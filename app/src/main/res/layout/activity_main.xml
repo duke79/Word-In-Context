@@ -10,8 +10,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.baliyaan.android.wordincontext.MainActivity">
 
-    <TextView
+    <android.support.v7.widget.ActionMenuView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_height="wrap_content">
+
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="37dp" />
+
+    </android.support.v7.widget.ActionMenuView>
+
 </RelativeLayout>

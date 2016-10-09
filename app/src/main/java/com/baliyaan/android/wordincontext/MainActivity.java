@@ -1,5 +1,6 @@
 package com.baliyaan.android.wordincontext;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         _context = this;
 
+        ActionBar actionBar = getActionBar();
+        if(null != actionBar)
+        {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -28,7 +36,12 @@ public class MainActivity extends AppCompatActivity {
                     _examples = GetExamples("fly");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast toast = Toast.makeText(_context,"No internet connection!", Toast.LENGTH_SHORT);
+
+                    ((MainActivity)_context).runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(_context, "No internet connection!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         }).start();
