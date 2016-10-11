@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -36,6 +38,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         _listView = (ListView)findViewById(R.id.view_examples);
+        _listView.setRotation(-90);
+
+        ViewTreeObserver viewTreeObserver = _listView.getViewTreeObserver();
+        viewTreeObserver.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                int go =1;
+                Adapter adapter = _listView.getAdapter();
+                if(null != adapter) {
+                    int listSize = adapter.getCount();
+                    for (int i = 0; i < listSize; i++) {
+                        View view = _listView.getChildAt(i);
+                        if (null != view)
+                            view.setRotation(90);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
 
         StartScraping();
 
@@ -94,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 }
             });
+
             int size = _examples.size();
         }
     }
