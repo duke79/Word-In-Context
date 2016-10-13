@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         _listView = (ListView)findViewById(R.id.view_examples);
+        ((SingleScrollListView)_listView).setSingleScroll(true);
         _listView.setRotation(-90);
 
         ViewTreeObserver viewTreeObserver = _listView.getViewTreeObserver();
@@ -50,8 +51,11 @@ public class MainActivity extends AppCompatActivity {
                     int listSize = adapter.getCount();
                     for (int i = 0; i < listSize; i++) {
                         View view = _listView.getChildAt(i);
-                        if (null != view)
+                        if (null != view) {
                             view.setRotation(90);
+                            view.getLayoutParams().height = 500;
+                            view.getLayoutParams().width = 500;
+                        }
                     }
                     return true;
                 }
