@@ -16,7 +16,16 @@ import java.util.List;
 public class Scraper {
 
     public static List<WordExample> GetExamples(String iWord) throws IOException {
-        List<WordExample> wordExamples = new ArrayList<WordExample>();
+        return GetExamples(iWord,null);
+    }
+
+    public static List<WordExample> GetExamples(String iWord, ArrayList<WordExample> ioList) throws IOException {
+        List<WordExample> wordExamples = null;
+        if (null != ioList) {
+            wordExamples = ioList;
+        } else {
+            wordExamples = new ArrayList<WordExample>();
+        }
         String url = "http://www.wordincontext.com/en/"+iWord;
         Document document = Jsoup.connect(url).get();
         Elements sentences = document.select("#content .sentence");

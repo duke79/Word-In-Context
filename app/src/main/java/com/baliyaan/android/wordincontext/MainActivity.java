@@ -5,24 +5,21 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.baliyaan.android.wordincontext.Scraper.GetExamples;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<WordExample> _examples = null;
+    ArrayList<WordExample> _examples = new ArrayList<WordExample>();
     Context _context = null;
-    ListView _listView ;
+    RecyclerView _recyclerView;
+    ExamplesAdapter _examplesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,51 +34,36 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        _listView = (ListView)findViewById(R.id.view_examples);
-        ((SingleScrollListView)_listView).setSingleScroll(true);
-        _listView.setRotation(-90);
+        _recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        ViewTreeObserver viewTreeObserver = _listView.getViewTreeObserver();
-        viewTreeObserver.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                int go =1;
-                Adapter adapter = _listView.getAdapter();
-                if(null != adapter) {
-                    int listSize = adapter.getCount();
-                    for (int i = 0; i < listSize; i++) {
-                        View view = _listView.getChildAt(i);
-                        if (null != view) {
-                            view.setRotation(90);
-                            view.getLayoutParams().height = 500;
-                            view.getLayoutParams().width = 500;
-                        }
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
+        _examplesAdapter = new ExamplesAdapter(_examples);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        if(null != _recyclerView) {
+            _recyclerView.setLayoutManager(mLayoutManager);
+            //_recyclerView.setItemAnimator(new DefaultItemAnimator());
+            _recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+            _recyclerView.setAdapter(_examplesAdapter);
+        }
 
-        StartScraping();
+        prepareExamplesList();
 
     }
 
-    private void StartScraping() {
+    private void prepareExamplesList() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    _examples = GetExamples("fly");
-
+                    GetExamples("fly",_examples);
                     Handler handler = new Handler(_context.getMainLooper());
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            PopulateList();
+                            if(_examplesAdapter != null) {
+                                _examplesAdapter.notifyDataSetChanged();
+                            }
                         }
                     });
-
                 } catch (IOException e) {
                     e.printStackTrace();
 
@@ -95,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+
+
+    /*
     private void PopulateList()
     {
         if(_examples != null) {
@@ -124,4 +109,5 @@ public class MainActivity extends AppCompatActivity {
             int size = _examples.size();
         }
     }
+    */
 }
