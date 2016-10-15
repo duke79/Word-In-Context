@@ -35,12 +35,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         _recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
         _examplesAdapter = new ExamplesAdapter(_examples);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(_context,LinearLayoutManager.HORIZONTAL,false);
         if(null != _recyclerView) {
             _recyclerView.setLayoutManager(mLayoutManager);
-            //_recyclerView.setItemAnimator(new DefaultItemAnimator());
             _recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             _recyclerView.setAdapter(_examplesAdapter);
         }
