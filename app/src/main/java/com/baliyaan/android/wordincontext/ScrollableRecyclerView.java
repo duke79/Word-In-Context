@@ -17,7 +17,7 @@ public class ScrollableRecyclerView extends RecyclerView {
     private VelocityTracker mVelocity = null;
     final private float mEscapeVelocity = 2000.0f;
     final private int mMinDistanceMoved = 20;
-    private float mStartY = 0;
+    private float mStartX = 0;
     private RecyclerViewPositionHelper _recyclerViewHelper;
 
     public ScrollableRecyclerView(Context context) {
@@ -44,7 +44,7 @@ public class ScrollableRecyclerView extends RecyclerView {
         {
             if (mSingleScroll && mVelocity == null)
                 mVelocity = VelocityTracker.obtain();
-            mStartY = aMotionEvent.getY();
+            mStartX = aMotionEvent.getX();
             return super.dispatchTouchEvent(aMotionEvent);
         }
 
@@ -52,24 +52,24 @@ public class ScrollableRecyclerView extends RecyclerView {
         {
             if (mVelocity != null)
             {
-                if (Math.abs(aMotionEvent.getY() - mStartY) > mMinDistanceMoved)
+                if (Math.abs(aMotionEvent.getX() - mStartX) > mMinDistanceMoved)
                 {
                     mVelocity.computeCurrentVelocity(1000);
                     float velocity = mVelocity.getYVelocity();
 
-                    if (aMotionEvent.getY() > mStartY)
+                    if (aMotionEvent.getX() > mStartX)
                     {
                         // always lock
                         if (velocity > mEscapeVelocity)
-                            smoothScrollToPosition(_recyclerViewHelper.findFirstVisibleItemPosition());
+                            smoothScrollToPosition(_recyclerViewHelper.findLastVisibleItemPosition());
                         else
                         {
                             // lock if over half way there
                             View view = getChildAt(0);
                             if (view != null)
                             {
-                                if (view.getBottom() >= getHeight() / 2)
-                                    smoothScrollToPosition(_recyclerViewHelper.findLastVisibleItemPosition());
+                                if (view.getRight() >= getWidth() / 2)
+                                    smoothScrollToPosition(_recyclerViewHelper.findFirstVisibleItemPosition());
                                 else
                                     smoothScrollToPosition(_recyclerViewHelper.findLastVisibleItemPosition());
                             }
@@ -85,7 +85,7 @@ public class ScrollableRecyclerView extends RecyclerView {
                             View view = getChildAt(1);
                             if (view != null)
                             {
-                                if (view.getTop() <= getHeight() / 2)
+                                if (view.getLeft() <= getWidth() / 2)
                                     smoothScrollToPosition(_recyclerViewHelper.findLastVisibleItemPosition());
                                 else
                                     smoothScrollToPosition(_recyclerViewHelper.findFirstVisibleItemPosition());
@@ -99,7 +99,7 @@ public class ScrollableRecyclerView extends RecyclerView {
 
             if (mSingleScroll)
             {
-                if (Math.abs(aMotionEvent.getY() - mStartY) > mMinDistanceMoved)
+                if (Math.abs(aMotionEvent.getX() - mStartX) > mMinDistanceMoved)
                     return super.dispatchTouchEvent(aMotionEvent);
             }
             else
@@ -111,7 +111,7 @@ public class ScrollableRecyclerView extends RecyclerView {
             if (mVelocity == null)
             {
                 mVelocity = VelocityTracker.obtain();
-                mStartY = aMotionEvent.getY();
+                mStartX = aMotionEvent.getX();
             }
             mVelocity.addMovement(aMotionEvent);
         }
