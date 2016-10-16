@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -18,8 +19,10 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<WordExample> _examples = new ArrayList<WordExample>();
     Context _context = null;
-    RecyclerView _recyclerView;
-    ExamplesAdapter _examplesAdapter;
+    RecyclerView _recyclerView = null;
+    ExamplesAdapter _examplesAdapter = null;
+    SearchView _searchView = null;
+    String _query = "dictionary";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,37 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        prepareSearchView();
+        prepareContentView();
+        //prepareExamplesList();
+    }
+
+    private void prepareSearchView() {
+        _searchView = (SearchView) findViewById(R.id.search_view);
+        _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                _query = query;
+                Handler handler = new Handler(_context.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(_examplesAdapter != null) {
+                            prepareExamplesList();
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+    }
+
+    private void prepareContentView() {
         _recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         _examplesAdapter = new ExamplesAdapter(_examples);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(_context,LinearLayoutManager.HORIZONTAL,false);
@@ -42,9 +76,6 @@ public class MainActivity extends AppCompatActivity {
             _recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             _recyclerView.setAdapter(_examplesAdapter);
         }
-
-        prepareExamplesList();
-
     }
 
     private void prepareExamplesList() {
@@ -52,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    GetExamples("fly",_examples);
+                    GetExamples(_query,_examples);
                     Handler handler = new Handler(_context.getMainLooper());
                     handler.post(new Runnable() {
                         @Override
