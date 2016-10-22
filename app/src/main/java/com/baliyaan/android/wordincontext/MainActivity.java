@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void prepareContentView() {
         _recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        _examplesAdapter = new ExamplesAdapter(_examples);
+        _examplesAdapter = new ExamplesAdapter(this,_examples);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(_context,LinearLayoutManager.HORIZONTAL,false);
         if(null != _recyclerView) {
             _recyclerView.setLayoutManager(mLayoutManager);

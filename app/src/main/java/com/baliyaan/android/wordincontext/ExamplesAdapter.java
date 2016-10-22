@@ -1,6 +1,11 @@
 package com.baliyaan.android.wordincontext;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +17,9 @@ import java.util.List;
  * Created by Pulkit Singh on 10/15/2016.
  */
 
-public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyViewHolder>{
+public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyViewHolder> {
     private List<WordExample> wordExampleList;
+    Context _context = null;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView content, link;
@@ -26,8 +32,9 @@ public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyView
     }
 
 
-    public ExamplesAdapter(List<WordExample> iList) {
+    public ExamplesAdapter(Context context, List<WordExample> iList) {
         this.wordExampleList = iList;
+        _context = context;
     }
 
     @Override
@@ -41,7 +48,21 @@ public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         WordExample wordExample = wordExampleList.get(position);
-        holder.content.setText(wordExample.get_content());
+        String content = wordExample.get_content();
+        String query = ((MainActivity) _context)._query;
+
+        Spannable wordtoSpan = new SpannableString(content);
+        for (int start = 0; start != -1; ) {
+            start = content.indexOf(query, start+1);
+
+            if (start != -1) {
+                int end = start + query.length();
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else
+                break;
+        }
+
+        holder.content.setText(wordtoSpan);
         holder.link.setText(wordExample.get_link());
     }
 
