@@ -26,6 +26,7 @@ public class Scraper {
         } else {
             wordExamples = new ArrayList<WordExample>();
         }
+        wordExamples.clear();
         String url = "http://www.wordincontext.com/en/"+iWord;
         Document document = Jsoup.connect(url).get();
         Elements sentences = document.select("#content .sentence");
