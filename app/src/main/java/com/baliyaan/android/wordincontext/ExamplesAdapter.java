@@ -65,7 +65,9 @@ public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyView
 
         holder.content.setText(wordtoSpan);
         holder.link.setText(wordExample.get_link());
-        //holder.counter.setText(position);
+        String strPosition = Integer.toString(position+1);
+        strPosition = "#"+strPosition;
+        holder.counter.setText(strPosition);
     }
 
     @Override
