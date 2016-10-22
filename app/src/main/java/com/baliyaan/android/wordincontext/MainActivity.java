@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         prepareSearchView();
         prepareContentView();
+        Interstitial interstitialAd = new Interstitial(_context, "ca-app-pub-4278963888720323/8594194494");
+        interstitialAd.showEvery(300000, true); // every 5 minutes
         //prepareExamplesList();
     }
 
