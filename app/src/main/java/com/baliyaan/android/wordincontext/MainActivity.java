@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        findViewById(R.id.welcomeText).setVisibility(View.GONE);
+                        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
                         if(_examplesAdapter != null) {
                             prepareExamplesList();
                         }
@@ -89,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if(_examplesAdapter != null) {
+                                findViewById(R.id.progressBar).setVisibility(View.GONE);
+                                findViewById(R.id.recycler_view).setVisibility(View.VISIBLE);
                                 _examplesAdapter.notifyDataSetChanged();
                             }
                         }
