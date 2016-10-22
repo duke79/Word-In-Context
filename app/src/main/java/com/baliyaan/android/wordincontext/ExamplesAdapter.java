@@ -22,12 +22,13 @@ public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyView
     Context _context = null;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView content, link;
+        public TextView content, link, counter;
 
         public MyViewHolder(View view) {
             super(view);
             content = (TextView) view.findViewById(R.id.content);
             link = (TextView) view.findViewById(R.id.link);
+            counter = (TextView) view.findViewById(R.id.counter);
         }
     }
 
@@ -57,13 +58,14 @@ public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyView
 
             if (start != -1) {
                 int end = start + query.length();
-                wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.DKGRAY), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else
                 break;
         }
 
         holder.content.setText(wordtoSpan);
         holder.link.setText(wordExample.get_link());
+        //holder.counter.setText(position);
     }
 
     @Override
