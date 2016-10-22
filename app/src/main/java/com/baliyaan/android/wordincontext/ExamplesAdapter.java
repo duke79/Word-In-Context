@@ -54,6 +54,8 @@ public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyView
 
         Spannable wordtoSpan = new SpannableString(content);
         for (int start = 0; start != -1; ) {
+            query = query.toLowerCase();
+            content = content.toLowerCase();
             start = content.indexOf(query, start+1);
 
             if (start != -1) {
