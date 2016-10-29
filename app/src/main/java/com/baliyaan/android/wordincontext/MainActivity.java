@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     ExamplesAdapter _examplesAdapter = null;
     SearchView _searchView = null;
     String _query = "dictionary";
+    public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         prepareSearchView();
         prepareContentView();
-        Interstitial interstitialAd = new Interstitial(_context, "ca-app-pub-4278963888720323/8594194494");
-        interstitialAd.showEvery(300000, true); // every 5 minutes
+
+        if(_BuildConfig != "debug") {
+            Interstitial interstitialAd = new Interstitial(_context, "ca-app-pub-4278963888720323/8594194494");
+            interstitialAd.showEvery(300000, true); // every 5 minutes
+        }
         //prepareExamplesList();
     }
 
