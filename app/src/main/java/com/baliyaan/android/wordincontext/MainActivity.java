@@ -1,7 +1,9 @@
 package com.baliyaan.android.wordincontext;
 
 import android.app.ActionBar;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import static com.baliyaan.android.wordincontext.Scraper.GetExamples;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TAG = "ContextDictionary";
     ArrayList<WordExample> _examples = new ArrayList<WordExample>();
     Context _context = null;
     RecyclerView _recyclerView = null;
@@ -29,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         _context = this;
 
+        // Enable home button
         ActionBar actionBar = getActionBar();
         if(null != actionBar)
         {
@@ -39,14 +42,20 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Prepare UI
+        setContentView(R.layout.activity_main);
         prepareSearchView();
         prepareContentView();
 
+        // Display ads in release configurations
         if(_BuildConfig != "debug") {
             Interstitial interstitialAd = new Interstitial(_context, "ca-app-pub-4278963888720323/8594194494");
             interstitialAd.showEvery(300000, true); // every 5 minutes
         }
-        //prepareExamplesList();
+
+        // Search by intent (if any)
+        Intent intent = getIntent();
+        ProcessIntent(intent);
     }
 
     private void prepareSearchView() {
@@ -74,6 +83,32 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void ProcessIntent(Intent intent) {
+        ClipData clipData = intent.getClipData();
+        if(clipData == null)
+            return;
+        ClipData.Item item = clipData.getItemAt(0);
+        if(item == null)
+            return;
+        String intentQuery = item.getText().toString();
+        if(intentQuery == null)
+            return;
+        if(!(intentQuery.length()>0))
+            return;
+        _searchView.setQuery(intentQuery,true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ProcessIntent(intent);
     }
 
     private void prepareContentView() {
@@ -116,38 +151,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-
-
-    /*
-    private void PopulateList()
-    {
-        if(_examples != null) {
-            String[] values = new String[_examples.size()];
-            int i=0;
-            for(WordExample example : _examples)
-            {
-                values[i] = example.get_content();
-                i++;
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,android.R.id.text1,values);
-            _listView.setAdapter(adapter);
-
-            _listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    int itemPosition = i;
-                    String itemValue = (String)_listView.getItemAtPosition(itemPosition);
-                    // Show Alert
-                    Toast.makeText(getApplicationContext(),
-                            "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                            .show();
-                }
-            });
-
-            int size = _examples.size();
-        }
-    }
-    */
 }
