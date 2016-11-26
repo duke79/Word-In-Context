@@ -16,71 +16,10 @@ import java.util.List;
 /**
  * Created by Pulkit Singh on 10/15/2016.
  */
-/*
-public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyViewHolder> {
-    private List<WordExample> wordExampleList;
-    Context _context = null;
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView content, link, counter;
-
-        public MyViewHolder(View view) {
-            super(view);
-            content = (TextView) view.findViewById(R.id.content);
-            link = (TextView) view.findViewById(R.id.link);
-            counter = (TextView) view.findViewById(R.id.counter);
-        }
-    }
-
-
-    public ExamplesAdapter(Context context, List<WordExample> iList) {
-        this.wordExampleList = iList;
-        _context = context;
-    }
-
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.word_example, parent, false);
-
-        return new MyViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        WordExample wordExample = wordExampleList.get(position);
-        String content = wordExample.get_content();
-        String query = ((MainActivity) _context)._query;
-
-        Spannable wordtoSpan = new SpannableString(content);
-        for (int start = 0; start != -1; ) {
-            query = query.toLowerCase();
-            content = content.toLowerCase();
-            start = content.indexOf(query, start+1);
-
-            if (start != -1) {
-                int end = start + query.length();
-                wordtoSpan.setSpan(new ForegroundColorSpan(Color.DKGRAY), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else
-                break;
-        }
-
-        holder.content.setText(wordtoSpan);
-        holder.link.setText(wordExample.get_link());
-        String strPosition = Integer.toString(position+1);
-        strPosition = "#"+strPosition;
-        holder.counter.setText(strPosition);
-    }
-
-    @Override
-    public int getItemCount() {
-        return wordExampleList.size();
-    }
-}*/
 
 public class ExamplesAdapter extends PagerAdapter{
-    List<WordExample> wordExampleList;
-    Context _context = null;
+    private List<WordExample> wordExampleList;
+    private Context _context = null;
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
