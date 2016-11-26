@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.baliyaan.android.wordincontext.Scraper.GetExamples;
 
@@ -36,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Enable home button
         ActionBar actionBar = getActionBar();
-        if(null != actionBar)
-        {
+        if (null != actionBar) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         prepareContentView();
 
         // Display ads in release configurations
-        if(_BuildConfig != "debug") {
+        if (_BuildConfig != "debug") {
             Interstitial interstitialAd = new Interstitial(_context, "ca-app-pub-4278963888720323/8594194494");
             interstitialAd.showEvery(300000, true); // every 5 minutes
         }
@@ -74,8 +74,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         findViewById(R.id.welcomeText).setVisibility(View.GONE);
+                        findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
                         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                        if(_pagerAdapter != null) {
+                        if (_pagerAdapter != null) {
                             prepareExamplesList();
                         }
                     }
@@ -87,17 +88,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void ProcessIntent(Intent intent) {
         ClipData clipData = intent.getClipData();
-        if(clipData == null)
+        if (clipData == null)
             return;
         ClipData.Item item = clipData.getItemAt(0);
-        if(item == null)
+        if (item == null)
             return;
         String intentQuery = item.getText().toString();
-        if(intentQuery == null)
+        if (intentQuery == null)
             return;
-        if(!(intentQuery.length()>0))
+        if (!(intentQuery.length() > 0))
             return;
-        _searchView.setQuery(intentQuery,true);
+        _searchView.setQuery(intentQuery, true);
     }
 
     @Override
@@ -113,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void prepareContentView() {
         _viewPager = (ViewPager) findViewById(R.id.view_pager_examples);
-        _pagerAdapter = new ExamplesAdapter(this,_examples);
-        if(null != _viewPager) {
+        _pagerAdapter = new ExamplesAdapter(this, _examples);
+        if (null != _viewPager) {
             _viewPager.setAdapter(_pagerAdapter);
         }
     }
@@ -124,22 +125,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    GetExamples(_query,_examples);
-                    Handler handler = new Handler(_context.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(_pagerAdapter != null) {
-                                findViewById(R.id.progressBar).setVisibility(View.GONE);
-                                findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
-                                _pagerAdapter.notifyDataSetChanged();
+                    final List<WordExample> newList = GetExamples(_query);
+                    if (newList.size() > 0) {
+                        Handler handler = new Handler(_context.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (_pagerAdapter != null) {
+                                    findViewById(R.id.progressBar).setVisibility(View.GONE);
+                                    findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
+                                    _examples.removeAll(_examples);
+                                    _examples.addAll(newList);
+                                    _pagerAdapter.notifyDataSetChanged();
+                                    _viewPager.setCurrentItem(0);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
 
-                    ((MainActivity)_context).runOnUiThread(new Runnable() {
+                    ((MainActivity) _context).runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(_context, "No internet connection!", Toast.LENGTH_SHORT).show();
                         }
