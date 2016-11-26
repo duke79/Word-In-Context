@@ -1,11 +1,7 @@
 package com.baliyaan.android.wordincontext;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
+import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +12,7 @@ import java.util.List;
 /**
  * Created by Pulkit Singh on 10/15/2016.
  */
-
+/*
 public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyViewHolder> {
     private List<WordExample> wordExampleList;
     Context _context = null;
@@ -75,5 +71,57 @@ public class ExamplesAdapter extends RecyclerView.Adapter<ExamplesAdapter.MyView
     @Override
     public int getItemCount() {
         return wordExampleList.size();
+    }
+}*/
+
+public class ExamplesAdapter extends PagerAdapter{
+    List<WordExample> wordExampleList;
+    Context _context = null;
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View)object);
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        LayoutInflater inflater = LayoutInflater.from(_context);
+        View wordExamplePage = inflater.inflate(R.layout.word_example,container,false);
+        SetPageValues(wordExamplePage,position);
+        container.addView(wordExamplePage);
+        return wordExamplePage;
+    }
+
+    private void SetPageValues(View page,int position) {
+        TextView content, link, counter;
+        content = (TextView) page.findViewById(R.id.content);
+        link = (TextView) page.findViewById(R.id.link);
+        counter = (TextView) page.findViewById(R.id.counter);
+
+        WordExample wordExample = wordExampleList.get(position);
+        content.setText(wordExample._content);
+        link.setText(wordExample._link);
+        counter.setText("#"+Integer.toString(position));
+    }
+
+    public ExamplesAdapter(Context context, List<WordExample> iList)
+    {
+        this.wordExampleList = iList;
+        _context = context;
+    }
+
+    @Override
+    public int getCount() {
+        return wordExampleList.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return "PageTitle";
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view==object;
     }
 }

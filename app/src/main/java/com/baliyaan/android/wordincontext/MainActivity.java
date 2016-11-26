@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.Toast;
@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "ContextDictionary";
     ArrayList<WordExample> _examples = new ArrayList<WordExample>();
     Context _context = null;
-    RecyclerView _recyclerView = null;
-    ExamplesAdapter _examplesAdapter = null;
+    ViewPager _viewPager = null;
+    PagerAdapter _pagerAdapter = null;
     SearchView _searchView = null;
     String _query = "dictionary";
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         findViewById(R.id.welcomeText).setVisibility(View.GONE);
                         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                        if(_examplesAdapter != null) {
+                        if(_pagerAdapter != null) {
                             prepareExamplesList();
                         }
                     }
@@ -112,13 +112,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareContentView() {
-        _recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        _examplesAdapter = new ExamplesAdapter(this,_examples);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(_context,LinearLayoutManager.HORIZONTAL,false);
-        if(null != _recyclerView) {
-            _recyclerView.setLayoutManager(mLayoutManager);
-            _recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-            _recyclerView.setAdapter(_examplesAdapter);
+        _viewPager = (ViewPager) findViewById(R.id.view_pager_examples);
+        _pagerAdapter = new ExamplesAdapter(this,_examples);
+        if(null != _viewPager) {
+            _viewPager.setAdapter(_pagerAdapter);
         }
     }
 
@@ -132,10 +129,10 @@ public class MainActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(_examplesAdapter != null) {
+                            if(_pagerAdapter != null) {
                                 findViewById(R.id.progressBar).setVisibility(View.GONE);
-                                findViewById(R.id.recycler_view).setVisibility(View.VISIBLE);
-                                _examplesAdapter.notifyDataSetChanged();
+                                findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
+                                _pagerAdapter.notifyDataSetChanged();
                             }
                         }
                     });
