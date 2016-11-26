@@ -92,7 +92,12 @@ public class ExamplesAdapter extends PagerAdapter{
         return wordExamplePage;
     }
 
-    private void SetPageValues(View page,int position) {
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    private void SetPageValues(View page, int position) {
         TextView content, link, counter;
         content = (TextView) page.findViewById(R.id.content);
         link = (TextView) page.findViewById(R.id.link);
