@@ -1,7 +1,11 @@
 package com.baliyaan.android.wordincontext;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +110,28 @@ public class ExamplesAdapter extends PagerAdapter{
         WordExample wordExample = wordExampleList.get(position);
         content.setText(wordExample._content);
         link.setText(wordExample._link);
-        counter.setText("#"+Integer.toString(position));
+        counter.setText("#"+Integer.toString(position+1));
+
+        String query = ((MainActivity) _context)._query;
+        HighLightQueryString(content,query);
+    }
+
+    private void HighLightQueryString(TextView contentView, String query) {
+        String content = (String) contentView.getText();
+        Spannable wordToSpan = new SpannableString(content);
+        for (int start = 0; start != -1; ) {
+            query = query.toLowerCase();
+            content = content.toLowerCase();
+            start = content.indexOf(query, start+1);
+
+            if (start != -1) {
+                int end = start + query.length();
+                wordToSpan.setSpan(new ForegroundColorSpan(Color.DKGRAY), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else
+                break;
+        }
+
+        contentView.setText(wordToSpan);
     }
 
     public ExamplesAdapter(Context context, List<WordExample> iList)
