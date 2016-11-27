@@ -1,12 +1,16 @@
 package com.baliyaan.android.wordincontext;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -53,6 +57,41 @@ public class ExamplesAdapter extends PagerAdapter{
 
         String query = ((MainActivity) _context)._query;
         HighLightQueryString(content,query);
+
+        SetOnSelectionIntent(content);
+    }
+
+    private void SetOnSelectionIntent(final TextView tv) {
+        tv.setCustomSelectionActionModeCallback(new ActionMode.Callback(){
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "Here is the share content body";
+                int start = tv.getSelectionStart();
+                int end = tv.getSelectionEnd();
+                shareBody = tv.getText().toString().substring(start,end);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                _context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+        });
     }
 
     private void HighLightQueryString(TextView contentView, String query) {
