@@ -65,7 +65,7 @@ public class ExamplesAdapter extends PagerAdapter{
         tv.setCustomSelectionActionModeCallback(new ActionMode.Callback(){
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                menu.add("Share");
+                menu.add("Share").setIcon(R.drawable.ic_share);
                 return true;
             }
 
@@ -89,7 +89,7 @@ public class ExamplesAdapter extends PagerAdapter{
                     int start = tv.getSelectionStart();
                     int end = tv.getSelectionEnd();
                     String shareBody = tv.getText().toString().substring(start,end);
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     _context.startActivity(Intent.createChooser(sharingIntent, "Share"));
                 }
