@@ -56,7 +56,7 @@ public class ExamplesAdapter extends PagerAdapter{
     }
 
     private void HighLightQueryString(TextView contentView, String query) {
-        String content = (String) contentView.getText();
+        String content = contentView.getText().toString();
         Spannable wordToSpan = new SpannableString(content);
         for (int start = 0; start != -1; ) {
             query = query.toLowerCase();
