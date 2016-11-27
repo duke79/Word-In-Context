@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Sentence Examples</string>
+    <string name="source">Source:-</string>
+    <string name="counter">#Counter</string>
 </resources>
