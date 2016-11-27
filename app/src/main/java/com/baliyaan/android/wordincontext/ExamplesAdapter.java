@@ -65,26 +65,7 @@ public class ExamplesAdapter extends PagerAdapter{
         tv.setCustomSelectionActionModeCallback(new ActionMode.Callback(){
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                int start = tv.getSelectionStart();
-                int end = tv.getSelectionEnd();
-                String shareBody = tv.getText().toString().substring(start,end);
-                //sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                //_context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
-                // Search and populate the menu with acceptable offering applications.
-                menu.addIntentOptions(
-                        1, // Menu group to which new items will be added
-                        0, // Unique item ID (none)
-                        0, // Order for the items (none)
-                        ((MainActivity)_context).getComponentName(), // The current Activity name
-                        null, // Specific items to place first (none)
-                        sharingIntent, // Intent created above that describes our requirements
-                        0, // Additional flags to control items (none)
-                        null); // Array of MenuItems that correlate to specific items
-                // (none)
+                menu.add("Share");
                 return true;
             }
 
@@ -100,6 +81,18 @@ public class ExamplesAdapter extends PagerAdapter{
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                String title = item.getTitle().toString();
+                if(title.contains("Share"))
+                {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    int start = tv.getSelectionStart();
+                    int end = tv.getSelectionEnd();
+                    String shareBody = tv.getText().toString().substring(start,end);
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                    _context.startActivity(Intent.createChooser(sharingIntent, "Share"));
+                }
                 return false;
             }
         });
