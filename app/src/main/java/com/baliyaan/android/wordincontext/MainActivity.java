@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -13,10 +15,12 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 import static com.baliyaan.android.wordincontext.Scraper.GetExamples;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,13 +53,37 @@ public class MainActivity extends AppCompatActivity {
 
         // Display ads in release configurations
         if (_BuildConfig != "debug") {
-            Interstitial interstitialAd = new Interstitial(_context, "ca-app-pub-4278963888720323/8594194494");
-            interstitialAd.showEvery(300000, true); // every 5 minutes
+            showAds();
         }
 
         // Search by intent (if any)
         Intent intent = getIntent();
         ProcessIntent(intent);
+    }
+
+    private void showAds() {
+        boolean hasMinInstallTimePassed = false;
+        PackageManager pm = _context.getPackageManager();
+        ApplicationInfo appInfo = null;
+        try {
+            appInfo = pm.getApplicationInfo(PACKAGE_NAME, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(null != appInfo) {
+            String appFile = appInfo.sourceDir;
+            long installed = new File(appFile).lastModified(); //Epoch Time
+            long now = System.currentTimeMillis();
+            if(now-installed > 3.6e+5) // 6 minutes
+                hasMinInstallTimePassed =true;
+        }
+        /*
+         * Show Ad every 5 minutes
+         */
+        if(hasMinInstallTimePassed ==true) {
+            Interstitial interstitialAd = new Interstitial(_context, getString(R.string.adId));
+            interstitialAd.showEvery(1000000, true); // every 16.66 minutes
+        }
     }
 
     private void prepareSearchView() {
