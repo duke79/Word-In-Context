@@ -21,6 +21,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 import static com.baliyaan.android.wordincontext.Scraper.GetExamples;
 
@@ -64,6 +71,25 @@ public class MainActivity extends AppCompatActivity {
 
         //Load dictionary
         _dictionary = Dictionary.GetInstance(_context);
+
+        TestRxAndroid();
+    }
+
+    private void TestRxAndroid() {
+        Observable<String> observable = new Observable<String>() {
+            @Override
+            protected void subscribeActual(Observer observer) {
+                observer.onNext("someText");
+            }
+        }
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+        observable.subscribe(new Consumer<String>() {
+            @Override
+            public void accept(@NonNull String s) throws Exception {
+                Log.i("RxAndroid",s);
+            }
+        });
     }
 
     private void showAds() {
