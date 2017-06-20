@@ -12,6 +12,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,11 +28,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "ContextDictionary";
     ArrayList<WordExample> _examples = new ArrayList<WordExample>();
-    Context _context = null;
+    static Context _context = null;
     ViewPager _viewPager = null;
     PagerAdapter _pagerAdapter = null;
     SearchView _searchView = null;
     String _query = "dictionary";
+    Dictionary _dictionary = null;
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
 
     @Override
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         // Search by intent (if any)
         Intent intent = getIntent();
         ProcessIntent(intent);
+
+        //Load dictionary
+        _dictionary = Dictionary.GetInstance(_context);
     }
 
     private void showAds() {
@@ -91,12 +96,41 @@ public class MainActivity extends AppCompatActivity {
         _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                Log.i("TextChange", "=(" + newText + ")");
+
+                if (newText == null || newText.isEmpty()) {
+                    _searchView.setSuggestionsAdapter(null);
+                } else {
+                    final Dictionary.SuggestionsAdapter adapter = _dictionary.GetSuggestionsAdapter(_context);
+                    //adapter.RemoveCursor();
+                    _searchView.setSuggestionsAdapter(adapter);
+                    adapter.SuggestFor(newText,5);
+                    _searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                        @Override
+                        public boolean onSuggestionSelect(int position) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onSuggestionClick(int position) {
+                            String suggestion = adapter.GetSuggestionAt(position);
+                            _searchView.setQuery(suggestion,true);
+                            _searchView.clearFocus();
+                            return true;
+                        }
+                    });
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
                 _query = query;
+
+                // Remove suggestions
+                _searchView.setSuggestionsAdapter(null);
+
+                //Handle search
                 Handler handler = new Handler(_context.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
