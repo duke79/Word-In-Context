@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.baliyaan.android.library.ads.Interstitial;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

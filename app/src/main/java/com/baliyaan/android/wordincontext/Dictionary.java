@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 
+import com.baliyaan.android.library.ds.Trie;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
