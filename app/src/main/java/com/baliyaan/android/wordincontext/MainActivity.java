@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.baliyaan.android.library.ads.Interstitial;
+import com.baliyaan.android.wordincontext.Model.Dictionary;
+import com.baliyaan.android.wordincontext.Model.WordExample;
+import com.baliyaan.android.wordincontext.UI.ExamplesAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +34,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
-import static com.baliyaan.android.wordincontext.Scraper.GetExamples;
+import static com.baliyaan.android.wordincontext.IO.Scraper.GetExamples;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager _viewPager = null;
     PagerAdapter _pagerAdapter = null;
     SearchView _searchView = null;
-    String _query = "dictionary";
+    public String _query = "dictionary";
     Dictionary _dictionary = null;
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
 

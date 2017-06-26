@@ -1,4 +1,6 @@
-package com.baliyaan.android.wordincontext;
+package com.baliyaan.android.wordincontext.IO;
+
+import com.baliyaan.android.wordincontext.Model.WordExample;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

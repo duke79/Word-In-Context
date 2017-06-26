@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext;
+package com.baliyaan.android.wordincontext.Model;
 
 /**
  * Created by Pulkit Singh on 10/9/2016.

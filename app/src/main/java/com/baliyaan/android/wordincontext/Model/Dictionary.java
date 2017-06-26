@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext;
+package com.baliyaan.android.wordincontext.Model;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,6 +6,8 @@ import android.database.MatrixCursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 import com.baliyaan.android.library.ds.Trie;
+import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.IO.WordListDB;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,11 +22,12 @@ import java.util.ArrayList;
 public class Dictionary {
     private static Dictionary _dictionary = null;
     private SuggestionsAdapter _suggestionsAdapter = null;
-    //private Context _context = null;
+    private Context _context = null;
     private Trie _words = null;
 
     private Dictionary(final Context context){
         _words = new Trie();
+        _context = context;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -91,7 +94,8 @@ public class Dictionary {
         {
             if(null != _suggestions)
                 _suggestions.removeAll(_suggestions);
-            _suggestions = Dictionary.GetInstance(_context).GetWordsTrie().getWordsStartingWith(token,nbrSuggestions);
+            //_suggestions = Dictionary.GetInstance(_context).GetWordsTrie().getWordsStartingWith(token,nbrSuggestions);
+            _suggestions = Dictionary.GetInstance(_context).GetSuggestionsFor(token,nbrSuggestions);
             if(_suggestions != null && _suggestions.size()>0)
             {
                 MatrixCursor cursorWithSuggestions = new MatrixCursor(new String[] {"_id","word"}); //one column named "_id" is required for CursorAdapter
@@ -116,5 +120,10 @@ public class Dictionary {
         {
             this.swapCursor(null);
         }
+    }
+
+    private ArrayList<String> GetSuggestionsFor(String token, int nbrSuggestions) {
+        WordListDB db = new WordListDB(_context);
+        return db.GetWordsStartingWith(token,nbrSuggestions);
     }
 }

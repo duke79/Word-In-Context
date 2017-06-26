@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext;
+package com.baliyaan.android.wordincontext.UI;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.baliyaan.android.wordincontext.MainActivity;
+import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.Model.WordExample;
 
 import java.util.List;
 
