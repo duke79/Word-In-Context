@@ -17,7 +17,8 @@ import java.util.Locale;
 
 public class WordListDB extends SQLiteAssetHelper {
     private static final String DATABASE_NAME = "WordsList.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
+    private SQLiteDatabase _db = null;
 
     public WordListDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,8 +32,9 @@ public class WordListDB extends SQLiteAssetHelper {
 
         Cursor cursor = null;
         try {
-            SQLiteDatabase db = getWritableDatabase();
-            cursor = db.rawQuery(query,null);
+            if(null == _db)
+                _db = getWritableDatabase();
+            cursor = _db.rawQuery(query,null);
         }
         catch (Exception e){
             Log.e("WordListDB",e.toString());

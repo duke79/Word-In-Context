@@ -24,6 +24,7 @@ public class Dictionary {
     private SuggestionsAdapter _suggestionsAdapter = null;
     private Context _context = null;
     private Trie _words = null;
+    private WordListDB _db = null;
 
     private Dictionary(final Context context){
         _words = new Trie();
@@ -123,7 +124,8 @@ public class Dictionary {
     }
 
     private ArrayList<String> GetSuggestionsFor(String token, int nbrSuggestions) {
-        WordListDB db = new WordListDB(_context);
-        return db.GetWordsStartingWith(token,nbrSuggestions);
+        if(null == _db)
+            _db = new WordListDB(_context);
+        return _db.GetWordsStartingWith(token,nbrSuggestions);
     }
 }
