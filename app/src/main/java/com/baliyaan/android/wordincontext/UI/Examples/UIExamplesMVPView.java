@@ -1,7 +1,6 @@
 package com.baliyaan.android.wordincontext.UI.Examples;
 
 import android.app.Activity;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +12,13 @@ import com.baliyaan.android.wordincontext.UI.MVPViewAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
 
@@ -37,26 +43,13 @@ public class UIExamplesMVPView extends MVPViewAdapter<UIExamplesMVPContract.Navi
 
     @Override
     public void onQueryTextSubmit(final String query) {
-        new Thread(new Runnable() {
+        Observable<List<WordExample>> observable = new Observable<List<WordExample>>() {
             @Override
-            public void run() {
+            protected void subscribeActual(Observer<? super List<WordExample>> observer) {
                 try {
                     final List<WordExample> newList = GetExamples(query);
                     if (newList.size() > 0) {
-                        Handler handler = new Handler(activity().getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (_pagerAdapter != null) {
-                                    activity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-                                    activity().findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
-                                    _examples.removeAll(_examples);
-                                    _examples.addAll(newList);
-                                    _pagerAdapter.notifyDataSetChanged();
-                                    _viewPager.setCurrentItem(0);
-                                }
-                            }
-                        });
+                        observer.onNext(newList);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -68,6 +61,21 @@ public class UIExamplesMVPView extends MVPViewAdapter<UIExamplesMVPContract.Navi
                     });
                 }
             }
-        }).start();
+        }.subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread());
+
+        observable.subscribe(   new Consumer<List<WordExample>>() {
+            @Override
+            public void accept(@NonNull List<WordExample> newList) throws Exception {
+                if (_pagerAdapter != null) {
+                    activity().findViewById(R.id.progressBar).setVisibility(View.GONE);
+                    activity().findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
+                    _examples.removeAll(_examples);
+                    _examples.addAll(newList);
+                    _pagerAdapter.notifyDataSetChanged();
+                    _viewPager.setCurrentItem(0);
+                }
+            }
+        });
     }
 }
