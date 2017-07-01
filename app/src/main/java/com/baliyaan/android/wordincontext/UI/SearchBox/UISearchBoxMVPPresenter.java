@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 
-import com.baliyaan.android.wordincontext.Model.Dictionary;
+import com.baliyaan.android.wordincontext.Data.Autocomplete.SuggestionsAdapter;
 import com.baliyaan.android.wordincontext.UI.MVPPresenterAdapter;
 
 /**
@@ -12,13 +12,12 @@ import com.baliyaan.android.wordincontext.UI.MVPPresenterAdapter;
  */
 
 class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract.View> implements UISearchBoxMVPContract.Presenter{
-    private Dictionary _dictionary = null;
-    private Dictionary.SuggestionsAdapter _adapter = null;
+    private SuggestionsAdapter _adapter = null;
 
     UISearchBoxMVPPresenter(Activity activity, UISearchBoxMVPContract.View view){
         super(activity, view);
-        //Load dictionary
-        _dictionary = Dictionary.GetInstance(activity());
+
+        _adapter = SuggestionsAdapter.getInstance(activity());
     }
 
     @Override
@@ -44,10 +43,8 @@ class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract
         if (newText == null || newText.isEmpty()) {
             view().setSuggestionsAdapter(null);
         } else {
-            _adapter = _dictionary.GetSuggestionsAdapter(activity());
-            //adapter.RemoveCursor();
             view().setSuggestionsAdapter(_adapter);
-            _adapter.SuggestFor(newText,5);
+            _adapter.suggestFor(newText,5);
         }
         return true;
     }
@@ -59,7 +56,7 @@ class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract
 
     @Override
     public boolean onSuggestionClick(int position) {
-        String suggestion = _adapter.GetSuggestionAt(position);
+        String suggestion = _adapter.getSuggestionAt(position);
         view().setQuery(suggestion,true);
         view().clearFocus();
         return true;
