@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Navigator {
 
     public static final String TAG = "ContextDictionary";
     ArrayList<WordExample> _examples = new ArrayList<WordExample>();
