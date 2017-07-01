@@ -16,7 +16,7 @@ public class UIExamplesMVPView extends MVPViewAdapter<UIExamplesMVPContract.Navi
 
     private ViewPager _viewPager = null;
     private UIExamplesMVPPresenter _presenter = null;
-    private ExamplesAdapter _pagerAdapter = null;
+    private UIExamplesPagerAdapter _pagerAdapter = null;
 
     public UIExamplesMVPView(Activity activity, UIExamplesMVPContract.Navigator navigator) {
         super(activity,navigator);
@@ -25,7 +25,7 @@ public class UIExamplesMVPView extends MVPViewAdapter<UIExamplesMVPContract.Navi
         _viewPager = (ViewPager) activity().findViewById(R.id.view_pager_examples);
 
         if (null != _viewPager) {
-            _pagerAdapter = new ExamplesAdapter(activity(),_presenter.getExamples());
+            _pagerAdapter = new UIExamplesPagerAdapter(activity(),_presenter.getExamples());
             _viewPager.setAdapter(_pagerAdapter);
         }
     }

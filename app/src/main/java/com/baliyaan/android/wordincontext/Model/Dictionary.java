@@ -5,19 +5,16 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-import com.baliyaan.android.library.ds.Trie;
-import com.baliyaan.android.wordincontext.R;
 import com.baliyaan.android.wordincontext.Data.WordListDB;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Pulkit Singh on 6/17/2017.
@@ -27,34 +24,12 @@ public class Dictionary {
     private static Dictionary _dictionary = null;
     private SuggestionsAdapter _suggestionsAdapter = null;
     private Context _context = null;
-    private Trie _words = null;
     private WordListDB _db = null;
 
     private Dictionary(final Context context){
-        _words = new Trie();
         _context = context;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                LoadWordsList(context);
-            }
-        }).start();
     }
 
-    private void LoadWordsList(Context context) {
-        InputStream is = context.getResources().openRawResource(R.raw.ukacd17);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        try {
-            String line = reader.readLine();
-            while(line!=null)
-            {
-                _words.add(line);
-                line = reader.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static Dictionary GetInstance(Context context){
         if(null == _dictionary)
@@ -62,10 +37,6 @@ public class Dictionary {
         return _dictionary;
     }
 
-    public Trie GetWordsTrie()
-    {
-        return _words;
-    }
 
     public SuggestionsAdapter GetSuggestionsAdapter(Context context){
         if(null == _suggestionsAdapter) {
@@ -95,31 +66,36 @@ public class Dictionary {
                     from, to, 0);
         }
 
-        public SuggestionsAdapter SuggestFor(String token, int nbrSuggestions)
+        public SuggestionsAdapter SuggestFor(final String token, final int nbrSuggestions)
         {
-            if(null != _suggestions)
-                _suggestions.removeAll(_suggestions);
-            //_suggestions = Dictionary.GetInstance(_context).GetWordsTrie().getWordsStartingWith(token,nbrSuggestions);
-            _suggestions = Dictionary.GetInstance(_context).GetSuggestionsFor(token,nbrSuggestions);
-            if(_suggestions != null && _suggestions.size()>0)
-            {
-                final MatrixCursor cursorWithSuggestions = new MatrixCursor(new String[] {"_id","word"}); //one column named "_id" is required for CursorAdapter
+            final MatrixCursor cursorWithSuggestions = new MatrixCursor(new String[] {"_id","word"}); //one column named "_id" is required for CursorAdapter
 
-                new Observable<String>(){
-                    @Override
-                    protected void subscribeActual(Observer<? super String> observer) {
-                        changeCursor(cursorWithSuggestions);
+            new Observable<String>(){
+                @Override
+                protected void subscribeActual(Observer<? super String> observer) {
+                    if(_suggestions != null)
+                        _suggestions.removeAll(_suggestions);
+
+                    _suggestions = Dictionary.GetInstance(_context).GetSuggestionsFor(token,nbrSuggestions);
+
+                    if(_suggestions != null && _suggestions.size()>0) {
+                        int key = 1;
+                        for (String suggestion : _suggestions) {
+                            cursorWithSuggestions.addRow(new Object[]{key, suggestion});
+                            key++;
+                        }
                     }
-                }.subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-
-                int key = 1;
-                for(String suggestion : _suggestions)
-                {
-                    cursorWithSuggestions.addRow(new Object[]{key,suggestion});
-                    key++;
+                    observer.onNext("");
                 }
-            }
+            }.subscribeOn(Schedulers.newThread())
+             .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<String>() {
+                @Override
+                public void accept(@NonNull String s) throws Exception {
+                    changeCursor(cursorWithSuggestions);
+                }
+            });
+
             return this;
         }
 
@@ -128,10 +104,6 @@ public class Dictionary {
             return _suggestions.get(index);
         }
 
-        public void RemoveCursor()
-        {
-            this.swapCursor(null);
-        }
     }
 
     private ArrayList<String> GetSuggestionsFor(String token, int nbrSuggestions) {

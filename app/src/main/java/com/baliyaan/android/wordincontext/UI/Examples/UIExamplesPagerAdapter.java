@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Pulkit Singh on 10/15/2016.
  */
 
-public class ExamplesAdapter extends PagerAdapter{
+public class UIExamplesPagerAdapter extends PagerAdapter{
     private List<WordExample> wordExampleList;
     private Context _context = null;
 
@@ -120,7 +120,7 @@ public class ExamplesAdapter extends PagerAdapter{
         contentView.setText(wordToSpan);
     }
 
-    public ExamplesAdapter(Context context, List<WordExample> iList)
+    public UIExamplesPagerAdapter(Context context, List<WordExample> iList)
     {
         this.wordExampleList = iList;
         _context = context;

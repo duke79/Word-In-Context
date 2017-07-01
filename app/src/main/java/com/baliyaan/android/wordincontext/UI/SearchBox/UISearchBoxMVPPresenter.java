@@ -47,12 +47,7 @@ class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract
             _adapter = _dictionary.GetSuggestionsAdapter(activity());
             //adapter.RemoveCursor();
             view().setSuggestionsAdapter(_adapter);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    _adapter.SuggestFor(newText,5);
-                }
-            }).start();
+            _adapter.SuggestFor(newText,5);
         }
         return true;
     }
