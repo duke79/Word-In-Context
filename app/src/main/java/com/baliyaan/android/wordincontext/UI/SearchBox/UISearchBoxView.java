@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 
-import com.baliyaan.android.wordincontext.Navigator;
 import com.baliyaan.android.wordincontext.R;
 
 /**
@@ -14,10 +13,10 @@ import com.baliyaan.android.wordincontext.R;
 public class UISearchBoxView implements UISearchBoxContract.View,UISearchBoxContract.Port{
     private UISearchBoxContract.Presenter _presenter;
     private Activity _activity = null;
-    private Navigator _navigator = null;
+    private UISearchBoxContract.Navigator _navigator = null;
     private SearchView _searchView = null;
 
-    public UISearchBoxView(Activity activity, Navigator navigator){
+    public UISearchBoxView(Activity activity, UISearchBoxContract.Navigator navigator){
         _activity = activity;
         _navigator = navigator;
         _presenter = new UISearchBoxPresenter(_activity,this);
@@ -51,7 +50,7 @@ public class UISearchBoxView implements UISearchBoxContract.View,UISearchBoxCont
     @Override
     public void onQueryTextSubmit(String query) {
         if (_navigator != null) {
-            _navigator.prepareExamplesList(query);
+            _navigator.onSearchBoxSubmit(query);
         }
     }
 }

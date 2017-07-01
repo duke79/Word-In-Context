@@ -12,13 +12,13 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class UISearchBoxPresenter implements UISearchBoxContract.Presenter{
+class UISearchBoxPresenter implements UISearchBoxContract.Presenter{
     private Dictionary _dictionary = null;
     private Activity _activity = null;
     private UISearchBoxContract.View _view = null;
     private Dictionary.SuggestionsAdapter _adapter = null;
 
-    public UISearchBoxPresenter(Activity activity, UISearchBoxContract.View view){
+    UISearchBoxPresenter(Activity activity, UISearchBoxContract.View view){
         _activity = activity;
         _view = view;
         //Load dictionary

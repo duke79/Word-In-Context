@@ -19,6 +19,10 @@ public interface UISearchBoxContract {
 
     }
 
+    interface Navigator {
+        void onSearchBoxSubmit(String query);
+    }
+
     interface Port{
         void setQuery(String query);
     }

@@ -36,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
-public class MainActivity extends AppCompatActivity implements Navigator {
+public class MainActivity extends AppCompatActivity implements UISearchBoxContract.Navigator {
 
     public static final String TAG = "ContextDictionary";
     ArrayList<WordExample> _examples = new ArrayList<WordExample>();
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements Navigator {
 
         // Prepare UI
         setContentView(R.layout.activity_main);
-        prepareSearchView();
+        _searchView  = new UISearchBoxView(this,this);
         prepareContentView();
 
         // Display ads in release configurations
@@ -127,64 +127,6 @@ public class MainActivity extends AppCompatActivity implements Navigator {
         }
     }
 
-    private void prepareSearchView() {
-//        _searchView = (SearchView) findViewById(R.id.search_view);
-//        _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                Log.i("TextChange", "=(" + newText + ")");
-//
-//                if (newText == null || newText.isEmpty()) {
-//                    _searchView.setSuggestionsAdapter(null);
-//                } else {
-//                    final Dictionary.SuggestionsAdapter adapter = _dictionary.GetSuggestionsAdapter(_context);
-//                    //adapter.RemoveCursor();
-//                    _searchView.setSuggestionsAdapter(adapter);
-//                    adapter.SuggestFor(newText,5);
-//                    _searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-//                        @Override
-//                        public boolean onSuggestionSelect(int position) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onSuggestionClick(int position) {
-//                            String suggestion = adapter.GetSuggestionAt(position);
-//                            _searchView.setQuery(suggestion,true);
-//                            _searchView.clearFocus();
-//                            return true;
-//                        }
-//                    });
-//                }
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                _query = query;
-//
-//                // Remove suggestions
-//                _searchView.setSuggestionsAdapter(null);
-//
-//                //Handle search
-//                Handler handler = new Handler(_context.getMainLooper());
-//                handler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        findViewById(R.id.welcomeText).setVisibility(View.GONE);
-//                        findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
-//                        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-//                        if (_pagerAdapter != null) {
-//                            prepareExamplesList();
-//                        }
-//                    }
-//                });
-//                return false;
-//            }
-//        });
-        new UISearchBoxView(this,this);
-    }
-
     private void ProcessIntent(Intent intent) {
         ClipData clipData = intent.getClipData();
         if (clipData == null)
@@ -220,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements Navigator {
     }
 
     @Override
-    public void prepareExamplesList(String query) {
+    public void onSearchBoxSubmit(String query) {
         _query = query;
         new Thread(new Runnable() {
             @Override
