@@ -1,5 +1,7 @@
 package com.baliyaan.android.wordincontext.UI.Examples;
 
+import io.reactivex.Observable;
+
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
@@ -10,7 +12,7 @@ public interface UIExamplesMVPContract {
     }
 
     interface Presenter {
-
+        Observable onQueryTextSubmit(final String query);
     }
 
     interface Navigator {
