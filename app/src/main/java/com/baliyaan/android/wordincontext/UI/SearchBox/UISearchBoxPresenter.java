@@ -1,9 +1,12 @@
 package com.baliyaan.android.wordincontext.UI.SearchBox;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
 import com.baliyaan.android.wordincontext.Model.Dictionary;
+import com.baliyaan.android.wordincontext.R;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
@@ -20,6 +23,25 @@ public class UISearchBoxPresenter implements UISearchBoxContract.Presenter{
         _view = view;
         //Load dictionary
         _dictionary = Dictionary.GetInstance(_activity);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(final String query) {
+        // Remove suggestions
+        _view.setSuggestionsAdapter(null);
+
+        //Handle search
+        Handler handler = new Handler(_activity.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                _activity.findViewById(R.id.welcomeText).setVisibility(View.GONE);
+                _activity.findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
+                _activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                _view.onQueryTextSubmit(query);
+            }
+        });
+        return false;
     }
 
     @Override
