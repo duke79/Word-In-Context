@@ -2,11 +2,10 @@ package com.baliyaan.android.wordincontext.UI.SearchBox;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.View;
 
-import com.baliyaan.android.wordincontext.Model.Dictionary;
 import com.baliyaan.android.wordincontext.Navigator;
 import com.baliyaan.android.wordincontext.R;
 
@@ -15,7 +14,7 @@ import com.baliyaan.android.wordincontext.R;
  */
 
 public class UISearchBoxView implements UISearchBoxContract.View,UISearchBoxContract.Port{
-    private Dictionary _dictionary;
+    private final UISearchBoxContract.Presenter _presenter;
     private Activity _activity = null;
     private Navigator _navigator = null;
 
@@ -25,38 +24,13 @@ public class UISearchBoxView implements UISearchBoxContract.View,UISearchBoxCont
     public UISearchBoxView(Activity activity, Navigator navigator){
         _activity = activity;
         _navigator = navigator;
-        //Load dictionary
-        _dictionary = Dictionary.GetInstance(_activity);
+        _presenter = new UISearchBoxPresenter(_activity,this);
 
         _searchView = (SearchView) _activity.findViewById(R.id.search_view);
         _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.i("TextChange", "=(" + newText + ")");
-
-                if (newText == null || newText.isEmpty()) {
-                    _searchView.setSuggestionsAdapter(null);
-                } else {
-                    final Dictionary.SuggestionsAdapter adapter = _dictionary.GetSuggestionsAdapter(_activity);
-                    //adapter.RemoveCursor();
-                    _searchView.setSuggestionsAdapter(adapter);
-                    adapter.SuggestFor(newText,5);
-                    _searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                        @Override
-                        public boolean onSuggestionSelect(int position) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onSuggestionClick(int position) {
-                            String suggestion = adapter.GetSuggestionAt(position);
-                            _searchView.setQuery(suggestion,true);
-                            _searchView.clearFocus();
-                            return true;
-                        }
-                    });
-                }
-                return true;
+                return _presenter.onQueryTextChange(newText);
             }
 
             @Override
@@ -82,11 +56,37 @@ public class UISearchBoxView implements UISearchBoxContract.View,UISearchBoxCont
                 return false;
             }
         });
+        _searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return _presenter.onSuggestionSelect(position);
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                return _presenter.onSuggestionClick(position);
+            }
+        });
     }
 
 
     @Override
     public void setQuery(String query) {
+        _searchView.setQuery(query,true);
+    }
 
+    @Override
+    public void setSuggestionsAdapter(CursorAdapter adapter) {
+        _searchView.setSuggestionsAdapter(adapter);
+    }
+
+    @Override
+    public void clearFocus() {
+        _searchView.clearFocus();
+    }
+
+    @Override
+    public void setQuery(String query, boolean b) {
+        _searchView.setQuery(query,b);
     }
 }
