@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import com.baliyaan.android.wordincontext.Model.WordExample;
+import com.baliyaan.android.wordincontext.R;
 import com.baliyaan.android.wordincontext.UI.MVPPresenterAdapter;
 
 import java.io.IOException;
@@ -12,6 +13,10 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
 
@@ -28,7 +33,7 @@ class UIExamplesMVPPresenter extends MVPPresenterAdapter<UIExamplesMVPContract.V
     }
 
     @Override
-    public Observable onQueryTextSubmit(final String query) {
+    public void onQueryTextSubmit(final String query) {
         Observable<List<WordExample>> observable = new Observable<List<WordExample>>() {
             @Override
             protected void subscribeActual(Observer<? super List<WordExample>> observer) {
@@ -37,21 +42,31 @@ class UIExamplesMVPPresenter extends MVPPresenterAdapter<UIExamplesMVPContract.V
                     if (newList.size() > 0) {
                             _examples.removeAll(_examples);
                             _examples.addAll(newList);
-                            observer.onNext(newList);
                     }
+                    observer.onNext(newList);
                 } catch (IOException e) {
                     e.printStackTrace();
 
                     (activity()).runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity(), "No internet connection!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity(), R.string.NoInternet, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }
         };
 
-        return observable;
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<WordExample>>() {
+                    @Override
+                    public void accept(@NonNull List<WordExample> newList) throws Exception {
+                        if(newList.size()>0)
+                            view().displayResult();
+                        else
+                            view().displayError();
+                    }
+                });
     }
 
     @Override

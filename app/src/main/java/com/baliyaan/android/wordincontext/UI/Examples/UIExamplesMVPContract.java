@@ -4,19 +4,18 @@ import com.baliyaan.android.wordincontext.Model.WordExample;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
 public interface UIExamplesMVPContract {
     interface View{
-
+        void displayResult();
+        void displayError();
     }
 
     interface Presenter {
-        Observable onQueryTextSubmit(final String query);
+        void onQueryTextSubmit(final String query);
         List<WordExample> getExamples();
     }
 

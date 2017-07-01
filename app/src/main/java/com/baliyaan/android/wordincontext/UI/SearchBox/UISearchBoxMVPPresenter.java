@@ -3,10 +3,8 @@ package com.baliyaan.android.wordincontext.UI.SearchBox;
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 
 import com.baliyaan.android.wordincontext.Model.Dictionary;
-import com.baliyaan.android.wordincontext.R;
 import com.baliyaan.android.wordincontext.UI.MVPPresenterAdapter;
 
 /**
@@ -33,9 +31,6 @@ class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract
         handler.post(new Runnable() {
             @Override
             public void run() {
-                activity().findViewById(R.id.welcomeText).setVisibility(View.GONE);
-                activity().findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
-                activity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
                 view().onQueryTextSubmit(query);
             }
         });

@@ -3,4 +3,6 @@
     <string name="source">Source:-</string>
     <string name="counter">#Counter</string>
     <string name="adId">ca-app-pub-4278963888720323/8594194494</string>
+    <string name="NoResult">No result found!</string>
+    <string name="NoInternet">No internet connection!</string>
 </resources>
