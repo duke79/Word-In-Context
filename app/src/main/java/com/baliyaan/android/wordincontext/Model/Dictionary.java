@@ -7,7 +7,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 
 import com.baliyaan.android.library.ds.Trie;
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.IO.WordListDB;
+import com.baliyaan.android.wordincontext.Data.WordListDB;
 
 import java.io.BufferedReader;
 import java.io.IOException;

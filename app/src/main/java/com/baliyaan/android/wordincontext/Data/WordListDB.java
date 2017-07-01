@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.IO;
+package com.baliyaan.android.wordincontext.Data;
 
 import android.content.Context;
 import android.database.Cursor;

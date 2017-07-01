@@ -34,7 +34,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
-import static com.baliyaan.android.wordincontext.IO.Scraper.GetExamples;
+import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
 
 public class MainActivity extends AppCompatActivity {
 
