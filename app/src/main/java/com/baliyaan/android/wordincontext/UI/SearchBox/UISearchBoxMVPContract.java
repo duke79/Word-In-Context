@@ -7,7 +7,7 @@ import android.support.v7.widget.SearchView;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public interface UISearchBoxContract {
+public interface UISearchBoxMVPContract {
     interface View{
         void setSuggestionsAdapter(CursorAdapter adapter);
         void clearFocus();

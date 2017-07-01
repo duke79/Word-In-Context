@@ -4,7 +4,7 @@ package com.baliyaan.android.wordincontext.UI.Examples;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public interface UIExamplesContract     {
+public interface UIExamplesMVPContract {
     interface View{
 
     }
@@ -13,7 +13,11 @@ public interface UIExamplesContract     {
 
     }
 
-    interface Port{
+    interface Navigator {
 
+    }
+
+    interface Port{
+        void onQueryTextSubmit(String query);
     }
 }

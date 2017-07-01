@@ -5,23 +5,21 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 
 import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.UI.MVPViewAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class UISearchBoxView implements UISearchBoxContract.View,UISearchBoxContract.Port{
-    private UISearchBoxContract.Presenter _presenter;
-    private Activity _activity = null;
-    private UISearchBoxContract.Navigator _navigator = null;
+public class UISearchBoxMVPView extends MVPViewAdapter<UISearchBoxMVPContract.Navigator> implements UISearchBoxMVPContract.View,UISearchBoxMVPContract.Port{
+    private UISearchBoxMVPContract.Presenter _presenter;
     private SearchView _searchView = null;
 
-    public UISearchBoxView(Activity activity, UISearchBoxContract.Navigator navigator){
-        _activity = activity;
-        _navigator = navigator;
-        _presenter = new UISearchBoxPresenter(_activity,this);
+    public UISearchBoxMVPView(Activity activity, UISearchBoxMVPContract.Navigator navigator){
+        super(activity,navigator);
+        _presenter = new UISearchBoxMVPPresenter(activity(),this);
 
-        _searchView = (SearchView) _activity.findViewById(R.id.search_view);
+        _searchView = (SearchView) activity().findViewById(R.id.search_view);
         _searchView.setOnQueryTextListener(_presenter);
         _searchView.setOnSuggestionListener(_presenter);
     }
@@ -49,8 +47,8 @@ public class UISearchBoxView implements UISearchBoxContract.View,UISearchBoxCont
 
     @Override
     public void onQueryTextSubmit(String query) {
-        if (_navigator != null) {
-            _navigator.onSearchBoxSubmit(query);
+        if (navigator() != null) {
+            navigator().onSearchBoxSubmit(query);
         }
     }
 }

@@ -7,38 +7,36 @@ import android.view.View;
 
 import com.baliyaan.android.wordincontext.Model.Dictionary;
 import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.UI.MVPPresenterAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-class UISearchBoxPresenter implements UISearchBoxContract.Presenter{
+class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract.View> implements UISearchBoxMVPContract.Presenter{
     private Dictionary _dictionary = null;
-    private Activity _activity = null;
-    private UISearchBoxContract.View _view = null;
     private Dictionary.SuggestionsAdapter _adapter = null;
 
-    UISearchBoxPresenter(Activity activity, UISearchBoxContract.View view){
-        _activity = activity;
-        _view = view;
+    UISearchBoxMVPPresenter(Activity activity, UISearchBoxMVPContract.View view){
+        super(activity, view);
         //Load dictionary
-        _dictionary = Dictionary.GetInstance(_activity);
+        _dictionary = Dictionary.GetInstance(activity());
     }
 
     @Override
     public boolean onQueryTextSubmit(final String query) {
         // Remove suggestions
-        _view.setSuggestionsAdapter(null);
+        view().setSuggestionsAdapter(null);
 
         //Handle search
-        Handler handler = new Handler(_activity.getMainLooper());
+        Handler handler = new Handler(activity().getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {
-                _activity.findViewById(R.id.welcomeText).setVisibility(View.GONE);
-                _activity.findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
-                _activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                _view.onQueryTextSubmit(query);
+                activity().findViewById(R.id.welcomeText).setVisibility(View.GONE);
+                activity().findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
+                activity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                view().onQueryTextSubmit(query);
             }
         });
         return false;
@@ -49,11 +47,11 @@ class UISearchBoxPresenter implements UISearchBoxContract.Presenter{
         Log.i("TextChange", "=(" + newText + ")");
 
         if (newText == null || newText.isEmpty()) {
-            _view.setSuggestionsAdapter(null);
+            view().setSuggestionsAdapter(null);
         } else {
-            _adapter = _dictionary.GetSuggestionsAdapter(_activity);
+            _adapter = _dictionary.GetSuggestionsAdapter(activity());
             //adapter.RemoveCursor();
-            _view.setSuggestionsAdapter(_adapter);
+            view().setSuggestionsAdapter(_adapter);
             _adapter.SuggestFor(newText,5);
         }
         return true;
@@ -67,8 +65,8 @@ class UISearchBoxPresenter implements UISearchBoxContract.Presenter{
     @Override
     public boolean onSuggestionClick(int position) {
         String suggestion = _adapter.GetSuggestionAt(position);
-        _view.setQuery(suggestion,true);
-        _view.clearFocus();
+        view().setQuery(suggestion,true);
+        view().clearFocus();
         return true;
     }
 }

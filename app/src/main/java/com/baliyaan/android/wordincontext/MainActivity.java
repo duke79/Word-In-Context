@@ -7,25 +7,21 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.baliyaan.android.library.ads.Interstitial;
 import com.baliyaan.android.wordincontext.Model.Dictionary;
 import com.baliyaan.android.wordincontext.Model.WordExample;
-import com.baliyaan.android.wordincontext.UI.ExamplesAdapter;
-import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxContract;
-import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxView;
+import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPContract;
+import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPView;
+import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPContract;
+import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -35,8 +31,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
-import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
-public class MainActivity extends AppCompatActivity implements UISearchBoxContract.Navigator {
+public class MainActivity extends AppCompatActivity implements UISearchBoxMVPContract.Navigator, UIExamplesMVPContract.Navigator {
 
     public static final String TAG = "ContextDictionary";
     ArrayList<WordExample> _examples = new ArrayList<WordExample>();
@@ -46,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxContra
     public String _query = "dictionary";
     Dictionary _dictionary = null;
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
-    private UISearchBoxContract.Port _searchView = null;
+    private UISearchBoxMVPContract.Port _searchView = null;
+    private UIExamplesMVPContract.Port _examplesView = null;
 //    public LruCache<Integer,String> _cache = null;
 
     @Override
@@ -67,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxContra
 
         // Prepare UI
         setContentView(R.layout.activity_main);
-        _searchView  = new UISearchBoxView(this,this);
-        prepareContentView();
+        _searchView  = new UISearchBoxMVPView(this,this);
+        _examplesView = new UIExamplesMVPView(this,this);
 
         // Display ads in release configurations
         if (_BuildConfig != "debug") {
@@ -153,48 +149,9 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxContra
         ProcessIntent(intent);
     }
 
-    private void prepareContentView() {
-        _viewPager = (ViewPager) findViewById(R.id.view_pager_examples);
-        _pagerAdapter = new ExamplesAdapter(this, _examples);
-        if (null != _viewPager) {
-            _viewPager.setAdapter(_pagerAdapter);
-        }
-    }
-
     @Override
     public void onSearchBoxSubmit(String query) {
         _query = query;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final List<WordExample> newList = GetExamples(_query);
-                    if (newList.size() > 0) {
-                        Handler handler = new Handler(_context.getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (_pagerAdapter != null) {
-                                    findViewById(R.id.progressBar).setVisibility(View.GONE);
-                                    findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
-                                    _examples.removeAll(_examples);
-                                    _examples.addAll(newList);
-                                    _pagerAdapter.notifyDataSetChanged();
-                                    _viewPager.setCurrentItem(0);
-                                }
-                            }
-                        });
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                    ((MainActivity) _context).runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(_context, "No internet connection!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        }).start();
+        _examplesView.onQueryTextSubmit(query);
     }
 }

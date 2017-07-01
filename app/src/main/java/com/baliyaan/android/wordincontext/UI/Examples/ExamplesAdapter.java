@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.UI;
+package com.baliyaan.android.wordincontext.UI.Examples;
 
 import android.content.Context;
 import android.content.Intent;
