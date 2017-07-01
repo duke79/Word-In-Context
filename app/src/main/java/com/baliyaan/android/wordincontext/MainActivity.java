@@ -35,7 +35,6 @@ import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
-
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "ContextDictionary";
@@ -47,11 +46,16 @@ public class MainActivity extends AppCompatActivity {
     public String _query = "dictionary";
     Dictionary _dictionary = null;
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
+//    public LruCache<Integer,String> _cache = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _context = this;
+
+//        int memClass = ( (ActivityManager) getSystemService( Context.ACTIVITY_SERVICE ) ).getMemoryClass();
+//        int cacheSize = 1024 * 1024 * memClass / 8;
+//        _cache = new LruCache<Integer,String>( cacheSize );
 
         // Enable home button
         ActionBar actionBar = getActionBar();
