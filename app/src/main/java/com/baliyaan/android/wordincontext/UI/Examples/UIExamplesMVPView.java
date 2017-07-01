@@ -8,7 +8,6 @@ import com.baliyaan.android.wordincontext.Model.WordExample;
 import com.baliyaan.android.wordincontext.R;
 import com.baliyaan.android.wordincontext.UI.MVPViewAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,18 +21,18 @@ import io.reactivex.schedulers.Schedulers;
 
 public class UIExamplesMVPView extends MVPViewAdapter<UIExamplesMVPContract.Navigator> implements UIExamplesMVPContract.View, UIExamplesMVPContract.Port {
 
-    private List<WordExample> _examples = new ArrayList<WordExample>();;
-    private ExamplesAdapter _pagerAdapter = null;
     private ViewPager _viewPager = null;
     private UIExamplesMVPPresenter _presenter = null;
+    private ExamplesAdapter _pagerAdapter = null;
 
     public UIExamplesMVPView(Activity activity, UIExamplesMVPContract.Navigator navigator) {
         super(activity,navigator);
         _presenter = new UIExamplesMVPPresenter(activity(),this);
 
         _viewPager = (ViewPager) activity().findViewById(R.id.view_pager_examples);
-        _pagerAdapter = new ExamplesAdapter(activity(),_examples);
+
         if (null != _viewPager) {
+            _pagerAdapter = new ExamplesAdapter(activity(),_presenter.getExamples());
             _viewPager.setAdapter(_pagerAdapter);
         }
     }
@@ -46,14 +45,15 @@ public class UIExamplesMVPView extends MVPViewAdapter<UIExamplesMVPContract.Navi
                 .subscribe(new Consumer<List<WordExample>>() {
             @Override
             public void accept(@NonNull List<WordExample> newList) throws Exception {
+
                 if (_pagerAdapter != null) {
                     activity().findViewById(R.id.progressBar).setVisibility(View.GONE);
                     activity().findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
-                    _examples.removeAll(_examples);
-                    _examples.addAll(newList);
+
                     _pagerAdapter.notifyDataSetChanged();
                     _viewPager.setCurrentItem(0);
                 }
+
             }
         });
     }

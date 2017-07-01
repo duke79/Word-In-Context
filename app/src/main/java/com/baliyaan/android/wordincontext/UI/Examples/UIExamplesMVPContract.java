@@ -1,5 +1,9 @@
 package com.baliyaan.android.wordincontext.UI.Examples;
 
+import com.baliyaan.android.wordincontext.Model.WordExample;
+
+import java.util.List;
+
 import io.reactivex.Observable;
 
 /**
@@ -13,6 +17,7 @@ public interface UIExamplesMVPContract {
 
     interface Presenter {
         Observable onQueryTextSubmit(final String query);
+        List<WordExample> getExamples();
     }
 
     interface Navigator {
