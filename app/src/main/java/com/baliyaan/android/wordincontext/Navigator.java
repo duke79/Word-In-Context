@@ -5,4 +5,5 @@ package com.baliyaan.android.wordincontext;
  */
 
 public interface Navigator {
+    void prepareExamplesList(String query);
 }

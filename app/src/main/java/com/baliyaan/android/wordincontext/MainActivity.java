@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -20,6 +19,8 @@ import com.baliyaan.android.library.ads.Interstitial;
 import com.baliyaan.android.wordincontext.Model.Dictionary;
 import com.baliyaan.android.wordincontext.Model.WordExample;
 import com.baliyaan.android.wordincontext.UI.ExamplesAdapter;
+import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxContract;
+import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxView;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,10 +43,10 @@ public class MainActivity extends AppCompatActivity implements Navigator {
     static Context _context = null;
     ViewPager _viewPager = null;
     PagerAdapter _pagerAdapter = null;
-    SearchView _searchView = null;
     public String _query = "dictionary";
     Dictionary _dictionary = null;
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
+    private UISearchBoxContract.Port _searchView = null;
 //    public LruCache<Integer,String> _cache = null;
 
     @Override
@@ -127,60 +128,61 @@ public class MainActivity extends AppCompatActivity implements Navigator {
     }
 
     private void prepareSearchView() {
-        _searchView = (SearchView) findViewById(R.id.search_view);
-        _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Log.i("TextChange", "=(" + newText + ")");
-
-                if (newText == null || newText.isEmpty()) {
-                    _searchView.setSuggestionsAdapter(null);
-                } else {
-                    final Dictionary.SuggestionsAdapter adapter = _dictionary.GetSuggestionsAdapter(_context);
-                    //adapter.RemoveCursor();
-                    _searchView.setSuggestionsAdapter(adapter);
-                    adapter.SuggestFor(newText,5);
-                    _searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                        @Override
-                        public boolean onSuggestionSelect(int position) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onSuggestionClick(int position) {
-                            String suggestion = adapter.GetSuggestionAt(position);
-                            _searchView.setQuery(suggestion,true);
-                            _searchView.clearFocus();
-                            return true;
-                        }
-                    });
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                _query = query;
-
-                // Remove suggestions
-                _searchView.setSuggestionsAdapter(null);
-
-                //Handle search
-                Handler handler = new Handler(_context.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        findViewById(R.id.welcomeText).setVisibility(View.GONE);
-                        findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
-                        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-                        if (_pagerAdapter != null) {
-                            prepareExamplesList();
-                        }
-                    }
-                });
-                return false;
-            }
-        });
+//        _searchView = (SearchView) findViewById(R.id.search_view);
+//        _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                Log.i("TextChange", "=(" + newText + ")");
+//
+//                if (newText == null || newText.isEmpty()) {
+//                    _searchView.setSuggestionsAdapter(null);
+//                } else {
+//                    final Dictionary.SuggestionsAdapter adapter = _dictionary.GetSuggestionsAdapter(_context);
+//                    //adapter.RemoveCursor();
+//                    _searchView.setSuggestionsAdapter(adapter);
+//                    adapter.SuggestFor(newText,5);
+//                    _searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+//                        @Override
+//                        public boolean onSuggestionSelect(int position) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onSuggestionClick(int position) {
+//                            String suggestion = adapter.GetSuggestionAt(position);
+//                            _searchView.setQuery(suggestion,true);
+//                            _searchView.clearFocus();
+//                            return true;
+//                        }
+//                    });
+//                }
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                _query = query;
+//
+//                // Remove suggestions
+//                _searchView.setSuggestionsAdapter(null);
+//
+//                //Handle search
+//                Handler handler = new Handler(_context.getMainLooper());
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        findViewById(R.id.welcomeText).setVisibility(View.GONE);
+//                        findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
+//                        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+//                        if (_pagerAdapter != null) {
+//                            prepareExamplesList();
+//                        }
+//                    }
+//                });
+//                return false;
+//            }
+//        });
+        new UISearchBoxView(this,this);
     }
 
     private void ProcessIntent(Intent intent) {
@@ -195,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements Navigator {
             return;
         if (!(intentQuery.length() > 0))
             return;
-        _searchView.setQuery(intentQuery, true);
+        _searchView.setQuery(intentQuery);
     }
 
     @Override
@@ -217,7 +219,9 @@ public class MainActivity extends AppCompatActivity implements Navigator {
         }
     }
 
-    private void prepareExamplesList() {
+    @Override
+    public void prepareExamplesList(String query) {
+        _query = query;
         new Thread(new Runnable() {
             @Override
             public void run() {

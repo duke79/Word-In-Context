@@ -5,4 +5,15 @@ package com.baliyaan.android.wordincontext.UI.SearchBox;
  */
 
 public interface UISearchBoxContract {
+    interface View{
+
+    }
+
+    interface Presenter {
+
+    }
+
+    interface Port{
+        public void setQuery(String query);
+    }
 }

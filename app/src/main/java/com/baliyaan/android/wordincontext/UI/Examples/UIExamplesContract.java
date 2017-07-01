@@ -5,4 +5,15 @@ package com.baliyaan.android.wordincontext.UI.Examples;
  */
 
 public interface UIExamplesContract     {
+    interface View{
+
+    }
+
+    interface Presenter {
+
+    }
+
+    interface Port{
+
+    }
 }
