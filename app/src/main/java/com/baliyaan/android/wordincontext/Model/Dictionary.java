@@ -15,6 +15,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 /**
  * Created by Pulkit Singh on 6/17/2017.
  */
@@ -99,9 +103,16 @@ public class Dictionary {
             _suggestions = Dictionary.GetInstance(_context).GetSuggestionsFor(token,nbrSuggestions);
             if(_suggestions != null && _suggestions.size()>0)
             {
-                MatrixCursor cursorWithSuggestions = new MatrixCursor(new String[] {"_id","word"}); //one column named "_id" is required for CursorAdapter
+                final MatrixCursor cursorWithSuggestions = new MatrixCursor(new String[] {"_id","word"}); //one column named "_id" is required for CursorAdapter
 
-                this.changeCursor(cursorWithSuggestions);
+                new Observable<String>(){
+                    @Override
+                    protected void subscribeActual(Observer<? super String> observer) {
+                        changeCursor(cursorWithSuggestions);
+                    }
+                }.subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+
                 int key = 1;
                 for(String suggestion : _suggestions)
                 {

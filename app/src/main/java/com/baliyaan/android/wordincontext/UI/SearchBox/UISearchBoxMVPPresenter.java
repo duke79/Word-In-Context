@@ -43,7 +43,7 @@ class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
+    public boolean onQueryTextChange(final String newText) {
         Log.i("TextChange", "=(" + newText + ")");
 
         if (newText == null || newText.isEmpty()) {
@@ -52,7 +52,12 @@ class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract
             _adapter = _dictionary.GetSuggestionsAdapter(activity());
             //adapter.RemoveCursor();
             view().setSuggestionsAdapter(_adapter);
-            _adapter.SuggestFor(newText,5);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    _adapter.SuggestFor(newText,5);
+                }
+            }).start();
         }
         return true;
     }

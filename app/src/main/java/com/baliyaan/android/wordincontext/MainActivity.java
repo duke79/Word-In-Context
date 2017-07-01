@@ -7,21 +7,16 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.baliyaan.android.library.ads.Interstitial;
-import com.baliyaan.android.wordincontext.Model.Dictionary;
-import com.baliyaan.android.wordincontext.Model.WordExample;
 import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPContract;
 import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPView;
 import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPContract;
 import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPView;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -33,13 +28,8 @@ import io.reactivex.schedulers.Schedulers;
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 public class MainActivity extends AppCompatActivity implements UISearchBoxMVPContract.Navigator, UIExamplesMVPContract.Navigator {
 
-    public static final String TAG = "ContextDictionary";
-    ArrayList<WordExample> _examples = new ArrayList<WordExample>();
     static Context _context = null;
-    ViewPager _viewPager = null;
-    PagerAdapter _pagerAdapter = null;
     public String _query = "dictionary";
-    Dictionary _dictionary = null;
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
     private UISearchBoxMVPContract.Port _searchView = null;
     private UIExamplesMVPContract.Port _examplesView = null;
@@ -74,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
         // Search by intent (if any)
         Intent intent = getIntent();
         ProcessIntent(intent);
-
-        //Load dictionary
-        _dictionary = Dictionary.GetInstance(_context);
 
         TestRxAndroid();
     }
