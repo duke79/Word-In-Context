@@ -1,6 +1,9 @@
 package com.baliyaan.android.wordincontext.UI.Examples;
 
 import com.baliyaan.android.wordincontext.Model.WordExample;
+import com.baliyaan.android.wordincontext.UI.MVPBasePortInterface;
+import com.baliyaan.android.wordincontext.UI.MVPBasePresenterInterface;
+import com.baliyaan.android.wordincontext.UI.MVPBaseViewInterface;
 
 import java.util.List;
 
@@ -9,12 +12,12 @@ import java.util.List;
  */
 
 public interface UIExamplesMVPContract {
-    interface View{
+    interface View extends MVPBaseViewInterface {
         void displayResult();
         void displayError();
     }
 
-    interface Presenter {
+    interface Presenter extends MVPBasePresenterInterface {
         void onQueryTextSubmit(final String query);
         List<WordExample> getExamples();
     }
@@ -23,7 +26,7 @@ public interface UIExamplesMVPContract {
 
     }
 
-    interface Port{
+    interface Port extends MVPBasePortInterface {
         void onQueryTextSubmit(String query);
     }
 }

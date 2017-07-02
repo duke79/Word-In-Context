@@ -6,33 +6,32 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.UI.MVPViewAdapter;
+import com.baliyaan.android.wordincontext.UI.MVPViewPortAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class UIExamplesMVPView extends MVPViewAdapter<UIExamplesMVPContract.Navigator> implements UIExamplesMVPContract.View, UIExamplesMVPContract.Port {
+public class UIExamplesMVPViewPort extends MVPViewPortAdapter<UIExamplesMVPContract.Navigator,UIExamplesMVPContract.Presenter> implements UIExamplesMVPContract.View, UIExamplesMVPContract.Port {
 
     private ViewPager _viewPager = null;
-    private UIExamplesMVPPresenter _presenter = null;
     private UIExamplesPagerAdapter _pagerAdapter = null;
 
-    public UIExamplesMVPView(Activity activity, UIExamplesMVPContract.Navigator navigator) {
+    public UIExamplesMVPViewPort(Activity activity, UIExamplesMVPContract.Navigator navigator) {
         super(activity,navigator);
-        _presenter = new UIExamplesMVPPresenter(activity(),this);
+        presenter(new UIExamplesMVPPresenter(activity(),this));
 
         _viewPager = (ViewPager) activity().findViewById(R.id.view_pager_examples);
 
         if (null != _viewPager) {
-            _pagerAdapter = new UIExamplesPagerAdapter(activity(),_presenter.getExamples());
+            _pagerAdapter = new UIExamplesPagerAdapter(activity(),presenter().getExamples());
             _viewPager.setAdapter(_pagerAdapter);
         }
     }
 
     @Override
     public void onQueryTextSubmit(final String query) {
-        _presenter.onQueryTextSubmit(query);
+        presenter().onQueryTextSubmit(query);
     }
 
 

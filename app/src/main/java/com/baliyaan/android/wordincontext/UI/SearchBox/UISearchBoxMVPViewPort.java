@@ -6,23 +6,22 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.UI.MVPViewAdapter;
+import com.baliyaan.android.wordincontext.UI.MVPViewPortAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class UISearchBoxMVPView extends MVPViewAdapter<UISearchBoxMVPContract.Navigator> implements UISearchBoxMVPContract.View,UISearchBoxMVPContract.Port{
-    private UISearchBoxMVPContract.Presenter _presenter;
+public class UISearchBoxMVPViewPort extends MVPViewPortAdapter<UISearchBoxMVPContract.Navigator,UISearchBoxMVPContract.Presenter> implements UISearchBoxMVPContract.View,UISearchBoxMVPContract.Port{
     private SearchView _searchView = null;
 
-    public UISearchBoxMVPView(Activity activity, UISearchBoxMVPContract.Navigator navigator){
+    public UISearchBoxMVPViewPort(Activity activity, UISearchBoxMVPContract.Navigator navigator){
         super(activity,navigator);
-        _presenter = new UISearchBoxMVPPresenter(activity(),this);
+        presenter(new UISearchBoxMVPPresenter(activity(),this));
 
         _searchView = (SearchView) activity().findViewById(R.id.search_view);
-        _searchView.setOnQueryTextListener(_presenter);
-        _searchView.setOnSuggestionListener(_presenter);
+        _searchView.setOnQueryTextListener(presenter());
+        _searchView.setOnSuggestionListener(presenter());
     }
 
 

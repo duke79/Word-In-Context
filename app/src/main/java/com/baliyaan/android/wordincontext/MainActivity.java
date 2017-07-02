@@ -12,9 +12,9 @@ import android.util.Log;
 
 import com.baliyaan.android.library.ads.Interstitial;
 import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPContract;
-import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPView;
+import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPViewPort;
 import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPContract;
-import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPView;
+import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPViewPort;
 
 import java.io.File;
 
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
 
         // Prepare UI
         setContentView(R.layout.activity_main);
-        _searchView  = new UISearchBoxMVPView(this,this);
-        _examplesView = new UIExamplesMVPView(this,this);
+        _searchView  = new UISearchBoxMVPViewPort(this,this);
+        _examplesView = new UIExamplesMVPViewPort(this,this);
 
         // Display ads in release configurations
         if (_BuildConfig != "debug") {
@@ -126,8 +126,17 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        _examplesView.onSaveState();
+        _searchView.onSaveState();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
+        _examplesView.onResumeState();
+        _searchView.onResumeState();
     }
 
     @Override
