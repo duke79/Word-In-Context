@@ -7,7 +7,7 @@ import android.os.Bundle;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class MVPViewPortAdapter<N,P extends MVPBasePresenterInterface> implements MVPBaseViewInterface, MVPBasePortInterface{
+public class MVPViewPortAdapter<N,P extends MVPBasePresenterInterface> implements MVPBaseViewInterface<P>, MVPBasePortInterface{
     private N _navigator;
     private Activity _activity = null;
     protected P _presenter;
@@ -29,12 +29,15 @@ public class MVPViewPortAdapter<N,P extends MVPBasePresenterInterface> implement
         return _presenter;
     }
 
-    protected P presenter(P presenter) {
+    // MVPBaseViewInterface implementation
+    @Override
+    public P bindPresenter(P presenter) {
         _presenter = presenter;
         return _presenter;
     }
 
-    // MVPBaseViewInterface implementation
+
+    // MVPBasePortInterface implementation
     @Override
     public void onSaveState() {
         if(null != presenter())

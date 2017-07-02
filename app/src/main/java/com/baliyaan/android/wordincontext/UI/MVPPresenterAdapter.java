@@ -7,7 +7,7 @@ import android.os.Bundle;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class MVPPresenterAdapter<T> implements MVPBasePresenterInterface{
+public class MVPPresenterAdapter<T extends MVPBaseViewInterface> implements MVPBasePresenterInterface{
 
     private T _view = null;
     private Activity _activity = null;

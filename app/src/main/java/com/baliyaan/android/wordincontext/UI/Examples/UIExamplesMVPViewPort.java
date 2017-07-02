@@ -19,12 +19,12 @@ public class UIExamplesMVPViewPort extends MVPViewPortAdapter<UIExamplesMVPContr
 
     public UIExamplesMVPViewPort(Activity activity, UIExamplesMVPContract.Navigator navigator) {
         super(activity,navigator);
-        presenter(new UIExamplesMVPPresenter(activity(),this));
+        super.bindPresenter(new UIExamplesMVPPresenter(activity(),this));
 
         _viewPager = (ViewPager) activity().findViewById(R.id.view_pager_examples);
 
         if (null != _viewPager) {
-            _pagerAdapter = new UIExamplesPagerAdapter(activity(),presenter().getExamples());
+            _pagerAdapter = new UIExamplesPagerAdapter(activity(), presenter().getExamples());
             _viewPager.setAdapter(_pagerAdapter);
         }
     }

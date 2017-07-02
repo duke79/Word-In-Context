@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 public interface UIExamplesMVPContract {
-    interface View extends MVPBaseViewInterface {
+    interface View extends MVPBaseViewInterface<Presenter> {
         void displayResult();
         void displayError();
     }

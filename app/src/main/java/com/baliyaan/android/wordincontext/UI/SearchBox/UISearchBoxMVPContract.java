@@ -12,7 +12,7 @@ import com.baliyaan.android.wordincontext.UI.MVPBaseViewInterface;
  */
 
 public interface UISearchBoxMVPContract {
-    interface View extends MVPBaseViewInterface {
+    interface View extends MVPBaseViewInterface<Presenter> {
         void setSuggestionsAdapter(CursorAdapter adapter);
         void clearFocus();
         void setQuery(String query, boolean b);
