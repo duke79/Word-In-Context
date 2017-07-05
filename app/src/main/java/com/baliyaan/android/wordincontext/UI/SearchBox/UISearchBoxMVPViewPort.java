@@ -3,7 +3,6 @@ package com.baliyaan.android.wordincontext.UI.SearchBox;
 import android.app.Activity;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
-import android.view.View;
 
 import com.baliyaan.android.wordincontext.R;
 import com.baliyaan.android.wordincontext.UI.MVPViewPortAdapter;
@@ -47,9 +46,6 @@ public class UISearchBoxMVPViewPort extends MVPViewPortAdapter<UISearchBoxMVPCon
 
     @Override
     public void onQueryTextSubmit(String query) {
-        activity().findViewById(R.id.welcomeText).setVisibility(View.GONE);
-        activity().findViewById(R.id.view_pager_examples).setVisibility(View.GONE);
-        activity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         if (navigator() != null) {
             navigator().onSearchBoxSubmit(query);
         }

@@ -1,11 +1,10 @@
 package com.baliyaan.android.wordincontext.UI.Examples;
 
 import android.app.Activity;
-import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.widget.Toast;
 
 import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.UI.CustomListView;
 import com.baliyaan.android.wordincontext.UI.MVPViewPortAdapter;
 
 /**
@@ -14,42 +13,32 @@ import com.baliyaan.android.wordincontext.UI.MVPViewPortAdapter;
 
 public class UIExamplesMVPViewPort extends MVPViewPortAdapter<UIExamplesMVPContract.Navigator,UIExamplesMVPContract.Presenter> implements UIExamplesMVPContract.View, UIExamplesMVPContract.Port {
 
-    private ViewPager _viewPager = null;
-    private UIExamplesPagerAdapter _pagerAdapter = null;
+    private CustomListView _view;
 
     public UIExamplesMVPViewPort(Activity activity, UIExamplesMVPContract.Navigator navigator) {
         super(activity,navigator);
         super.bindPresenter(new UIExamplesMVPPresenter(activity(),this));
 
-        _viewPager = (ViewPager) activity().findViewById(R.id.view_pager_examples);
-
-        if (null != _viewPager) {
-            _pagerAdapter = new UIExamplesPagerAdapter(activity(), presenter().getExamples());
-            _viewPager.setAdapter(_pagerAdapter);
-        }
+        _view = (CustomListView) activity().findViewById(R.id.list_view);
+        UIExamplesPagerAdapter pagerAdapter = new UIExamplesPagerAdapter(activity(), presenter().getExamples());
+        _view.setAdapter(pagerAdapter);
     }
 
     @Override
     public void onQueryTextSubmit(final String query) {
+        _view.displayLoading();
         presenter().onQueryTextSubmit(query);
     }
 
 
     @Override
     public void displayResult() {
-        if (_pagerAdapter != null) {
-            activity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-            activity().findViewById(R.id.view_pager_examples).setVisibility(View.VISIBLE);
-
-            _pagerAdapter.notifyDataSetChanged();
-            _viewPager.setCurrentItem(0);
-        }
+        _view.displayList();
     }
 
     @Override
     public void displayError() {
-        activity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-        activity().findViewById(R.id.welcomeText).setVisibility(View.VISIBLE);
+        _view.displayWelcomeText();
         Toast.makeText(activity(), R.string.NoResult, Toast.LENGTH_SHORT).show();
     }
 }
