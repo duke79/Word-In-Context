@@ -38,7 +38,7 @@ public class UIExamplesMVPViewPort extends MVPViewPortAdapter<UIExamplesMVPContr
 
     @Override
     public void displayError() {
-        _view.displayWelcomeText();
+        _view.displayErrorText();
         Toast.makeText(activity(), R.string.NoResult, Toast.LENGTH_SHORT).show();
     }
 }

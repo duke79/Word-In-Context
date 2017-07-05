@@ -58,7 +58,9 @@ public class CustomListView extends RelativeLayout {
     public void displayList(){
         findViewById(R.id.progress_bar).setVisibility(View.GONE);
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
+        findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.VISIBLE);
+
 
         _adapter.notifyDataSetChanged();
         _viewPager.setCurrentItem(0);
@@ -67,12 +69,21 @@ public class CustomListView extends RelativeLayout {
     public void displayLoading(){
         findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
+        findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
     }
 
     public void displayWelcomeText(){
         findViewById(R.id.progress_bar).setVisibility(View.GONE);
         findViewById(R.id.welcome_text).setVisibility(View.VISIBLE);
+        findViewById(R.id.error_text).setVisibility(View.GONE);
+        findViewById(R.id.view_pager).setVisibility(View.GONE);
+    }
+
+    public void displayErrorText(){
+        findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        findViewById(R.id.welcome_text).setVisibility(View.GONE);
+        findViewById(R.id.error_text).setVisibility(View.VISIBLE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
     }
 }

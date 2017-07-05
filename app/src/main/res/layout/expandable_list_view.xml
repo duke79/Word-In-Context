@@ -23,7 +23,35 @@
         android:layout_height="match_parent"
         android:background="#ffffff"
         android:textColor="@color/year"
+        android:textSize="30dp"
         android:gravity="center"
-        android:text="@string/app_name"/>
+        android:text="@string/app_name" />
+
+    <LinearLayout
+        android:id="@+id/error_text"
+        android:orientation="vertical"
+        android:layout_below="@+id/search_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:textColor="@color/year"
+        android:textSize="40dp"
+        android:gravity="center"
+        android:text="Oops!"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:textColor="@color/year"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:text="Something went wrong :("/>
+    </LinearLayout>
 
 </merge>
