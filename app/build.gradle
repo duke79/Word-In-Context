@@ -7,8 +7,8 @@ android {
         applicationId "com.baliyaan.android.wordincontext"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 5
-        versionName "2.3"
+        versionCode 6
+        versionName "Suggestive"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
