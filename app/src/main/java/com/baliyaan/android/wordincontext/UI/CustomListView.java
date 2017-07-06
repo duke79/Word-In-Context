@@ -39,7 +39,7 @@ public class CustomListView extends RelativeLayout {
     private void init(Context context) {
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.expandable_list_view,this);
+        inflater.inflate(R.layout.custom_list_view,this);
     }
 
     @Override
