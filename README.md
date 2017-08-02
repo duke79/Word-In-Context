@@ -1,5 +1,5 @@
 ### Sliding View
-* Three small-circular Icons
+* Three small-circular Icons {Toggle}
 	* Image
 	* Trends (google)
 	* Examples
