@@ -1,9 +1,9 @@
 package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
-import com.baliyaan.android.wordincontext.Model.WordExample;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePortInterface;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePresenterInterface;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPBaseViewInterface;
+import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPort;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPresenter;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPView;
 
 import java.util.List;
 
@@ -12,21 +12,21 @@ import java.util.List;
  */
 
 public interface ExamplesMVPContract {
-    interface View extends MVPBaseViewInterface<Presenter> {
+    interface MVPView extends BaseMVPView<MVPPresenter> {
         void displayResult();
         void displayError();
     }
 
-    interface Presenter extends MVPBasePresenterInterface {
+    interface MVPPresenter extends BaseMVPPresenter {
         void onQueryTextSubmit(final String query);
-        List<WordExample> getExamples();
+        List<Example> getExamples();
     }
 
     interface Navigator {
         void onTryAgain();
     }
 
-    interface Port extends MVPBasePortInterface {
+    interface MVPPort extends BaseMVPPort {
         void onQueryTextSubmit(String query);
     }
 }

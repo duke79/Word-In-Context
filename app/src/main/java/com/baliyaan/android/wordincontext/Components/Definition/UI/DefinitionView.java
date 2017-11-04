@@ -11,18 +11,18 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 11/4/2017.
  */
 
-public class UIDefinitionView  extends RelativeLayout {
-    public UIDefinitionView(Context context) {
+public class DefinitionView extends RelativeLayout {
+    public DefinitionView(Context context) {
         super(context);
         init(context);
     }
 
-    public UIDefinitionView(Context context, AttributeSet attrs) {
+    public DefinitionView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public UIDefinitionView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DefinitionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

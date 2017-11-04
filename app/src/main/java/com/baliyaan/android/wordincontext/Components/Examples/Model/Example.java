@@ -1,18 +1,18 @@
-package com.baliyaan.android.wordincontext.Model;
+package com.baliyaan.android.wordincontext.Components.Examples.Model;
 
 /**
  * Created by Pulkit Singh on 10/9/2016.
  */
 
-public class WordExample {
+public class Example {
     public String _content;
     public String _link;
 
-    public WordExample(String content) {
+    public Example(String content) {
         _content = content;
     }
 
-    public WordExample(String _content, String _link) {
+    public Example(String _content, String _link) {
         this._content = _content;
         this._link = _link;
     }

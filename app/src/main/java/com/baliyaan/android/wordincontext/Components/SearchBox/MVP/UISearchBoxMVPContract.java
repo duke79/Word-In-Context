@@ -3,23 +3,23 @@ package com.baliyaan.android.wordincontext.Components.SearchBox.MVP;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 
-import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePortInterface;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePresenterInterface;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPBaseViewInterface;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPort;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPresenter;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPView;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
 public interface UISearchBoxMVPContract {
-    interface View extends MVPBaseViewInterface<Presenter> {
+    interface MVPView extends BaseMVPView<MVPPresenter> {
         void setSuggestionsAdapter(CursorAdapter adapter);
         void clearFocus();
         void setQuery(String query, boolean b);
         void onQueryTextSubmit(String query);
     }
 
-    interface Presenter extends MVPBasePresenterInterface,SearchView.OnQueryTextListener,SearchView.OnSuggestionListener{
+    interface MVPPresenter extends BaseMVPPresenter,SearchView.OnQueryTextListener,SearchView.OnSuggestionListener{
 
     }
 
@@ -27,7 +27,7 @@ public interface UISearchBoxMVPContract {
         void onSearchBoxSubmit(String query);
     }
 
-    interface Port extends MVPBasePortInterface{
+    interface MVPPort extends BaseMVPPort {
         void setQuery(String query);
     }
 }

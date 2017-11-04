@@ -6,18 +6,18 @@ import android.widget.Button;
 
 import com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesPagerAdapter;
 import com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView;
+import com.baliyaan.android.wordincontext.MVPInfra.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPViewPortAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class ExamplesMVPViewPort extends MVPViewPortAdapter<ExamplesMVPContract.Navigator, ExamplesMVPContract.Presenter> implements ExamplesMVPContract.View, ExamplesMVPContract.Port {
+public class ExamplesViewPortMVPViewPortAdapter extends MVPViewPortAdapter<ExamplesMVPContract.Navigator, ExamplesMVPContract.MVPPresenter> implements ExamplesMVPContract.MVPView, ExamplesMVPContract.MVPPort {
 
     private ExamplesView _view;
 
-    public ExamplesMVPViewPort(Activity activity, final ExamplesMVPContract.Navigator navigator) {
+    public ExamplesViewPortMVPViewPortAdapter(Activity activity, final ExamplesMVPContract.Navigator navigator) {
         super(activity, navigator);
         super.bindPresenter(new ExamplesMVPPresenter(activity(), this));
 

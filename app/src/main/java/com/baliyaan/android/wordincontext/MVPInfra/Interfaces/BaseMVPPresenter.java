@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.MVPInfra;
+package com.baliyaan.android.wordincontext.MVPInfra.Interfaces;
 
 import android.os.Bundle;
 
@@ -6,7 +6,7 @@ import android.os.Bundle;
  * Created by Pulkit Singh on 7/2/2017.
  */
 
-public interface MVPBasePresenterInterface {
+public interface BaseMVPPresenter {
     void onSaveState();
     void onResumeState();
     Bundle getState();

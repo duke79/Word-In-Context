@@ -1,6 +1,6 @@
-package com.baliyaan.android.wordincontext.Data;
+package com.baliyaan.android.wordincontext.Components.Examples.Data;
 
-import com.baliyaan.android.wordincontext.Model.WordExample;
+import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,17 +17,17 @@ import java.util.List;
 
 public class Scraper {
 
-    public static List<WordExample> GetExamples(String iWord) throws IOException {
-        List<WordExample> wordExamples = new ArrayList<WordExample>();
+    public static List<Example> GetExamples(String iWord) throws IOException {
+        List<Example> examples = new ArrayList<Example>();
 
-        wordExamples.clear();
+        examples.clear();
         String url = "http://www.wordincontext.com/en/"+iWord;
         Document document = Jsoup.connect(url).get();
         Elements sentences = document.select("#content .sentence");
         for(Element element : sentences)
         {
             String sentence = element.text();
-            boolean add = wordExamples.add(new WordExample(sentence));
+            boolean add = examples.add(new Example(sentence));
             System.out.println(sentence);
         }
 
@@ -37,10 +37,10 @@ public class Scraper {
         for(Element element : books)
         {
             String book = element.text();
-            wordExamples.get(i).set_link(book);
+            examples.get(i).set_link(book);
             System.out.println(book);
             i++;
         }
-        return wordExamples;
+        return examples;
     }
 }

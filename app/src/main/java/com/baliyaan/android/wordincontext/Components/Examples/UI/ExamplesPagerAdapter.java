@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.baliyaan.android.wordincontext.MainActivity;
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.Model.WordExample;
+import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import java.util.List;
  */
 
 public class ExamplesPagerAdapter extends PagerAdapter{
-    private List<WordExample> wordExampleList;
+    private List<Example> exampleList;
     private Context _context = null;
 
     @Override
@@ -54,9 +54,9 @@ public class ExamplesPagerAdapter extends PagerAdapter{
         link = (TextView) page.findViewById(R.id.link);
         counter = (TextView) page.findViewById(R.id.counter);
 
-        WordExample wordExample = wordExampleList.get(position);
-        content.setText(wordExample._content);
-        link.setText(wordExample._link);
+        Example example = exampleList.get(position);
+        content.setText(example._content);
+        link.setText(example._link);
         counter.setText("#"+Integer.toString(position+1));
 
         String query = ((MainActivity) _context)._query;
@@ -120,15 +120,15 @@ public class ExamplesPagerAdapter extends PagerAdapter{
         contentView.setText(wordToSpan);
     }
 
-    public ExamplesPagerAdapter(Context context, List<WordExample> iList)
+    public ExamplesPagerAdapter(Context context, List<Example> iList)
     {
-        this.wordExampleList = iList;
+        this.exampleList = iList;
         _context = context;
     }
 
     @Override
     public int getCount() {
-        return wordExampleList.size();
+        return exampleList.size();
     }
 
     @Override

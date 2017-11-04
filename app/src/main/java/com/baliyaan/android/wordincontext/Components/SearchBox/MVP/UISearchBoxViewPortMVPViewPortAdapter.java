@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 
+import com.baliyaan.android.wordincontext.MVPInfra.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPViewPortAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class UISearchBoxMVPViewPort extends MVPViewPortAdapter<UISearchBoxMVPContract.Navigator,UISearchBoxMVPContract.Presenter> implements UISearchBoxMVPContract.View,UISearchBoxMVPContract.Port{
+public class UISearchBoxViewPortMVPViewPortAdapter extends MVPViewPortAdapter<UISearchBoxMVPContract.Navigator,UISearchBoxMVPContract.MVPPresenter> implements UISearchBoxMVPContract.MVPView,UISearchBoxMVPContract.MVPPort {
     private SearchView _searchView = null;
 
-    public UISearchBoxMVPViewPort(Activity activity, UISearchBoxMVPContract.Navigator navigator){
+    public UISearchBoxViewPortMVPViewPortAdapter(Activity activity, UISearchBoxMVPContract.Navigator navigator){
         super(activity,navigator);
         super.bindPresenter(new UISearchBoxMVPPresenter(activity(),this));
 

@@ -1,13 +1,17 @@
-package com.baliyaan.android.wordincontext.MVPInfra;
+package com.baliyaan.android.wordincontext.MVPInfra.Adapters;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPort;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPresenter;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPView;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class MVPViewPortAdapter<N,P extends MVPBasePresenterInterface> implements MVPBaseViewInterface<P>, MVPBasePortInterface{
+public class MVPViewPortAdapter<N,P extends BaseMVPPresenter> implements BaseMVPView<P>, BaseMVPPort {
     private N _navigator;
     private Activity _activity = null;
     protected P _presenter;
@@ -29,7 +33,7 @@ public class MVPViewPortAdapter<N,P extends MVPBasePresenterInterface> implement
         return _presenter;
     }
 
-    // MVPBaseViewInterface implementation
+    // BaseMVPView implementation
     @Override
     public P bindPresenter(P presenter) {
         _presenter = presenter;
@@ -37,7 +41,7 @@ public class MVPViewPortAdapter<N,P extends MVPBasePresenterInterface> implement
     }
 
 
-    // MVPBasePortInterface implementation
+    // BaseMVPPort implementation
     @Override
     public void onSaveState() {
         if(null != presenter())

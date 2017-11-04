@@ -19,7 +19,7 @@
         android:layout_below="@+id/search_view"
         android:background="#ffffff" />
 
-    <com.baliyaan.android.wordincontext.Components.Definition.UI.UIDefinitionView
+    <com.baliyaan.android.wordincontext.Components.Definition.UI.DefinitionView
         android:id="@+id/definition_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

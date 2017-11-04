@@ -1,13 +1,16 @@
-package com.baliyaan.android.wordincontext.MVPInfra;
+package com.baliyaan.android.wordincontext.MVPInfra.Adapters;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPresenter;
+import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPView;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class MVPPresenterAdapter<T extends MVPBaseViewInterface> implements MVPBasePresenterInterface{
+public class MVPPresenterAdapter<T extends BaseMVPView> implements BaseMVPPresenter {
 
     private T _view = null;
     private Activity _activity = null;
@@ -25,7 +28,7 @@ public class MVPPresenterAdapter<T extends MVPBaseViewInterface> implements MVPB
         return _activity;
     }
 
-    // MVPBasePresenterInterface implementation
+    // BaseMVPPresenter implementation
     Bundle _state = null;
 
     @Override

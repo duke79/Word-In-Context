@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 
-import com.baliyaan.android.wordincontext.Data.Autocomplete.SuggestionsAdapter;
-import com.baliyaan.android.wordincontext.MVPInfra.MVPPresenterAdapter;
+import com.baliyaan.android.wordincontext.Components.SearchBox.Data.Autocomplete.SuggestionsAdapter;
+import com.baliyaan.android.wordincontext.MVPInfra.Adapters.MVPPresenterAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract.View> implements UISearchBoxMVPContract.Presenter{
+class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract.MVPView> implements UISearchBoxMVPContract.MVPPresenter {
     private SuggestionsAdapter _adapter = null;
 
-    UISearchBoxMVPPresenter(Activity activity, UISearchBoxMVPContract.View view){
+    UISearchBoxMVPPresenter(Activity activity, UISearchBoxMVPContract.MVPView view){
         super(activity, view);
 
         _adapter = SuggestionsAdapter.getInstance(activity());

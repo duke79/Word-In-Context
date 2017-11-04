@@ -1,9 +1,0 @@
-package com.baliyaan.android.wordincontext.MVPInfra;
-
-/**
- * Created by Pulkit Singh on 7/2/2017.
- */
-
-public interface MVPBaseViewInterface<P extends MVPBasePresenterInterface> {
-    P bindPresenter(P presenter);
-}

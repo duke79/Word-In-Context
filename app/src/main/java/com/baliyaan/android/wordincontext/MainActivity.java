@@ -12,9 +12,9 @@ import android.util.Log;
 
 import com.baliyaan.android.library.ads.Interstitial;
 import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPContract;
-import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPViewPort;
+import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesViewPortMVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.UISearchBoxMVPContract;
-import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.UISearchBoxMVPViewPort;
+import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.UISearchBoxViewPortMVPViewPortAdapter;
 
 import java.io.File;
 
@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
     static Context _context = null;
     public String _query = "dictionary";
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
-    private UISearchBoxMVPContract.Port _searchPort = null;
-    private ExamplesMVPContract.Port _examplesPort = null;
+    private UISearchBoxMVPContract.MVPPort _searchPort = null;
+    private ExamplesMVPContract.MVPPort _examplesPort = null;
 //    public LruCache<Integer,String> _cache = null;
 
     @Override
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
 
         // Prepare UI
         setContentView(R.layout.activity_main);
-        _searchPort = new UISearchBoxMVPViewPort(this,this);
-        _examplesPort = new ExamplesMVPViewPort(this,this);
+        _searchPort = new UISearchBoxViewPortMVPViewPortAdapter(this,this);
+        _examplesPort = new ExamplesViewPortMVPViewPortAdapter(this,this);
 
         // Display ads in release configurations
         if (_BuildConfig != "debug") {
