@@ -1,11 +1,12 @@
 package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
+
 import android.content.Context;
 
+import com.baliyaan.android.mvp.Interfaces.BaseMVPPort;
+import com.baliyaan.android.mvp.Interfaces.BaseMVPPresenter;
+import com.baliyaan.android.mvp.Interfaces.BaseMVPView;
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
-import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPort;
-import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPresenter;
-import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPView;
 
 import java.util.List;
 

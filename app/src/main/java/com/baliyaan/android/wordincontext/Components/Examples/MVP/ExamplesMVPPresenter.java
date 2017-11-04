@@ -3,9 +3,9 @@ package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 import android.app.Activity;
 import android.widget.Toast;
 
+import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.MVPInfra.Adapters.MVPPresenterAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;

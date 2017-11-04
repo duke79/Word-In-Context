@@ -1,11 +1,12 @@
 package com.baliyaan.android.wordincontext.Components.SearchBox.MVP;
 
+
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 
+import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
 import com.baliyaan.android.wordincontext.Components.SearchBox.Data.Autocomplete.SuggestionsAdapter;
-import com.baliyaan.android.wordincontext.MVPInfra.Adapters.MVPPresenterAdapter;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.

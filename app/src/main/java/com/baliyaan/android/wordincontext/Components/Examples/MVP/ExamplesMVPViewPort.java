@@ -1,12 +1,13 @@
 package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
+
 import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 
+import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesPagerAdapter;
 import com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView;
-import com.baliyaan.android.wordincontext.MVPInfra.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.R;
 
 /**

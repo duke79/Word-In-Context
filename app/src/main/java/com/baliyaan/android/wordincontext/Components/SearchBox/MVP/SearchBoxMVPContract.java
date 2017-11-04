@@ -1,11 +1,12 @@
 package com.baliyaan.android.wordincontext.Components.SearchBox.MVP;
 
+
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 
-import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPort;
-import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPPresenter;
-import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPView;
+import com.baliyaan.android.mvp.Interfaces.BaseMVPPort;
+import com.baliyaan.android.mvp.Interfaces.BaseMVPPresenter;
+import com.baliyaan.android.mvp.Interfaces.BaseMVPView;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.

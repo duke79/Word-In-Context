@@ -18,7 +18,7 @@ android {
         }
         release {
             minifyEnabled true
-            useProguard false
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,5 +42,6 @@ dependencies {
     compile 'com.github.Baliyaan.Android-Library:db:-SNAPSHOT'
     compile 'com.github.Baliyaan.Android-Library:ads:-SNAPSHOT'
     compile 'com.github.Baliyaan.Android-Library:ds:-SNAPSHOT'
+    compile 'com.github.Baliyaan.Android-Library:mvp:-SNAPSHOT'
     compile 'com.android.support:percent:23.3.0'
 }
