@@ -7,25 +7,16 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.baliyaan.android.library.ads.Interstitial;
 
 import java.io.File;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
 public class MainActivity extends AppCompatActivity {
 
     Navigator _navigator = null;
-    public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +34,14 @@ public class MainActivity extends AppCompatActivity {
         _navigator = new Navigator(this);
 
         // Display ads in release configurations
+        String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
         if (_BuildConfig != "debug") {
             showAds();
         }
 
         // Search by intent (if any)
         Intent intent = getIntent();
-        ProcessIntent(intent);
-
-        TestRxAndroid();
-    }
-
-    private void TestRxAndroid() {
-        Observable<String> observable = new Observable<String>() {
-            @Override
-            protected void subscribeActual(Observer observer) {
-                observer.onNext("someText");
-            }
-        }
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-        observable.subscribe(new Consumer<String>() {
-            @Override
-            public void accept(@NonNull String s) throws Exception {
-                Log.i("RxAndroid", s);
-            }
-        });
+        onIntent(intent);
     }
 
     private void showAds() {
@@ -96,21 +69,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void ProcessIntent(Intent intent) {
-        ClipData clipData = intent.getClipData();
-        if (clipData == null)
-            return;
-        ClipData.Item item = clipData.getItemAt(0);
-        if (item == null)
-            return;
-        String intentQuery = item.getText().toString();
-        if (intentQuery == null)
-            return;
-        if (!(intentQuery.length() > 0))
-            return;
-        _navigator.onSearchIntent(intentQuery);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -126,6 +84,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        ProcessIntent(intent);
+        onIntent(intent);
+    }
+
+    private void onIntent(Intent intent) {
+        ClipData clipData = intent.getClipData();
+        if (clipData == null)
+            return;
+        ClipData.Item item = clipData.getItemAt(0);
+        if (item == null)
+            return;
+        String intentQuery = item.getText().toString();
+        if (intentQuery == null)
+            return;
+        if (!(intentQuery.length() > 0))
+            return;
+        _navigator.onSearchIntent(intentQuery);
     }
 }
