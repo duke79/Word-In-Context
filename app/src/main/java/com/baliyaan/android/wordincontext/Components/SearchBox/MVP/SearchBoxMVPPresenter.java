@@ -11,10 +11,10 @@ import com.baliyaan.android.wordincontext.MVPInfra.Adapters.MVPPresenterAdapter;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-class UISearchBoxMVPPresenter extends MVPPresenterAdapter<UISearchBoxMVPContract.MVPView> implements UISearchBoxMVPContract.MVPPresenter {
+class SearchBoxMVPPresenter extends MVPPresenterAdapter<SearchBoxMVPContract.MVPView> implements SearchBoxMVPContract.MVPPresenter {
     private SuggestionsAdapter _adapter = null;
 
-    UISearchBoxMVPPresenter(Activity activity, UISearchBoxMVPContract.MVPView view){
+    SearchBoxMVPPresenter(Activity activity, SearchBoxMVPContract.MVPView view){
         super(activity, view);
 
         _adapter = SuggestionsAdapter.getInstance(activity());

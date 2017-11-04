@@ -1,6 +1,5 @@
 package com.baliyaan.android.wordincontext.Components.Examples.UI;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
@@ -15,9 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.baliyaan.android.wordincontext.MainActivity;
-import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPContract;
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
+import com.baliyaan.android.wordincontext.R;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class ExamplesPagerAdapter extends PagerAdapter{
     private List<Example> exampleList;
-    private Context _context = null;
+    private ExamplesMVPContract.Navigator _navigator = null;
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
@@ -36,7 +35,7 @@ public class ExamplesPagerAdapter extends PagerAdapter{
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater inflater = LayoutInflater.from(_context);
+        LayoutInflater inflater = LayoutInflater.from(_navigator.getContext());
         View wordExamplePage = inflater.inflate(R.layout.word_example,container,false);
         SetPageValues(wordExamplePage,position);
         container.addView(wordExamplePage);
@@ -59,7 +58,7 @@ public class ExamplesPagerAdapter extends PagerAdapter{
         link.setText(example._link);
         counter.setText("#"+Integer.toString(position+1));
 
-        String query = ((MainActivity) _context)._query;
+        String query = _navigator.getQuery();
         HighLightQueryString(content,query);
 
         SetOnSelectionIntent(content);
@@ -95,7 +94,7 @@ public class ExamplesPagerAdapter extends PagerAdapter{
                     String shareBody = tv.getText().toString().substring(start,end);
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                    _context.startActivity(Intent.createChooser(sharingIntent, "Share"));
+                    _navigator.getContext().startActivity(Intent.createChooser(sharingIntent, "Share"));
                 }
                 return false;
             }
@@ -120,10 +119,10 @@ public class ExamplesPagerAdapter extends PagerAdapter{
         contentView.setText(wordToSpan);
     }
 
-    public ExamplesPagerAdapter(Context context, List<Example> iList)
+    public ExamplesPagerAdapter(ExamplesMVPContract.Navigator navigator, List<Example> iList)
     {
         this.exampleList = iList;
-        _context = context;
+        _navigator = navigator;
     }
 
     @Override

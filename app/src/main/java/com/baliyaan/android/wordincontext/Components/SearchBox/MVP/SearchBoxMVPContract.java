@@ -11,7 +11,7 @@ import com.baliyaan.android.wordincontext.MVPInfra.Interfaces.BaseMVPView;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public interface UISearchBoxMVPContract {
+public interface SearchBoxMVPContract {
     interface MVPView extends BaseMVPView<MVPPresenter> {
         void setSuggestionsAdapter(CursorAdapter adapter);
         void clearFocus();

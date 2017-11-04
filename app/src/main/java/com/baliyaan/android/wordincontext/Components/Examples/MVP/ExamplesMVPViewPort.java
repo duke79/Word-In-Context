@@ -13,17 +13,17 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class ExamplesViewPortMVPViewPortAdapter extends MVPViewPortAdapter<ExamplesMVPContract.Navigator, ExamplesMVPContract.MVPPresenter> implements ExamplesMVPContract.MVPView, ExamplesMVPContract.MVPPort {
+public class ExamplesMVPViewPort extends MVPViewPortAdapter<ExamplesMVPContract.Navigator, ExamplesMVPContract.MVPPresenter> implements ExamplesMVPContract.MVPView, ExamplesMVPContract.MVPPort {
 
     private ExamplesView _view;
 
-    public ExamplesViewPortMVPViewPortAdapter(Activity activity, final ExamplesMVPContract.Navigator navigator) {
+    public ExamplesMVPViewPort(Activity activity, final ExamplesMVPContract.Navigator navigator) {
         super(activity, navigator);
         super.bindPresenter(new ExamplesMVPPresenter(activity(), this));
 
         //Configure UIExamplesView
         _view = (ExamplesView) activity().findViewById(R.id.list_view);
-        ExamplesPagerAdapter pagerAdapter = new ExamplesPagerAdapter(activity(), presenter().getExamples());
+        ExamplesPagerAdapter pagerAdapter = new ExamplesPagerAdapter(navigator(), presenter().getExamples());
         if (null != _view) {
             _view.setAdapter(pagerAdapter);
         }

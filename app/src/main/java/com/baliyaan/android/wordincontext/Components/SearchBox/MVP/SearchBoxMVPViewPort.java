@@ -11,12 +11,12 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class UISearchBoxViewPortMVPViewPortAdapter extends MVPViewPortAdapter<UISearchBoxMVPContract.Navigator,UISearchBoxMVPContract.MVPPresenter> implements UISearchBoxMVPContract.MVPView,UISearchBoxMVPContract.MVPPort {
+public class SearchBoxMVPViewPort extends MVPViewPortAdapter<SearchBoxMVPContract.Navigator,SearchBoxMVPContract.MVPPresenter> implements SearchBoxMVPContract.MVPView,SearchBoxMVPContract.MVPPort {
     private SearchView _searchView = null;
 
-    public UISearchBoxViewPortMVPViewPortAdapter(Activity activity, UISearchBoxMVPContract.Navigator navigator){
+    public SearchBoxMVPViewPort(Activity activity, SearchBoxMVPContract.Navigator navigator){
         super(activity,navigator);
-        super.bindPresenter(new UISearchBoxMVPPresenter(activity(),this));
+        super.bindPresenter(new SearchBoxMVPPresenter(activity(),this));
 
         //Configure searchView
         _searchView = (SearchView) activity().findViewById(R.id.search_view);
