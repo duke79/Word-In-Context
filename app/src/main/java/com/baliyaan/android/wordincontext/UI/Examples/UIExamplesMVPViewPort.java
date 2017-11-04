@@ -3,7 +3,6 @@ package com.baliyaan.android.wordincontext.UI.Examples;
 import android.app.Activity;
 
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.UI.CustomListView;
 import com.baliyaan.android.wordincontext.UI.MVPViewPortAdapter;
 
 /**
@@ -12,15 +11,17 @@ import com.baliyaan.android.wordincontext.UI.MVPViewPortAdapter;
 
 public class UIExamplesMVPViewPort extends MVPViewPortAdapter<UIExamplesMVPContract.Navigator,UIExamplesMVPContract.Presenter> implements UIExamplesMVPContract.View, UIExamplesMVPContract.Port {
 
-    private CustomListView _view;
+    private UIExamplesView _view;
 
     public UIExamplesMVPViewPort(Activity activity, UIExamplesMVPContract.Navigator navigator) {
         super(activity,navigator);
         super.bindPresenter(new UIExamplesMVPPresenter(activity(),this));
 
-        _view = (CustomListView) activity().findViewById(R.id.list_view);
+        _view = (UIExamplesView) activity().findViewById(R.id.list_view);
         UIExamplesPagerAdapter pagerAdapter = new UIExamplesPagerAdapter(activity(), presenter().getExamples());
-        _view.setAdapter(pagerAdapter);
+        if(null!=_view) {
+            _view.setAdapter(pagerAdapter);
+        }
     }
 
     @Override

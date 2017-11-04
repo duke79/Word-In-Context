@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.UI;
+package com.baliyaan.android.wordincontext.UI.Examples;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -15,23 +15,23 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 7/5/2017.
  */
 
-public class CustomListView extends RelativeLayout {
+public class UIExamplesView extends RelativeLayout {
 
     private TextView _textView;
     private ViewPager _viewPager;
     private PagerAdapter _adapter;
 
-    public CustomListView(Context context) {
+    public UIExamplesView(Context context) {
         super(context);
         init(context);
     }
 
-    public CustomListView(Context context, AttributeSet attrs) {
+    public UIExamplesView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CustomListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public UIExamplesView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -39,7 +39,7 @@ public class CustomListView extends RelativeLayout {
     private void init(Context context) {
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.custom_list_view,this);
+        inflater.inflate(R.layout.ui_examples_view,this);
     }
 
     @Override
@@ -85,5 +85,14 @@ public class CustomListView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
         findViewById(R.id.error_text).setVisibility(View.VISIBLE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
+    }
+
+    public void setVisibilityForChildren(int visibility){
+        int nbrChildren = getChildCount();
+        for (int index=0;index<nbrChildren;index++) {
+            View child = getChildAt(index);
+            child.setVisibility(visibility);
+        }
+
     }
 }
