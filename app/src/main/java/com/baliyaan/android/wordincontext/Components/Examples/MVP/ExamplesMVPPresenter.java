@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.Components.Examples;
+package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
 import android.app.Activity;
 import android.widget.Toast;

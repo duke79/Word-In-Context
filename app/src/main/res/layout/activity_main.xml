@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <com.baliyaan.android.wordincontext.Components.Examples.ExamplesView
+    <com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/search_view"
         android:background="#ffffff" />
 
-    <com.baliyaan.android.wordincontext.Components.Definition.UIDefinitionView
+    <com.baliyaan.android.wordincontext.Components.Definition.UI.UIDefinitionView
         android:id="@+id/definition_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

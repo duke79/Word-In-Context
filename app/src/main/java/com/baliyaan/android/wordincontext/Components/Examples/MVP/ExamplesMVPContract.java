@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.Components.Examples;
+package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
 import com.baliyaan.android.wordincontext.Model.WordExample;
 import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePortInterface;

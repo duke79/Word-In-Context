@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.Data;
+package com.baliyaan.android.wordincontext.Data.Autocomplete;
 
 import android.content.Context;
 import android.database.Cursor;

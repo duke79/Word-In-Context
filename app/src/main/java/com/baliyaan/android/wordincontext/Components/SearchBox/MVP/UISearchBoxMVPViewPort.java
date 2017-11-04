@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.Components.SearchBox;
+package com.baliyaan.android.wordincontext.Components.SearchBox.MVP;
 
 import android.app.Activity;
 import android.support.v4.widget.CursorAdapter;

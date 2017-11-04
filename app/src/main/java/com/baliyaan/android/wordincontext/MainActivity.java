@@ -11,10 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.baliyaan.android.library.ads.Interstitial;
-import com.baliyaan.android.wordincontext.Components.Examples.ExamplesMVPContract;
-import com.baliyaan.android.wordincontext.Components.Examples.ExamplesMVPViewPort;
-import com.baliyaan.android.wordincontext.Components.SearchBox.UISearchBoxMVPContract;
-import com.baliyaan.android.wordincontext.Components.SearchBox.UISearchBoxMVPViewPort;
+import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPContract;
+import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPViewPort;
+import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.UISearchBoxMVPContract;
+import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.UISearchBoxMVPViewPort;
 
 import java.io.File;
 

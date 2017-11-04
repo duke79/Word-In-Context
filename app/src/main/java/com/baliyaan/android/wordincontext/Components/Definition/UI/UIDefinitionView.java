@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.Components.Definition;
+package com.baliyaan.android.wordincontext.Components.Definition.UI;
 
 import android.content.Context;
 import android.util.AttributeSet;

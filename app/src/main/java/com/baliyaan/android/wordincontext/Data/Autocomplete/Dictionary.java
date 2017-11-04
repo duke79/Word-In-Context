@@ -2,8 +2,6 @@ package com.baliyaan.android.wordincontext.Data.Autocomplete;
 
 import android.content.Context;
 
-import com.baliyaan.android.wordincontext.Data.WordListDB;
-
 import java.util.ArrayList;
 
 /**
