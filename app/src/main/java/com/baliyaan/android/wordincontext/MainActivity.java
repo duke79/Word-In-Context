@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
     static Context _context = null;
     public String _query = "dictionary";
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
-    private UISearchBoxMVPContract.Port _searchView = null;
-    private UIExamplesMVPContract.Port _examplesView = null;
+    private UISearchBoxMVPContract.Port _searchPort = null;
+    private UIExamplesMVPContract.Port _examplesPort = null;
 //    public LruCache<Integer,String> _cache = null;
 
     @Override
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
 
         // Prepare UI
         setContentView(R.layout.activity_main);
-        _searchView  = new UISearchBoxMVPViewPort(this,this);
-        _examplesView = new UIExamplesMVPViewPort(this,this);
+        _searchPort = new UISearchBoxMVPViewPort(this,this);
+        _examplesPort = new UIExamplesMVPViewPort(this,this);
 
         // Display ads in release configurations
         if (_BuildConfig != "debug") {
@@ -122,21 +122,21 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
             return;
         if (!(intentQuery.length() > 0))
             return;
-        _searchView.setQuery(intentQuery);
+        _searchPort.setQuery(intentQuery);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        _examplesView.onSaveState();
-        _searchView.onSaveState();
+        _examplesPort.onSaveState();
+        _searchPort.onSaveState();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        _examplesView.onResumeState();
-        _searchView.onResumeState();
+        _examplesPort.onResumeState();
+        _searchPort.onResumeState();
     }
 
     @Override
@@ -145,9 +145,14 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
         ProcessIntent(intent);
     }
 
-    @Override
+    @Override //UISearchBoxMVPContract.Navigator
     public void onSearchBoxSubmit(String query) {
         _query = query;
-        _examplesView.onQueryTextSubmit(query);
+        _examplesPort.onQueryTextSubmit(query);
+    }
+
+    @Override //UISearchBoxMVPContract.Navigator
+    public void onTryAgain() {
+        _examplesPort.onQueryTextSubmit(_query);
     }
 }

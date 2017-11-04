@@ -18,6 +18,7 @@ public class UISearchBoxMVPViewPort extends MVPViewPortAdapter<UISearchBoxMVPCon
         super(activity,navigator);
         super.bindPresenter(new UISearchBoxMVPPresenter(activity(),this));
 
+        //Configure searchView
         _searchView = (SearchView) activity().findViewById(R.id.search_view);
         if(null!=_searchView) {
             _searchView.setOnQueryTextListener(presenter());

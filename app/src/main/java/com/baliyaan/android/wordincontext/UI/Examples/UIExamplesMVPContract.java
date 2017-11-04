@@ -23,7 +23,7 @@ public interface UIExamplesMVPContract {
     }
 
     interface Navigator {
-
+        void onTryAgain();
     }
 
     interface Port extends MVPBasePortInterface {
