@@ -1,11 +1,11 @@
-package com.baliyaan.android.wordincontext.UI.SearchBox;
+package com.baliyaan.android.wordincontext.Components.SearchBox;
 
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 
-import com.baliyaan.android.wordincontext.UI.MVPBasePortInterface;
-import com.baliyaan.android.wordincontext.UI.MVPBasePresenterInterface;
-import com.baliyaan.android.wordincontext.UI.MVPBaseViewInterface;
+import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePortInterface;
+import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePresenterInterface;
+import com.baliyaan.android.wordincontext.MVPInfra.MVPBaseViewInterface;
 
 /**
  * Created by Pulkit Singh on 7/1/2017.

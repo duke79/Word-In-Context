@@ -42,4 +42,5 @@ dependencies {
     compile 'com.github.Baliyaan.Android-Library:db:-SNAPSHOT'
     compile 'com.github.Baliyaan.Android-Library:ads:-SNAPSHOT'
     compile 'com.github.Baliyaan.Android-Library:ds:-SNAPSHOT'
+    compile 'com.android.support:percent:23.3.0'
 }

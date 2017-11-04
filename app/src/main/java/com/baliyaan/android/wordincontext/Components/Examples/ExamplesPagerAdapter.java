@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.UI.Examples;
+package com.baliyaan.android.wordincontext.Components.Examples;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Pulkit Singh on 10/15/2016.
  */
 
-public class UIExamplesPagerAdapter extends PagerAdapter{
+public class ExamplesPagerAdapter extends PagerAdapter{
     private List<WordExample> wordExampleList;
     private Context _context = null;
 
@@ -120,7 +120,7 @@ public class UIExamplesPagerAdapter extends PagerAdapter{
         contentView.setText(wordToSpan);
     }
 
-    public UIExamplesPagerAdapter(Context context, List<WordExample> iList)
+    public ExamplesPagerAdapter(Context context, List<WordExample> iList)
     {
         this.wordExampleList = iList;
         _context = context;

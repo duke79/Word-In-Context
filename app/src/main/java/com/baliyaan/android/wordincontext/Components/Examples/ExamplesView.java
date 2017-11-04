@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.UI.Examples;
+package com.baliyaan.android.wordincontext.Components.Examples;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -15,23 +15,23 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 7/5/2017.
  */
 
-public class UIExamplesView extends RelativeLayout {
+public class ExamplesView extends RelativeLayout {
 
     private TextView _textView;
     private ViewPager _viewPager;
     private PagerAdapter _adapter;
 
-    public UIExamplesView(Context context) {
+    public ExamplesView(Context context) {
         super(context);
         init(context);
     }
 
-    public UIExamplesView(Context context, AttributeSet attrs) {
+    public ExamplesView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public UIExamplesView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ExamplesView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

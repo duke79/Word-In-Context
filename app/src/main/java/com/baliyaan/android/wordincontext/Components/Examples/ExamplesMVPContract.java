@@ -1,9 +1,9 @@
-package com.baliyaan.android.wordincontext.UI.Examples;
+package com.baliyaan.android.wordincontext.Components.Examples;
 
 import com.baliyaan.android.wordincontext.Model.WordExample;
-import com.baliyaan.android.wordincontext.UI.MVPBasePortInterface;
-import com.baliyaan.android.wordincontext.UI.MVPBasePresenterInterface;
-import com.baliyaan.android.wordincontext.UI.MVPBaseViewInterface;
+import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePortInterface;
+import com.baliyaan.android.wordincontext.MVPInfra.MVPBasePresenterInterface;
+import com.baliyaan.android.wordincontext.MVPInfra.MVPBaseViewInterface;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public interface UIExamplesMVPContract {
+public interface ExamplesMVPContract {
     interface View extends MVPBaseViewInterface<Presenter> {
         void displayResult();
         void displayError();

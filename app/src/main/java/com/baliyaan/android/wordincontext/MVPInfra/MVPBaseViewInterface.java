@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.UI;
+package com.baliyaan.android.wordincontext.MVPInfra;
 
 /**
  * Created by Pulkit Singh on 7/2/2017.

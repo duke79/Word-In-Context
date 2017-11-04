@@ -1,11 +1,11 @@
-package com.baliyaan.android.wordincontext.UI.Examples;
+package com.baliyaan.android.wordincontext.Components.Examples;
 
 import android.app.Activity;
 import android.widget.Toast;
 
 import com.baliyaan.android.wordincontext.Model.WordExample;
 import com.baliyaan.android.wordincontext.R;
-import com.baliyaan.android.wordincontext.UI.MVPPresenterAdapter;
+import com.baliyaan.android.wordincontext.MVPInfra.MVPPresenterAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,11 +24,11 @@ import static com.baliyaan.android.wordincontext.Data.Scraper.GetExamples;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-class UIExamplesMVPPresenter extends MVPPresenterAdapter<UIExamplesMVPContract.View> implements UIExamplesMVPContract.Presenter {
+class ExamplesMVPPresenter extends MVPPresenterAdapter<ExamplesMVPContract.View> implements ExamplesMVPContract.Presenter {
 
     private List<WordExample> _examples = new ArrayList<WordExample>();;
 
-    protected UIExamplesMVPPresenter(Activity activity, UIExamplesMVPContract.View view) {
+    protected ExamplesMVPPresenter(Activity activity, ExamplesMVPContract.View view) {
         super(activity, view);
     }
 

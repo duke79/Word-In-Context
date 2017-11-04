@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.UI;
+package com.baliyaan.android.wordincontext.MVPInfra;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -11,10 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.baliyaan.android.library.ads.Interstitial;
-import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPContract;
-import com.baliyaan.android.wordincontext.UI.Examples.UIExamplesMVPViewPort;
-import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPContract;
-import com.baliyaan.android.wordincontext.UI.SearchBox.UISearchBoxMVPViewPort;
+import com.baliyaan.android.wordincontext.Components.Examples.ExamplesMVPContract;
+import com.baliyaan.android.wordincontext.Components.Examples.ExamplesMVPViewPort;
+import com.baliyaan.android.wordincontext.Components.SearchBox.UISearchBoxMVPContract;
+import com.baliyaan.android.wordincontext.Components.SearchBox.UISearchBoxMVPViewPort;
 
 import java.io.File;
 
@@ -26,13 +26,13 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
-public class MainActivity extends AppCompatActivity implements UISearchBoxMVPContract.Navigator, UIExamplesMVPContract.Navigator {
+public class MainActivity extends AppCompatActivity implements UISearchBoxMVPContract.Navigator, ExamplesMVPContract.Navigator {
 
     static Context _context = null;
     public String _query = "dictionary";
     public final static String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
     private UISearchBoxMVPContract.Port _searchPort = null;
-    private UIExamplesMVPContract.Port _examplesPort = null;
+    private ExamplesMVPContract.Port _examplesPort = null;
 //    public LruCache<Integer,String> _cache = null;
 
     @Override
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements UISearchBoxMVPCon
         // Prepare UI
         setContentView(R.layout.activity_main);
         _searchPort = new UISearchBoxMVPViewPort(this,this);
-        _examplesPort = new UIExamplesMVPViewPort(this,this);
+        _examplesPort = new ExamplesMVPViewPort(this,this);
 
         // Display ads in release configurations
         if (_BuildConfig != "debug") {
