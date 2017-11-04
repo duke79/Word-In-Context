@@ -46,6 +46,8 @@ class UIExamplesMVPPresenter extends MVPPresenterAdapter<UIExamplesMVPContract.V
                     observer.onNext(newList);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    final List<WordExample> newList = new ArrayList<>();
+                    observer.onNext(newList);
 
                     (activity()).runOnUiThread(new Runnable() {
                         public void run() {

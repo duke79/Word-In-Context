@@ -1,7 +1,6 @@
 package com.baliyaan.android.wordincontext.UI.Examples;
 
 import android.app.Activity;
-import android.widget.Toast;
 
 import com.baliyaan.android.wordincontext.R;
 import com.baliyaan.android.wordincontext.UI.CustomListView;
@@ -39,6 +38,6 @@ public class UIExamplesMVPViewPort extends MVPViewPortAdapter<UIExamplesMVPContr
     @Override
     public void displayError() {
         _view.displayErrorText();
-        Toast.makeText(activity(), R.string.NoResult, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity(), R.string.NoResult, Toast.LENGTH_SHORT).show();
     }
 }
