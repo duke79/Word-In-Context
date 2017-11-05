@@ -1,7 +1,6 @@
 package com.baliyaan.android.wordincontext.Components.SearchBox.MVP;
 
 
-import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 
@@ -15,10 +14,10 @@ import com.baliyaan.android.wordincontext.Components.SearchBox.Data.Autocomplete
 class SearchBoxMVPPresenter extends MVPPresenterAdapter<SearchBoxMVPContract.MVPView> implements SearchBoxMVPContract.MVPPresenter {
     private SuggestionsAdapter _adapter = null;
 
-    SearchBoxMVPPresenter(Activity activity, SearchBoxMVPContract.MVPView view){
-        super(activity, view);
+    SearchBoxMVPPresenter(SearchBoxMVPContract.MVPView view){
+        super(view);
 
-        _adapter = SuggestionsAdapter.getInstance(activity());
+        _adapter = SuggestionsAdapter.getInstance(view().getContext());
     }
 
     @Override
@@ -27,7 +26,7 @@ class SearchBoxMVPPresenter extends MVPPresenterAdapter<SearchBoxMVPContract.MVP
         view().setSuggestionsAdapter(null);
 
         //Handle search
-        Handler handler = new Handler(activity().getMainLooper());
+        Handler handler = new Handler((view().getContext()).getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {

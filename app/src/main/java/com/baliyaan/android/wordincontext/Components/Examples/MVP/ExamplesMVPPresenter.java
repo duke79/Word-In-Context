@@ -28,8 +28,8 @@ class ExamplesMVPPresenter extends MVPPresenterAdapter<ExamplesMVPContract.MVPVi
 
     private List<Example> _examples = new ArrayList<Example>();;
 
-    protected ExamplesMVPPresenter(Activity activity, ExamplesMVPContract.MVPView view) {
-        super(activity, view);
+    protected ExamplesMVPPresenter(ExamplesMVPContract.MVPView view) {
+        super(view);
     }
 
     @Override
@@ -49,9 +49,9 @@ class ExamplesMVPPresenter extends MVPPresenterAdapter<ExamplesMVPContract.MVPVi
                     final List<Example> newList = new ArrayList<>();
                     observer.onNext(newList);
 
-                    (activity()).runOnUiThread(new Runnable() {
+                    ((Activity)view().getContext()).runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity(), R.string.NoInternet, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(view().getContext(), R.string.NoInternet, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

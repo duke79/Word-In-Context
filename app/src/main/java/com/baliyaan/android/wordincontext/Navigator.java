@@ -1,8 +1,8 @@
 package com.baliyaan.android.wordincontext;
 
 import android.app.Activity;
-import android.content.Context;
 
+import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
 import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPContract;
 import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPViewPort;
 import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.SearchBoxMVPContract;
@@ -12,7 +12,7 @@ import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.SearchBoxMVPV
  * Created by Pulkit Singh on 11/4/2017.
  */
 
-public class Navigator implements SearchBoxMVPContract.Navigator, ExamplesMVPContract.Navigator {
+public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContract.Navigator, ExamplesMVPContract.Navigator{
 
 /*
 * Member Variables
@@ -21,16 +21,15 @@ public class Navigator implements SearchBoxMVPContract.Navigator, ExamplesMVPCon
     private SearchBoxMVPContract.MVPPort _searchPort = null;
     private ExamplesMVPContract.MVPPort _examplesPort = null;
     //Local-Use-Vars
-    private Activity _context = null;
     private String _query = "dictionary";
 
 /*
 * Initialization
  */
     Navigator(Activity activity) {
-        _context = activity;
-        _searchPort = new SearchBoxMVPViewPort(_context, this);
-        _examplesPort = new ExamplesMVPViewPort(_context, this);
+        super(activity);
+        _searchPort = new SearchBoxMVPViewPort(this);
+        _examplesPort = new ExamplesMVPViewPort(this);
     }
 
 /*
@@ -62,11 +61,6 @@ public class Navigator implements SearchBoxMVPContract.Navigator, ExamplesMVPCon
     @Override
     public String getQuery() {
         return _query;
-    }
-
-    @Override
-    public Context getContext() {
-        return _context;
     }
 
     @Override //SearchBoxMVPContract.Navigator

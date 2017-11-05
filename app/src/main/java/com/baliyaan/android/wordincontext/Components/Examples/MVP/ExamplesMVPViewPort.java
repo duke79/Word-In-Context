@@ -18,12 +18,12 @@ public class ExamplesMVPViewPort extends MVPViewPortAdapter<ExamplesMVPContract.
 
     private ExamplesView _view;
 
-    public ExamplesMVPViewPort(Activity activity, final ExamplesMVPContract.Navigator navigator) {
-        super(activity, navigator);
-        super.bindPresenter(new ExamplesMVPPresenter(activity(), this));
+    public ExamplesMVPViewPort(final ExamplesMVPContract.Navigator navigator) {
+        super(navigator);
+        super.bindPresenter(new ExamplesMVPPresenter(this));
 
         //Configure UIExamplesView
-        _view = (ExamplesView) activity().findViewById(R.id.list_view);
+        _view = (ExamplesView) ((Activity)navigator().getContext()).findViewById(R.id.list_view);
         ExamplesPagerAdapter pagerAdapter = new ExamplesPagerAdapter(navigator(), presenter().getExamples());
         if (null != _view) {
             _view.setAdapter(pagerAdapter);
