@@ -5,4 +5,5 @@
     <string name="adId">ca-app-pub-4278963888720323/8594194494</string>
     <string name="NoResult">No result found!</string>
     <string name="NoInternet">No internet connection!</string>
+    <string name="definition_placeholder">True, a simple TextView could be used instead in layout2, however that then would be a completely different thing and not useful as an example in the answer to this question</string>
 </resources>

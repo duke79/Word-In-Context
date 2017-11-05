@@ -7,5 +7,5 @@
         android:textColor="@color/year"
         android:textSize="15sp"
         android:gravity="center"
-        android:text="True, a simple TextView could be used instead in layout2, however that then would be a completely different thing and not useful as an example in the answer to this question"/>
+        android:text="@string/definition_placeholder"/>
 </merge>
