@@ -3,16 +3,10 @@ package com.baliyaan.android.wordincontext;
 import android.app.ActionBar;
 import android.content.ClipData;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.baliyaan.android.library.ads.Interstitial;
-
-import java.io.File;
-
-import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,40 +27,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         _navigator = new Navigator(this);
 
-        // Display ads in release configurations
-        String _BuildConfig = BuildConfig.DEBUG ? "debug" : "release";
-        if (_BuildConfig != "debug") {
-            showAds();
-        }
+        // Display ads
+        Interstitial interstitialAd = new Interstitial(this, getString(R.string.adId));
+        interstitialAd.AllowOnlyAfter((long) 3.6e+5);// 6 minutes
+        interstitialAd.AllowInDebug(false);
+        interstitialAd.showEvery(1000000, true); // every 16.66 minutes
 
         // Search by intent (if any)
         Intent intent = getIntent();
         onIntent(intent);
-    }
-
-    private void showAds() {
-        boolean hasMinInstallTimePassed = false;
-        PackageManager pm = getPackageManager();
-        ApplicationInfo appInfo = null;
-        try {
-            appInfo = pm.getApplicationInfo(PACKAGE_NAME, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (null != appInfo) {
-            String appFile = appInfo.sourceDir;
-            long installed = new File(appFile).lastModified(); //Epoch Time
-            long now = System.currentTimeMillis();
-            if (now - installed > 3.6e+5) // 6 minutes
-                hasMinInstallTimePassed = true;
-        }
-        /*
-         * Show Ad every 5 minutes
-         */
-        if (hasMinInstallTimePassed == true) {
-            Interstitial interstitialAd = new Interstitial(this, getString(R.string.adId));
-            interstitialAd.showEvery(1000000, true); // every 16.66 minutes
-        }
     }
 
     @Override
