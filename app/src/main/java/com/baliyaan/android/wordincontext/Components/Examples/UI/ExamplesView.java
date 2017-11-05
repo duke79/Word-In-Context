@@ -1,6 +1,7 @@
 package com.baliyaan.android.wordincontext.Components.Examples.UI;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -53,6 +54,8 @@ public class ExamplesView extends RelativeLayout {
         _pageIndicatorView = (PageIndicatorView) findViewById(R.id.pageIndicatorView);
         _pageIndicatorView.setViewPager(_viewPager);
         _pageIndicatorView.setDynamicCount(true);
+        _pageIndicatorView.setSelectedColor(Color.parseColor("#000000"));
+        _pageIndicatorView.setUnselectedColor(Color.parseColor("#999999"));
     }
 
     public void setAdapter(PagerAdapter adapter){
