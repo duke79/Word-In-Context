@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baliyaan.android.wordincontext.R;
+import com.rd.PageIndicatorView;
 
 /**
  * Created by Pulkit Singh on 7/5/2017.
@@ -20,6 +21,7 @@ public class ExamplesView extends RelativeLayout {
     private TextView _textView;
     private ViewPager _viewPager;
     private PagerAdapter _adapter;
+    private PageIndicatorView _pageIndicatorView;
 
     public ExamplesView(Context context) {
         super(context);
@@ -48,6 +50,9 @@ public class ExamplesView extends RelativeLayout {
 
         _textView = (TextView) findViewById(R.id.welcome_text);
         _viewPager = (ViewPager) findViewById(R.id.view_pager);
+        _pageIndicatorView = (PageIndicatorView) findViewById(R.id.pageIndicatorView);
+        _pageIndicatorView.setViewPager(_viewPager);
+        _pageIndicatorView.setDynamicCount(true);
     }
 
     public void setAdapter(PagerAdapter adapter){
