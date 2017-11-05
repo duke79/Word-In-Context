@@ -2,11 +2,8 @@ package com.baliyaan.android.wordincontext.Components.SearchBox.MVP;
 
 
 import android.app.Activity;
-import android.content.res.ColorStateList;
-import android.os.Build;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
-import android.widget.ImageView;
 
 import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.R;
@@ -28,6 +25,12 @@ public class SearchBoxMVPViewPort extends MVPViewPortAdapter<SearchBoxMVPContrac
             _searchView.setOnQueryTextListener(presenter());
             _searchView.setOnSuggestionListener(presenter());
         }
+
+        //SearchView icon color
+        /*ImageView searchViewIcon = (ImageView)_searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            searchViewIcon.setImageTintList(ColorStateList.valueOf(0)); //black-color
+        }*/
     }
 
 

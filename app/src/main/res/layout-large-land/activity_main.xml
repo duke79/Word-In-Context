@@ -5,26 +5,29 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context="com.baliyaan.android.wordincontext.MainActivity">
 
     <android.support.v7.widget.SearchView
         android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        app:layout_heightPercent="8%"
-        android:layout_alignParentTop="true" />
+        app:layout_widthPercent="30%"
+        app:layout_heightPercent="6%"
+        android:background="#aaaaaa"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
 
     <com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        app:layout_heightPercent="72%"
+        app:layout_heightPercent="74%"
         android:layout_below="@+id/search_view"
-        android:background="#ffffff" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <com.baliyaan.android.wordincontext.Components.Definition.UI.DefinitionView
         android:id="@+id/definition_view"
         android:layout_width="match_parent"
         app:layout_heightPercent="20%"
-        android:layout_below="@+id/list_view"
-        android:background="#ffffff" />
+        android:layout_below="@+id/list_view"/>
 
 </android.support.percent.PercentRelativeLayout>
