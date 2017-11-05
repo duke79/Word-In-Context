@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.baliyaan.android.wordincontext.R;
 
@@ -31,5 +32,10 @@ public class DefinitionView extends RelativeLayout {
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.ui_definition_view,this);
+    }
+
+    public void setDefinition(String definition){
+        TextView def_tv = (TextView) findViewById(R.id.definition_tv);
+        def_tv.setText(definition);
     }
 }

@@ -3,6 +3,8 @@ package com.baliyaan.android.wordincontext;
 import android.app.Activity;
 
 import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
+import com.baliyaan.android.wordincontext.Components.Definition.MVP.DefinitionMVPContract;
+import com.baliyaan.android.wordincontext.Components.Definition.MVP.DefinitionMVPViewPort;
 import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPContract;
 import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPViewPort;
 import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.SearchBoxMVPContract;
@@ -12,14 +14,15 @@ import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.SearchBoxMVPV
  * Created by Pulkit Singh on 11/4/2017.
  */
 
-public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContract.Navigator, ExamplesMVPContract.Navigator{
+public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContract.Navigator, ExamplesMVPContract.Navigator, DefinitionMVPContract.Navigator{
 
-/*
-* Member Variables
- */
+    /*
+    * Member Variables
+     */
     //MVP-Ports
     private SearchBoxMVPContract.MVPPort _searchPort = null;
-    private ExamplesMVPContract.MVPPort _examplesPort = null;
+    private ExamplesMVPContract.Port _examplesPort = null;
+    private DefinitionMVPViewPort _definitionPort = null;
     //Local-Use-Vars
     private String _query = "dictionary";
 
@@ -30,6 +33,7 @@ public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContra
         super(activity);
         _searchPort = new SearchBoxMVPViewPort(this);
         _examplesPort = new ExamplesMVPViewPort(this);
+        _definitionPort = new DefinitionMVPViewPort(this);
     }
 
 /*
@@ -56,6 +60,7 @@ public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContra
     public void onSearchBoxSubmit(String query) {
         _query = query;
         _examplesPort.onQueryTextSubmit(query);
+        _definitionPort.onQueryTextSubmit(query);
     }
 
     @Override

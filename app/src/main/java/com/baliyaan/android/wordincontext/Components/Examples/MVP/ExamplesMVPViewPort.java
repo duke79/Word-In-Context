@@ -2,7 +2,6 @@ package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.Button;
 
 import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
@@ -14,7 +13,7 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class ExamplesMVPViewPort extends MVPViewPortAdapter<ExamplesMVPContract.Navigator, ExamplesMVPContract.MVPPresenter> implements ExamplesMVPContract.MVPView, ExamplesMVPContract.MVPPort {
+public class ExamplesMVPViewPort extends MVPViewPortAdapter<ExamplesMVPContract.Navigator, ExamplesMVPContract.Presenter> implements ExamplesMVPContract.View, ExamplesMVPContract.Port {
 
     private ExamplesView _view;
 
@@ -32,9 +31,9 @@ public class ExamplesMVPViewPort extends MVPViewPortAdapter<ExamplesMVPContract.
         //Configure "Try again" button
         Button button = (Button) _view.findViewById(R.id.try_again);
         if (null != button) {
-            button.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new android.view.View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(android.view.View v) {
                     navigator().onTryAgain();
                 }
             });

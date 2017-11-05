@@ -24,11 +24,11 @@ import static com.baliyaan.android.wordincontext.Components.Examples.Data.Scrape
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-class ExamplesMVPPresenter extends MVPPresenterAdapter<ExamplesMVPContract.MVPView> implements ExamplesMVPContract.MVPPresenter {
+class ExamplesMVPPresenter extends MVPPresenterAdapter<ExamplesMVPContract.View> implements ExamplesMVPContract.Presenter {
 
     private List<Example> _examples = new ArrayList<Example>();;
 
-    protected ExamplesMVPPresenter(ExamplesMVPContract.MVPView view) {
+    protected ExamplesMVPPresenter(ExamplesMVPContract.View view) {
         super(view);
     }
 

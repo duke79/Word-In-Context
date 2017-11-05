@@ -1,8 +1,6 @@
 package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
 
-import android.content.Context;
-
 import com.baliyaan.android.mvp.Interfaces.BaseMVPNavigator;
 import com.baliyaan.android.mvp.Interfaces.BaseMVPPort;
 import com.baliyaan.android.mvp.Interfaces.BaseMVPPresenter;
@@ -16,23 +14,22 @@ import java.util.List;
  */
 
 public interface ExamplesMVPContract {
-    interface MVPView extends BaseMVPView<MVPPresenter> {
-        void displayResult();
-        void displayError();
-    }
-
-    interface MVPPresenter extends BaseMVPPresenter {
+    interface Presenter extends BaseMVPPresenter {
         void onQueryTextSubmit(final String query);
         List<Example> getExamples();
     }
 
+    interface View extends BaseMVPView<Presenter> {
+        void displayResult();
+        void displayError();
+    }
+
     interface Navigator extends BaseMVPNavigator {
         String getQuery();
-        Context getContext();
         void onTryAgain();
     }
 
-    interface MVPPort extends BaseMVPPort {
+    interface Port extends BaseMVPPort {
         void onQueryTextSubmit(String query);
     }
 }
