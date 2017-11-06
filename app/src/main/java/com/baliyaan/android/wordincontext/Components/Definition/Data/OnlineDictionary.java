@@ -1,5 +1,6 @@
 package com.baliyaan.android.wordincontext.Components.Definition.Data;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -17,11 +18,17 @@ public class OnlineDictionary {
 
         String url = "https://api.pearson.com/v2/dictionaries/entries?headword=" + word;
         String res = getWebPage(url);
-        definition =
-                new JSONObject(res)
-                        .getJSONArray("results").getJSONObject(0)
-                        .getJSONArray("senses").getJSONObject(0)
-                        .getJSONArray("definition").getString(0);
+        definition = "";
+        Object defObj = new JSONObject(res)
+                .getJSONArray("results").getJSONObject(0)
+                .getJSONArray("senses").getJSONObject(0)
+                .get("definition");
+        if (defObj instanceof String)
+            definition = (String) defObj;
+        else if (defObj instanceof JSONObject)
+            definition = defObj.toString();
+        else if (defObj instanceof JSONArray)
+            definition = ((JSONArray)defObj).getString(0);
         return definition;
     }
 
