@@ -3,30 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:attrs="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/search_view"
-        android:background="#ffffff">
-
-        <com.rd.PageIndicatorView
-            android:id="@+id/pageIndicatorView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            attrs:piv_viewPager="@+id/viewPager" />
+        android:background="#ffffff"
+        android:orientation="vertical">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pageIndicatorView"
+            android:layout_height="0px"
+            android:layout_weight=".97"
             android:background="#ffffff"
+            android:paddingBottom="100dp"
             android:scrollbars="horizontal" />
-    </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:layout_gravity="center">
+
+            <com.rd.PageIndicatorView
+                android:id="@+id/pageIndicatorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                attrs:piv_viewPager="@+id/viewPager" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -80,6 +86,7 @@
         android:gravity="center"
         android:text="@string/app_name"
         android:textColor="@color/year"
-        android:textSize="30dp" />
+        android:textSize="30dp"
+        android:visibility="gone" />
 
 </merge>
