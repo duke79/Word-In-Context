@@ -70,6 +70,6 @@ public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContra
 
     @Override //SearchBoxMVPContract.Navigator
     public void onTryAgain() {
-        _examplesPort.onQueryTextSubmit(_query);
+        onSearchBoxSubmit(_query);
     }
 }

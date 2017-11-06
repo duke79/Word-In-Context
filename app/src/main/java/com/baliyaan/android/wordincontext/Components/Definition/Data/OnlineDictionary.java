@@ -13,23 +13,37 @@ import java.io.IOException;
 
 public class OnlineDictionary {
 
-    static public String getDefinitionOf(String word) throws IOException, JSONException {
-        String definition = "";
+    static public String getDefinitionOf(String word) throws IOException {
+        String definitions = "";
 
         String url = "https://api.pearson.com/v2/dictionaries/entries?headword=" + word;
         String res = getWebPage(url);
-        definition = "";
-        Object defObj = new JSONObject(res)
-                .getJSONArray("results").getJSONObject(0)
-                .getJSONArray("senses").getJSONObject(0)
-                .get("definition");
-        if (defObj instanceof String)
-            definition = (String) defObj;
-        else if (defObj instanceof JSONObject)
-            definition = defObj.toString();
-        else if (defObj instanceof JSONArray)
-            definition = ((JSONArray)defObj).getString(0);
-        return definition;
+
+        try {
+            JSONArray resultArray = new JSONObject(res).getJSONArray("results");
+            for (int i = 0; i < resultArray.length(); i++) {
+                String definition = "";
+                JSONObject result = resultArray.getJSONObject(i);
+                String partOfSpeech = result.getString("part_of_speech");
+                definition += partOfSpeech + "\n";
+                JSONArray sensesArray = result.getJSONArray("senses");
+                for (int j = 0; j < sensesArray.length(); j++) {
+                    JSONObject sense = sensesArray.getJSONObject(j);
+                    Object defObj = sense.get("definition");
+                    if (defObj instanceof String)
+                        definition += defObj + "\n";
+                    else if (defObj instanceof JSONObject)
+                        definition += defObj.toString() + "\n";
+                    else if (defObj instanceof JSONArray)
+                        definition += ((JSONArray) defObj).getString(0) + "\n";
+                }
+                definitions +=definition;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return definitions;
     }
 
     static private String getWebPage(String iUrl) throws IOException {

@@ -7,8 +7,6 @@ import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
 import com.baliyaan.android.wordincontext.Components.Definition.Data.OnlineDictionary;
 import com.baliyaan.android.wordincontext.R;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 
 import io.reactivex.Observable;
@@ -47,8 +45,6 @@ implements DefinitionMVPContract.Presenter{
                             Toast.makeText(view().getContext(), R.string.NoInternet, Toast.LENGTH_SHORT).show();
                         }
                     });
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         };
