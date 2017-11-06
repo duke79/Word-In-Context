@@ -23,21 +23,9 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/counter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/counter"
-                android:textAlignment="center"
-                android:textColor="@color/year"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textIsSelectable="true"/>
-
-            <TextView
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
                 android:textColor="@color/year"
                 android:textSize="20sp"
                 android:textStyle="bold"

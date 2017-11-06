@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.baliyaan.android.wordincontext.R;
 import com.rd.PageIndicatorView;
 
+import static com.baliyaan.android.wordincontext.R.id.pageIndicatorView;
+
 /**
  * Created by Pulkit Singh on 7/5/2017.
  */
@@ -51,7 +53,7 @@ public class ExamplesView extends RelativeLayout {
 
         _textView = (TextView) findViewById(R.id.welcome_text);
         _viewPager = (ViewPager) findViewById(R.id.view_pager);
-        _pageIndicatorView = (PageIndicatorView) findViewById(R.id.pageIndicatorView);
+        _pageIndicatorView = (PageIndicatorView) findViewById(pageIndicatorView);
         _pageIndicatorView.setViewPager(_viewPager);
         _pageIndicatorView.setDynamicCount(true);
         _pageIndicatorView.setSelectedColor(Color.parseColor("#000000"));
@@ -68,6 +70,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
         findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.VISIBLE);
+        findViewById(R.id.pageIndicatorView).setVisibility(View.VISIBLE);
 
 
         _adapter.notifyDataSetChanged();
@@ -79,6 +82,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
         findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
+        findViewById(R.id.pageIndicatorView).setVisibility(View.GONE);
     }
 
     public void displayWelcomeText(){
@@ -86,6 +90,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.VISIBLE);
         findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
+        findViewById(R.id.pageIndicatorView).setVisibility(View.GONE);
     }
 
     public void displayErrorText(){
@@ -93,6 +98,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
         findViewById(R.id.error_text).setVisibility(View.VISIBLE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
+        findViewById(R.id.pageIndicatorView).setVisibility(View.GONE);
     }
 
     public void setVisibilityForChildren(int visibility){

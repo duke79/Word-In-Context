@@ -48,15 +48,13 @@ public class ExamplesPagerAdapter extends PagerAdapter{
     }
 
     private void SetPageValues(View page, int position) {
-        TextView content, link, counter;
+        TextView content, link;
         content = (TextView) page.findViewById(R.id.content);
         link = (TextView) page.findViewById(R.id.link);
-        counter = (TextView) page.findViewById(R.id.counter);
 
         Example example = exampleList.get(position);
         content.setText(example._content);
         link.setText(example._link);
-        counter.setText("#"+Integer.toString(position+1));
 
         String query = _navigator.getQuery();
         HighLightQueryString(content,query);
