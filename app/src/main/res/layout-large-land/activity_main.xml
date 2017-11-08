@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     tools:context="com.baliyaan.android.wordincontext.MainActivity">
+
+    <ImageView
+        android:src="@drawable/background_mage"
+        android:scaleType = "centerCrop"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
 
     <android.support.v7.widget.SearchView
         android:id="@+id/search_view"
-        app:layout_widthPercent="30%"
-        app:layout_heightPercent="6%"
-        android:background="#aaaaaa"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
-
-    <com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView
-        android:id="@+id/list_view"
-        android:layout_width="match_parent"
-        app:layout_heightPercent="74%"
-        android:layout_below="@+id/search_view"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp"
+        android:background="#7777bb"
+        app:layout_heightPercent="6%"
+        app:layout_widthPercent="88%" />
 
     <com.baliyaan.android.wordincontext.Components.Definition.UI.DefinitionView
         android:id="@+id/definition_view"
         android:layout_width="match_parent"
-        app:layout_heightPercent="20%"
-        android:background="#aaaaaa"
-        android:layout_below="@+id/list_view"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/search_view"
+        app:layout_heightPercent="20%" />
+
+    <com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/definition_view"
+        app:layout_heightPercent="74%" />
 
 </android.support.percent.PercentRelativeLayout>

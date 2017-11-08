@@ -4,8 +4,7 @@
         android:id="@+id/definition_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:textColor="@color/year"
+        android:textColor="#ffffff"
         android:textSize="15sp"
         android:gravity="center"
         android:text="@string/definition_placeholder"/>
