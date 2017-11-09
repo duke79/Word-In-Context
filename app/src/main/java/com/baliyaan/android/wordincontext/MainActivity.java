@@ -41,13 +41,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        _navigator.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        _navigator.onStop();
     }
 
     @Override
@@ -69,5 +67,17 @@ public class MainActivity extends AppCompatActivity {
         if (!(intentQuery.length() > 0))
             return;
         _navigator.onSearchIntent(intentQuery);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        _navigator.onSaveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        _navigator.onRestoreState(savedInstanceState);
     }
 }

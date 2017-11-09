@@ -1,6 +1,8 @@
 package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
@@ -74,5 +76,20 @@ class ExamplesMVPPresenter extends MVPPresenterAdapter<ExamplesMVPContract.View>
     @Override
     public List<Example> getExamples() {
         return _examples;
+    }
+
+    @Override
+    public void onSaveState(Bundle state) {
+        super.onSaveState(state);
+        state.putParcelableArrayList("examples", (ArrayList<? extends Parcelable>) _examples);
+    }
+
+    @Override
+    public void onRestoreState(Bundle state) {
+        super.onRestoreState(state);
+        List<Example> savedList = state.getParcelableArrayList("examples");
+        _examples.removeAll(savedList);
+        _examples.addAll(savedList);
+        view().displayResult();
     }
 }

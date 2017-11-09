@@ -1,6 +1,7 @@
 package com.baliyaan.android.wordincontext;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
 import com.baliyaan.android.wordincontext.Components.Definition.MVP.DefinitionMVPContract;
@@ -39,14 +40,16 @@ public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContra
 /*
 * Methods to be called from parent activity
  */
-    void onStop() {
-        _examplesPort.onSaveState();
-        _searchPort.onSaveState();
+    void onSaveState(Bundle state) {
+        _examplesPort.onSaveState(state);
+        _searchPort.onSaveState(state);
+        _definitionPort.onSaveState(state);
     }
 
-    void onStart() {
-        _examplesPort.onResumeState();
-        _searchPort.onResumeState();
+    void onRestoreState(Bundle state) {
+        _examplesPort.onRestoreState(state);
+        _searchPort.onRestoreState(state);
+        _definitionPort.onRestoreState(state);
     }
 
     void onSearchIntent(String query) {
