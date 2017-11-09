@@ -6,6 +6,6 @@
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
         android:textSize="15sp"
-        android:gravity="center"
+        android:gravity="left"
         android:text="@string/definition_placeholder"/>
 </merge>

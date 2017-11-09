@@ -27,28 +27,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#cccccc"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textIsSelectable="true"/>
+                android:textIsSelectable="true"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-            <TextView
+            <!--TextView
                 android:id="@+id/editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:text="@string/source"
                 android:textColor="@color/year"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                android:textIsSelectable="true"/>
+                android:textIsSelectable="true"/-->
 
             <TextView
                 android:id="@+id/link"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2sp"
                 android:textColor="@color/year"
-                android:textSize="16sp"
-                android:textIsSelectable="true"/>
+                android:textIsSelectable="true"
+                android:textSize="14sp" />
 
         </LinearLayout>
     </ScrollView>

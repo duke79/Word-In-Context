@@ -58,6 +58,7 @@ public class SearchBoxMVPViewPort extends MVPViewPortAdapter<SearchBoxMVPContrac
     public void onQueryTextSubmit(String query) {
         if (navigator() != null) {
             navigator().onSearchBoxSubmit(query);
+            clearFocus();
         }
     }
 }
