@@ -37,8 +37,35 @@ public class OnlineDictionary {
                     else if (defObj instanceof JSONArray)
                         definition += ((JSONArray) defObj).getString(0) + "\n";
                 }
-                definitions +=definition;
+                definitions += definition;
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return definitions;
+    }
+
+    static public String getSimpleDefinitionOf(String word) throws IOException {
+        String definitions = "";
+
+        String url = "https://api.pearson.com/v2/dictionaries/entries?headword=" + word;
+        String res = getWebPage(url);
+
+        try {
+            JSONArray resultArray = new JSONObject(res).getJSONArray("results");
+            String definition = "";
+            JSONObject result = resultArray.getJSONObject(0);
+            JSONArray sensesArray = result.getJSONArray("senses");
+            JSONObject sense = sensesArray.getJSONObject(0);
+            Object defObj = sense.get("definition");
+            if (defObj instanceof String)
+                definition += defObj + "\n";
+            else if (defObj instanceof JSONObject)
+                definition += defObj.toString() + "\n";
+            else if (defObj instanceof JSONArray)
+                definition += ((JSONArray) defObj).getString(0) + "\n";
+            definitions += definition;
         } catch (JSONException e) {
             e.printStackTrace();
         }

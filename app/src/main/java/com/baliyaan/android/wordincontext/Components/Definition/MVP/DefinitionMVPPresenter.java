@@ -34,7 +34,7 @@ implements DefinitionMVPContract.Presenter{
             @Override
             protected void subscribeActual(Observer observer) {
                 try {
-                    String definition = OnlineDictionary.getDefinitionOf(query); // Get definition
+                    String definition = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition
                     observer.onNext(definition); // Send definition
                 } catch (IOException e) {
                     e.printStackTrace();

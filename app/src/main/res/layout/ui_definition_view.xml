@@ -7,5 +7,6 @@
         android:textColor="#ffffff"
         android:textSize="15sp"
         android:gravity="left"
+        android:layout_marginLeft="10dp"
         android:text="@string/definition_placeholder"/>
 </merge>
