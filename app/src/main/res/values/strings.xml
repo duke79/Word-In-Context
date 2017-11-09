@@ -6,4 +6,5 @@
     <string name="NoResult">No result found!</string>
     <string name="NoInternet">No internet connection!</string>
     <string name="definition_placeholder"></string>
+    <string name="no_defintion"><![CDATA[<No definition found!>]]></string>
 </resources>

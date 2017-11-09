@@ -1,6 +1,7 @@
 package com.baliyaan.android.wordincontext.Components.Definition.MVP;
 
 import android.app.Activity;
+import android.view.View;
 
 import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.Components.Definition.UI.DefinitionView;
@@ -23,15 +24,20 @@ public class DefinitionMVPViewPort
 
     private void init() {
         _view = (DefinitionView) ((Activity)navigator().getContext()).findViewById(R.id.definition_view);
+        _view.setVisibility(View.GONE);
     }
 
     @Override
     public void setDefinition(String definition) {
+        if(definition == "")
+            definition = navigator().getContext().getString(R.string.no_defintion);
         _view.setDefinition(definition);
+        _view.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onQueryTextSubmit(String query) {
+        _view.setVisibility(View.GONE);
         presenter().onQueryTextSubmit(query);
     }
 }
