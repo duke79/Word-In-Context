@@ -22,15 +22,16 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.baliyaan.android.wordincontext.Components.Examples.Data.Scraper.GetExamples;
 
+
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-class ExamplesMVPPresenter extends MVPPresenterAdapter<ExamplesMVPContract.View> implements ExamplesMVPContract.Presenter {
+class Presenter extends MVPPresenterAdapter<Contract.View> implements Contract.Presenter {
 
     private List<Example> _examples = new ArrayList<Example>();;
 
-    protected ExamplesMVPPresenter(ExamplesMVPContract.View view) {
+    protected Presenter(Contract.View view) {
         super(view);
     }
 

@@ -23,14 +23,14 @@
         android:layout_margin="10dp"
         android:background="#aaaaaa" />
 
-    <com.baliyaan.android.wordincontext.Components.Definition.UI.DefinitionView
+    <com.baliyaan.android.wordincontext.Components.Definition.UI.CustomView
         android:id="@+id/definition_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_view" />
 
 
-    <com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView
+    <com.baliyaan.android.wordincontext.Components.Examples.UI.CustomView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

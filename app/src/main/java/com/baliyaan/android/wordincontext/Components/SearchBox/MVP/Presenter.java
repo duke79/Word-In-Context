@@ -7,14 +7,15 @@ import android.util.Log;
 import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
 import com.baliyaan.android.wordincontext.Components.SearchBox.Data.Autocomplete.SuggestionsAdapter;
 
+
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-class SearchBoxMVPPresenter extends MVPPresenterAdapter<SearchBoxMVPContract.MVPView> implements SearchBoxMVPContract.MVPPresenter {
+class Presenter extends MVPPresenterAdapter<Contract.View> implements Contract.Presenter {
     private SuggestionsAdapter _adapter = null;
 
-    SearchBoxMVPPresenter(SearchBoxMVPContract.MVPView view){
+    Presenter(Contract.View view){
         super(view);
 
         _adapter = SuggestionsAdapter.getInstance(view().getContext());

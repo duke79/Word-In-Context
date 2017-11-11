@@ -22,7 +22,7 @@
         app:layout_heightPercent="6%"
         app:layout_widthPercent="88%" />
 
-    <com.baliyaan.android.wordincontext.Components.Definition.UI.DefinitionView
+    <vilokanlabs.vilokandictionary.Components.Definition.UI.View
         android:id="@+id/definition_view"
         android:layout_width="match_parent"
         android:layout_alignParentLeft="true"
@@ -30,7 +30,7 @@
         android:layout_below="@+id/search_view"
         app:layout_heightPercent="20%" />
 
-    <com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView
+    <vilokanlabs.vilokandictionary.Components.Examples.UI.View
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_alignParentLeft="true"

@@ -8,16 +8,17 @@ import android.support.v7.widget.SearchView;
 import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.R;
 
+
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class SearchBoxMVPViewPort extends MVPViewPortAdapter<SearchBoxMVPContract.Navigator,SearchBoxMVPContract.MVPPresenter> implements SearchBoxMVPContract.MVPView,SearchBoxMVPContract.MVPPort {
+public class ViewPort extends MVPViewPortAdapter<Contract.Navigator,Contract.Presenter> implements Contract.View,Contract.Port {
     private SearchView _searchView = null;
 
-    public SearchBoxMVPViewPort(SearchBoxMVPContract.Navigator navigator){
+    public ViewPort(Contract.Navigator navigator){
         super(navigator);
-        super.bindPresenter(new SearchBoxMVPPresenter(this));
+        super.bindPresenter(new Presenter(this));
 
         //Configure searchView
         _searchView = (SearchView) ((Activity)navigator().getContext()).findViewById(R.id.search_view);

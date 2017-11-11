@@ -12,18 +12,18 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 11/4/2017.
  */
 
-public class DefinitionView extends RelativeLayout {
-    public DefinitionView(Context context) {
+public class CustomView extends RelativeLayout {
+    public CustomView(Context context) {
         super(context);
         init(context);
     }
 
-    public DefinitionView(Context context, AttributeSet attrs) {
+    public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public DefinitionView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

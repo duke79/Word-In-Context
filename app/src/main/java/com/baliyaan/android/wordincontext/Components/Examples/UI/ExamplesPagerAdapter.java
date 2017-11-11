@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.baliyaan.android.wordincontext.Components.Examples.MVP.ExamplesMVPContract;
+import com.baliyaan.android.wordincontext.Components.Examples.MVP.Contract;
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
 import com.baliyaan.android.wordincontext.R;
 
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ExamplesPagerAdapter extends PagerAdapter{
     private List<Example> exampleList;
-    private ExamplesMVPContract.Navigator _navigator = null;
+    private Contract.Navigator _navigator = null;
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
@@ -117,7 +117,7 @@ public class ExamplesPagerAdapter extends PagerAdapter{
         contentView.setText(wordToSpan);
     }
 
-    public ExamplesPagerAdapter(ExamplesMVPContract.Navigator navigator, List<Example> iList)
+    public ExamplesPagerAdapter(Contract.Navigator navigator, List<Example> iList)
     {
         this.exampleList = iList;
         _navigator = navigator;

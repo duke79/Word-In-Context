@@ -9,7 +9,7 @@ import com.baliyaan.android.mvp.Interfaces.BaseMVPView;
  * Created by Pulkit Singh on 11/5/2017.
  */
 
-public interface DefinitionMVPContract {
+public interface Contract {
     interface Presenter extends BaseMVPPresenter{
         void onQueryTextSubmit(final String query);
     }

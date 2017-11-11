@@ -13,15 +13,15 @@ import com.baliyaan.android.mvp.Interfaces.BaseMVPView;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public interface SearchBoxMVPContract {
-    interface MVPView extends BaseMVPView<MVPPresenter> {
+public interface Contract {
+    interface View extends BaseMVPView<Presenter> {
         void setSuggestionsAdapter(CursorAdapter adapter);
         void clearFocus();
         void setQuery(String query, boolean b);
         void onQueryTextSubmit(String query);
     }
 
-    interface MVPPresenter extends BaseMVPPresenter,SearchView.OnQueryTextListener,SearchView.OnSuggestionListener{
+    interface Presenter extends BaseMVPPresenter,SearchView.OnQueryTextListener,SearchView.OnSuggestionListener{
 
     }
 
@@ -29,7 +29,7 @@ public interface SearchBoxMVPContract {
         void onSearchBoxSubmit(String query);
     }
 
-    interface MVPPort extends BaseMVPPort {
+    interface Port extends BaseMVPPort {
         void setQuery(String query);
     }
 }

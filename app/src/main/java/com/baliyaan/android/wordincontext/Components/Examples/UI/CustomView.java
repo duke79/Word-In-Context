@@ -9,34 +9,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.baliyaan.android.wordincontext.R;
 import com.rd.PageIndicatorView;
 
 import static com.baliyaan.android.wordincontext.R.id.pageIndicatorView;
 
+
 /**
  * Created by Pulkit Singh on 7/5/2017.
  */
 
-public class ExamplesView extends RelativeLayout {
+public class CustomView extends RelativeLayout {
 
     private TextView _textView;
     private ViewPager _viewPager;
     private PagerAdapter _adapter;
     private PageIndicatorView _pageIndicatorView;
 
-    public ExamplesView(Context context) {
+    public CustomView(Context context) {
         super(context);
         init(context);
     }
 
-    public ExamplesView(Context context, AttributeSet attrs) {
+    public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public ExamplesView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -71,7 +71,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
         findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.VISIBLE);
-        findViewById(R.id.pageIndicatorView).setVisibility(View.VISIBLE);
+        findViewById(pageIndicatorView).setVisibility(View.VISIBLE);
 
 
         _adapter.notifyDataSetChanged();
@@ -83,7 +83,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
         findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
-        findViewById(R.id.pageIndicatorView).setVisibility(View.GONE);
+        findViewById(pageIndicatorView).setVisibility(View.GONE);
     }
 
     public void displayWelcomeText(){
@@ -91,7 +91,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.VISIBLE);
         findViewById(R.id.error_text).setVisibility(View.GONE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
-        findViewById(R.id.pageIndicatorView).setVisibility(View.GONE);
+        findViewById(pageIndicatorView).setVisibility(View.GONE);
     }
 
     public void displayErrorText(){
@@ -99,7 +99,7 @@ public class ExamplesView extends RelativeLayout {
         findViewById(R.id.welcome_text).setVisibility(View.GONE);
         findViewById(R.id.error_text).setVisibility(View.VISIBLE);
         findViewById(R.id.view_pager).setVisibility(View.GONE);
-        findViewById(R.id.pageIndicatorView).setVisibility(View.GONE);
+        findViewById(pageIndicatorView).setVisibility(View.GONE);
     }
 
     public void setVisibilityForChildren(int visibility){

@@ -20,10 +20,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Pulkit Singh on 11/5/2017.
  */
 
-public class DefinitionMVPPresenter
-        extends MVPPresenterAdapter<DefinitionMVPContract.View>
-implements DefinitionMVPContract.Presenter{
-    protected DefinitionMVPPresenter(DefinitionMVPContract.View view) {
+public class Presenter
+        extends MVPPresenterAdapter<Contract.View>
+implements Contract.Presenter{
+    protected Presenter(Contract.View view) {
         super(view);
     }
 

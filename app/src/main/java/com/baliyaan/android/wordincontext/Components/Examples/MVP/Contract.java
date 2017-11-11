@@ -9,11 +9,12 @@ import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
 
 import java.util.List;
 
+
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public interface ExamplesMVPContract {
+public interface Contract {
     interface Presenter extends BaseMVPPresenter {
         void onQueryTextSubmit(final String query);
         List<Example> getExamples();

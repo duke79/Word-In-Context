@@ -5,24 +5,25 @@ import android.app.Activity;
 import android.widget.Button;
 
 import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
+import com.baliyaan.android.wordincontext.Components.Examples.UI.CustomView;
 import com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesPagerAdapter;
-import com.baliyaan.android.wordincontext.Components.Examples.UI.ExamplesView;
 import com.baliyaan.android.wordincontext.R;
+
 
 /**
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class ExamplesMVPViewPort extends MVPViewPortAdapter<ExamplesMVPContract.Navigator, ExamplesMVPContract.Presenter> implements ExamplesMVPContract.View, ExamplesMVPContract.Port {
+public class ViewPort extends MVPViewPortAdapter<Contract.Navigator, Contract.Presenter> implements Contract.View, Contract.Port {
 
-    private ExamplesView _view;
+    private CustomView _view;
 
-    public ExamplesMVPViewPort(final ExamplesMVPContract.Navigator navigator) {
+    public ViewPort(final Contract.Navigator navigator) {
         super(navigator);
-        super.bindPresenter(new ExamplesMVPPresenter(this));
+        super.bindPresenter(new Presenter(this));
 
         //Configure UIExamplesView
-        _view = (ExamplesView) ((Activity)navigator().getContext()).findViewById(R.id.list_view);
+        _view = (CustomView) ((Activity) navigator().getContext()).findViewById(R.id.list_view);
         ExamplesPagerAdapter pagerAdapter = new ExamplesPagerAdapter(navigator(), presenter().getExamples());
         if (null != _view) {
             _view.setAdapter(pagerAdapter);
