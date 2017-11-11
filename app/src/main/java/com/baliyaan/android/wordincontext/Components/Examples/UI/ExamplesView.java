@@ -44,7 +44,7 @@ public class ExamplesView extends RelativeLayout {
     private void init(Context context) {
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.ui_examples_view,this);
+        inflater.inflate(R.layout.examples_main,this);
         displayWelcomeText();
     }
 

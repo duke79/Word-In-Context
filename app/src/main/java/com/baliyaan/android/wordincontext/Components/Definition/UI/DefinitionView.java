@@ -31,7 +31,7 @@ public class DefinitionView extends RelativeLayout {
     private void init(Context context) {
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.ui_definition_view,this);
+        inflater.inflate(R.layout.definition_main,this);
     }
 
     public void setDefinition(String definition){

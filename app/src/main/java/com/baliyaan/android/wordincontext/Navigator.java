@@ -66,7 +66,7 @@ public class Navigator extends MVPNavigatorAdapter implements SearchBoxMVPContra
         _definitionPort.onQueryTextSubmit(query);
     }
 
-    @Override
+    @Override //ExamplesMVPContract.Navigator
     public String getQuery() {
         return _query;
     }

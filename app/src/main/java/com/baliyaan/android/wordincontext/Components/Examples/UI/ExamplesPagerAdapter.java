@@ -36,7 +36,7 @@ public class ExamplesPagerAdapter extends PagerAdapter{
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater inflater = LayoutInflater.from(_navigator.getContext());
-        View wordExamplePage = inflater.inflate(R.layout.word_example,container,false);
+        View wordExamplePage = inflater.inflate(R.layout.examples_word_example,container,false);
         SetPageValues(wordExamplePage,position);
         container.addView(wordExamplePage);
         return wordExamplePage;
