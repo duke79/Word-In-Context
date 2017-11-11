@@ -4,7 +4,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import junit.framework.Assert;
 
-import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,9 +25,6 @@ public class OnlineDictionaryTST {
         } catch (IOException e) {
             e.printStackTrace();
             Assert.fail("Web-page not fetched.");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Assert.fail("JSON failure.");
         }
     }
 }
