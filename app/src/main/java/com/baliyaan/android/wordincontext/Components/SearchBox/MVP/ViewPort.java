@@ -2,6 +2,7 @@ package com.baliyaan.android.wordincontext.Components.SearchBox.MVP;
 
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 
@@ -61,5 +62,11 @@ public class ViewPort extends MVPViewPortAdapter<Contract.Navigator,Contract.Pre
             navigator().onSearchBoxSubmit(query);
             clearFocus();
         }
+    }
+
+    @Override
+    public void onRestoreState(Bundle state) {
+        super.onRestoreState(state);
+        clearFocus();
     }
 }

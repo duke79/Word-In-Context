@@ -5,23 +5,23 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
     android:background="#ffffff"
-    tools:context="com.baliyaan.android.wordincontext.MainActivity"
-    android:layout_alignParentBottom="true">
+    tools:context="com.baliyaan.android.wordincontext.MainActivity">
 
     <ImageView
-        android:src="@drawable/background_mage"
-        android:scaleType = "centerCrop"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_mage" />
 
     <android.support.v7.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        app:layout_heightPercent="6%"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
-        android:background="#aaaaaa" />
+        android:background="#aaaaaa"
+        app:layout_heightPercent="6%" />
 
     <com.baliyaan.android.wordincontext.Components.Definition.UI.CustomView
         android:id="@+id/definition_view"
@@ -35,6 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/definition_view"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
 </android.support.percent.PercentRelativeLayout>
