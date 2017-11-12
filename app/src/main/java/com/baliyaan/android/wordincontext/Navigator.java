@@ -28,7 +28,7 @@ public class Navigator
     private com.baliyaan.android.wordincontext.Components.Examples.MVP.Contract.Port _examplesPort = null;
     private Contract.Port _definitionPort = null;
     //Local-Use-Vars
-    private String _query = "dictionary";
+    private String _query = "";
 
     /*
     * Initialization
@@ -44,12 +44,14 @@ public class Navigator
     * Methods to be called from parent activity
      */
     void onSaveState(Bundle state) {
+        state.putString("query",_query);
         _examplesPort.onSaveState(state);
         _searchPort.onSaveState(state);
         _definitionPort.onSaveState(state);
     }
 
     void onRestoreState(Bundle state) {
+        _query = (String) state.get("query");
         _examplesPort.onRestoreState(state);
         _searchPort.onRestoreState(state);
         _definitionPort.onRestoreState(state);
