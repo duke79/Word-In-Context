@@ -10,10 +10,10 @@
     tools:context="com.baliyaan.android.wordincontext.MainActivity">
 
     <ImageView
+        android:id="@+id/background_blur"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background_mage" />
+        android:scaleType="centerCrop" />
 
     <android.support.v7.widget.SearchView
         android:id="@+id/search_view"
