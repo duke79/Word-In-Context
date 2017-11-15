@@ -13,9 +13,15 @@ import com.baliyaan.android.wordincontext.R;
  */
 
 public class PaperView extends RelativeLayout {
+    /*
+    * Member variables
+     */
     private float _bottomViewHeight;
     private float _topViewHeight;
 
+    /*
+    * Initialization
+     */
     public PaperView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
@@ -45,8 +51,30 @@ public class PaperView extends RelativeLayout {
         }
     }
 
+    /*
+    * Behavior
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
+    }
+
+    /*
+    * Attributes' setters & getters
+     */
+    public float getTopViewHeight(){
+        return _topViewHeight;
+    }
+
+    public void setTopViewHeight(float height){
+        _topViewHeight = height;
+    }
+
+    public float getBottomViewHeight(){
+        return _bottomViewHeight;
+    }
+
+    public void setBottomViewHeight(float height){
+        _bottomViewHeight = height;
     }
 }
