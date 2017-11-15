@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         /*
         * Prepare UI
         */
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.paper_example);
         _navigator = new Navigator(this);
         ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
         // Back-ground image

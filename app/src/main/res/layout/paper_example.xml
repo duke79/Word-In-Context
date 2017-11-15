@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baliyaan.android.wordincontext.Components.Paper.PaperView android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:topViewHeight="@dimen/activity_horizontal_margin"
+    app:bottomViewHeight="@dimen/activity_vertical_margin"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/background_blur"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop" />
+
+    <android.support.v7.widget.SearchView
+        android:background="#aaaaaa"
+        android:id="@+id/search_view"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent" />
+
+    <com.baliyaan.android.wordincontext.Components.Definition.UI.CustomView
+        android:id="@+id/definition_view"
+        android:layout_below="@id/search_view"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+
+    <com.baliyaan.android.wordincontext.Components.Examples.UI.CustomView
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:id="@+id/list_view"
+        android:layout_below="@+id/definition_view"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent" />
+
+</com.baliyaan.android.wordincontext.Components.Paper.PaperView>
