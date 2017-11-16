@@ -3,6 +3,7 @@ package com.baliyaan.android.wordincontext.Components.Paper;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
@@ -14,10 +15,14 @@ import com.baliyaan.android.wordincontext.R;
 
 public class PaperView extends RelativeLayout {
     /*
-    * Member variables
+    * View Attributes
      */
     private float _bottomViewHeight;
     private float _topViewHeight;
+    /*
+    * Helper objects
+     */
+    private GestureDetector _gestureDetector;
 
     /*
     * Initialization
@@ -37,6 +42,9 @@ public class PaperView extends RelativeLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        /*
+        * Read attributes
+         */
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
                 R.styleable.PaperView,
@@ -45,36 +53,53 @@ public class PaperView extends RelativeLayout {
         try {
             _bottomViewHeight = a.getDimension(R.styleable.PaperView_bottomViewHeight, 0);
             _topViewHeight = a.getDimension(R.styleable.PaperView_topViewHeight, 0);
-        }
-        finally {
+        } finally {
             a.recycle();
         }
+
+        /*
+        * One time initialization
+         */
+        _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector());
     }
 
     /*
     * Behavior
      */
+    class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+        boolean result = _gestureDetector.onTouchEvent(event);
+        if (!result) {
+            if(event.getAction() == MotionEvent.ACTION_UP){
+                result = true;
+            }
+        }
+        return result;
     }
 
     /*
     * Attributes' setters & getters
      */
-    public float getTopViewHeight(){
+    public float getTopViewHeight() {
         return _topViewHeight;
     }
 
-    public void setTopViewHeight(float height){
+    public void setTopViewHeight(float height) {
         _topViewHeight = height;
     }
 
-    public float getBottomViewHeight(){
+    public float getBottomViewHeight() {
         return _bottomViewHeight;
     }
 
-    public void setBottomViewHeight(float height){
+    public void setBottomViewHeight(float height) {
         _bottomViewHeight = height;
     }
 }
