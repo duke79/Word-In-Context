@@ -1,11 +1,13 @@
 package com.baliyaan.android.wordincontext.Components.Paper;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 
 import com.baliyaan.android.wordincontext.R;
 
@@ -20,9 +22,15 @@ public class PaperView extends RelativeLayout {
     private float _bottomViewHeight;
     private float _topViewHeight;
     /*
+    * Enums etc (other non-changing values)
+     */
+    int SCALE = 2;
+    /*
     * Helper objects
      */
     private GestureDetector _gestureDetector;
+    private Scroller _scroller;
+    private ValueAnimator _scrollAnimator;
 
     /*
     * Initialization
@@ -61,6 +69,20 @@ public class PaperView extends RelativeLayout {
         * One time initialization
          */
         _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector());
+        _scroller = new Scroller(getContext(),null,true);
+        _scrollAnimator = ValueAnimator.ofFloat(0,1);
+        _scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if(!_scroller.isFinished()){
+                    _scroller.computeScrollOffset();
+                    float offsetX = _scroller.getCurrX();
+                    float offsetY = _scroller.getCurrY();
+                } else {
+                    _scrollAnimator.cancel();
+                }
+            }
+        });
     }
 
     /*
@@ -70,6 +92,13 @@ public class PaperView extends RelativeLayout {
         @Override
         public boolean onDown(MotionEvent e) {
             return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            _scroller.fling(0,0,Math.round(velocityX/SCALE),Math.round(velocityY/SCALE),0,100,0,100);
+            _scrollAnimator.start();
+            return super.onFling(e1, e2, velocityX, velocityY);
         }
     }
 
