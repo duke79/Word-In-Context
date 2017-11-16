@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
@@ -78,11 +79,19 @@ public class PaperView extends RelativeLayout {
                     _scroller.computeScrollOffset();
                     float offsetX = _scroller.getCurrX();
                     float offsetY = _scroller.getCurrY();
+                    setViewSize(offsetX,offsetY);
                 } else {
                     _scrollAnimator.cancel();
                 }
             }
         });
+    }
+
+    private void setViewSize(float offsetX, float offsetY) {
+        ViewGroup.LayoutParams params =  getLayoutParams();
+        params.width = 300+Math.round(offsetX)*5;
+        params.height = 500+Math.round(offsetY)*8;
+        setLayoutParams(params);
     }
 
     /*
