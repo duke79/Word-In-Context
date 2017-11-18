@@ -175,6 +175,25 @@ public class PaperView extends RelativeLayout {
         return result;
     }
 
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        layoutFirstPosition(l,t,r,b);
+    }
+
+    private void layoutFirstPosition(int l, int t, int r, int b) {
+        int heightBottomView = _bottomView.getMeasuredHeight();
+        int widthBottomView = _bottomView.getMeasuredWidth();
+        int heightFullSearchBar = _fullSearchBar.getMeasuredHeight();
+        int widthFullSearchBar = _fullSearchBar.getMeasuredWidth();
+        int heightParallexView = _parallexView.getMeasuredHeight();
+        int widthParallexView = _parallexView.getMeasuredWidth();
+        
+        _bottomView.layout(0,b-heightBottomView,r,b);
+        _fullSearchBar.layout(0,100,r,100+heightFullSearchBar);
+        _parallexView.layout(0,b,r,b+heightParallexView);
+    }
+
     /*
     * Attributes' setters & getters
      */
