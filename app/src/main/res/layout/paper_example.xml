@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.baliyaan.android.wordincontext.Components.Paper.PaperView android:layout_height="match_parent"
     android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:topViewHeight="@dimen/activity_horizontal_margin"
-    app:bottomViewHeight="@dimen/activity_vertical_margin"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    app:full_search_bar_id="@id/search_view"
+    app:bottom_view_id="@id/definition_view"
+    app:parallex_view_id="@id/list_view">
 
     <ImageView
         android:id="@+id/background_blur"

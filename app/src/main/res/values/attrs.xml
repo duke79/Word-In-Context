@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="PaperView">
-        <attr name="topViewHeight" format="dimension"/>
-        <attr name="bottomViewHeight" format="dimension"/>
+        <attr name="full_search_bar_id" format="reference"/>
+        <attr name="minimal_search_bar_id" format="reference"/>
+        <attr name="bottom_view_id" format="reference"/>
+        <attr name="parallex_view_id" format="reference"/>
+        <attr name="title_view_id" format="reference"/>
+        <attr name="content_view_id" format="reference"/>
     </declare-styleable>
 </resources>
