@@ -1,6 +1,5 @@
 package com.baliyaan.android.wordincontext.Components.Paper;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.widget.ViewDragHelper;
@@ -10,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Scroller;
 
 import com.baliyaan.android.wordincontext.R;
 
@@ -19,35 +17,15 @@ import com.baliyaan.android.wordincontext.R;
  */
 
 public class PaperView extends RelativeLayout {
-
-    class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (velocityY > SWIPE_THRESHOLD_VELOCITY) {
-                _scroller.fling(0, 0, 1000 + Math.round(velocityX), 1000 + Math.round(velocityY), 0, 100, 0, 100);
-                _scrollAnimator.start();
-                return true;
-            }
-            return super.onFling(e1, e2, velocityX, velocityY);
-        }
-    }
-
     /*
     * View Attributes
      */
     // Enums etc (other non-changing values)
-    private int DENSITY_INDEPENDENT_THRESHOLD;
-    private int SWIPE_THRESHOLD_VELOCITY;
-    private float SENSITIVITY = 1f;
+    int DENSITY_INDEPENDENT_THRESHOLD;
+    int SWIPE_THRESHOLD_VELOCITY;
+    float SENSITIVITY = 1f;
     // Helper objects
     private GestureDetector _gestureDetector;
-    private Scroller _scroller;
-    private ValueAnimator _scrollAnimator;
     private ViewDragHelper _dragHelper;
     // Child views
     private int _fullSearchBarId;
@@ -89,25 +67,6 @@ public class PaperView extends RelativeLayout {
         /*
         * One time initialization
          */
-        _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector());
-        _scroller = new Scroller(getContext());
-        _scrollAnimator = ValueAnimator.ofFloat(0, 1);
-        _scrollAnimator.setDuration(50000);
-        _scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                if (!_scroller.isFinished()) {
-                    _scroller.computeScrollOffset();
-                    float offsetX = _scroller.getCurrX();
-                    float offsetY = _scroller.getCurrY();
-                    setViewSize(offsetX, offsetY);
-                } else {
-                    float offsetX = _scroller.getCurrX();
-                    float offsetY = _scroller.getCurrY();
-                    _scrollAnimator.cancel();
-                }
-            }
-        });
         DENSITY_INDEPENDENT_THRESHOLD = 200;
         float density = getResources().getDisplayMetrics().density;
         SWIPE_THRESHOLD_VELOCITY = (int) (DENSITY_INDEPENDENT_THRESHOLD * density);
@@ -138,6 +97,7 @@ public class PaperView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mapViews();
+        _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector(this));
         _dragHelper = ViewDragHelper.create(this,SENSITIVITY, new DragHelper());
     }
 
@@ -150,7 +110,7 @@ public class PaperView extends RelativeLayout {
         _contentView = findViewById(_contentViewId);
     }
 
-    private void setViewSize(float offsetX, float offsetY) {
+    void setViewSize(float offsetX, float offsetY) {
         ViewGroup.LayoutParams params = getLayoutParams();
         //params.width = 300 + Math.round(offsetX) * 5;
         int parentHeight = ((View) getParent()).getHeight();
