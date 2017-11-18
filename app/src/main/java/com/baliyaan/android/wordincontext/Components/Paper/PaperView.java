@@ -34,12 +34,12 @@ public class PaperView extends RelativeLayout {
     private int _parallaxViewId;
     private int _titleViewId;
     private int _contentViewId;
-    private View _fullSearchBar;
-    private View _minimalSearchBar;
-    private View _bottomView;
-    private View _parallaxView;
-    private View _titleView;
-    private View _contentView;
+    View _fullSearchBar;
+    View _minimalSearchBar;
+    View _bottomView;
+    View _parallaxView;
+    View _titleView;
+    View _contentView;
 
     /*
     * Initialization
@@ -98,7 +98,7 @@ public class PaperView extends RelativeLayout {
         super.onFinishInflate();
         mapViews();
         _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector(this));
-        _dragHelper = ViewDragHelper.create(this,SENSITIVITY, new DragHelper());
+        _dragHelper = ViewDragHelper.create(this,SENSITIVITY, new DragHelper(this));
     }
 
     private void mapViews() {
@@ -110,18 +110,9 @@ public class PaperView extends RelativeLayout {
         _contentView = findViewById(_contentViewId);
     }
 
-    void setViewSize(float offsetX, float offsetY) {
-        ViewGroup.LayoutParams params = getLayoutParams();
-        //params.width = 300 + Math.round(offsetX) * 5;
-        int parentHeight = ((View) getParent()).getHeight();
-        params.height = Math.round(parentHeight * offsetY / 100);
-        setLayoutParams(params);
-    }
-
     /*
     * Behavior
      */
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean shouldIntercept =  _dragHelper.shouldInterceptTouchEvent(ev);
@@ -152,6 +143,14 @@ public class PaperView extends RelativeLayout {
         _bottomView.layout(0,b-heightBottomView,r,b);
         _fullSearchBar.layout(0,100,r,100+heightFullSearchBar);
         _parallaxView.layout(0,b,r,b+heightParallexView);
+    }
+
+    void setViewSize(float offsetX, float offsetY) {
+        ViewGroup.LayoutParams params = getLayoutParams();
+        //params.width = 300 + Math.round(offsetX) * 5;
+        int parentHeight = ((View) getParent()).getHeight();
+        params.height = Math.round(parentHeight * offsetY / 100);
+        setLayoutParams(params);
     }
 
     /*

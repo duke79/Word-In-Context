@@ -8,8 +8,22 @@ import android.view.View;
  */
 
 class DragHelper extends ViewDragHelper.Callback{
+    PaperView _paperView;
+
+    public DragHelper(PaperView paperView) {
+        _paperView = paperView;
+    }
+
     @Override
     public boolean tryCaptureView(View child, int pointerId) {
-        return false;
+        boolean bTryCapture = false;
+        if(child.equals(_paperView._bottomView))
+            bTryCapture = true;
+        return bTryCapture;
+    }
+
+    @Override
+    public int clampViewPositionVertical(View child, int top, int dy) {
+        return top+dy;
     }
 }
