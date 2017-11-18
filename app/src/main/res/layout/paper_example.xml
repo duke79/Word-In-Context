@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:full_search_bar_id="@id/search_view"
     app:bottom_view_id="@id/definition_view"
-    app:parallex_view_id="@id/list_view">
+    app:parallax_view_id="@id/list_view">
 
     <ImageView
         android:id="@+id/background_blur"

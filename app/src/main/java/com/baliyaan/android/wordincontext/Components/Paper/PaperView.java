@@ -3,6 +3,7 @@ package com.baliyaan.android.wordincontext.Components.Paper;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -18,35 +19,47 @@ import com.baliyaan.android.wordincontext.R;
  */
 
 public class PaperView extends RelativeLayout {
+
+    class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (velocityY > SWIPE_THRESHOLD_VELOCITY) {
+                _scroller.fling(0, 0, 1000 + Math.round(velocityX), 1000 + Math.round(velocityY), 0, 100, 0, 100);
+                _scrollAnimator.start();
+                return true;
+            }
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
+    }
+
     /*
     * View Attributes
      */
-    //private float _bottomViewHeight;
-    //private float _topViewHeight;
-    /*
-    * Enums etc (other non-changing values)
-     */
+    // Enums etc (other non-changing values)
     private int DENSITY_INDEPENDENT_THRESHOLD;
     private int SWIPE_THRESHOLD_VELOCITY;
-    /*
-    * Helper objects
-     */
+    private float SENSITIVITY = 1f;
+    // Helper objects
     private GestureDetector _gestureDetector;
     private Scroller _scroller;
     private ValueAnimator _scrollAnimator;
-    /*
-    * Child views
-     */
+    private ViewDragHelper _dragHelper;
+    // Child views
     private int _fullSearchBarId;
     private int _minimalSearchBarId;
     private int _bottomViewId;
-    private int _parallexViewId;
+    private int _parallaxViewId;
     private int _titleViewId;
     private int _contentViewId;
     private View _fullSearchBar;
     private View _minimalSearchBar;
     private View _bottomView;
-    private View _parallexView;
+    private View _parallaxView;
     private View _titleView;
     private View _contentView;
 
@@ -71,7 +84,7 @@ public class PaperView extends RelativeLayout {
         /*
         * Read attributes
          */
-        initializeAttribute(context, attrs);
+        initializeAttributes(context, attrs);
 
         /*
         * One time initialization
@@ -100,7 +113,7 @@ public class PaperView extends RelativeLayout {
         SWIPE_THRESHOLD_VELOCITY = (int) (DENSITY_INDEPENDENT_THRESHOLD * density);
     }
 
-    private void initializeAttribute(Context context, AttributeSet attrs) {
+    private void initializeAttributes(Context context, AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
                 R.styleable.PaperView,
@@ -113,8 +126,8 @@ public class PaperView extends RelativeLayout {
             _fullSearchBarId = a.getResourceId(R.styleable.PaperView_full_search_bar_id, 0);
             _minimalSearchBarId = a.getResourceId(R.styleable.PaperView_minimal_search_bar_id, 0);
             _bottomViewId = a.getResourceId(R.styleable.PaperView_bottom_view_id, 0);
-            _parallexViewId = a.getResourceId(R.styleable.PaperView_parallex_view_id, 0);
-            _titleViewId = a.getResourceId(R.styleable.PaperView_parallex_view_id, 0);
+            _parallaxViewId = a.getResourceId(R.styleable.PaperView_parallax_view_id, 0);
+            _titleViewId = a.getResourceId(R.styleable.PaperView_parallax_view_id, 0);
             _contentViewId = a.getResourceId(R.styleable.PaperView_content_view_id, 0);
         } finally {
             a.recycle();
@@ -125,13 +138,14 @@ public class PaperView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mapViews();
+        _dragHelper = ViewDragHelper.create(this,SENSITIVITY, new DragHelper());
     }
 
     private void mapViews() {
         _fullSearchBar = findViewById(_fullSearchBarId);
         _minimalSearchBar = findViewById(_minimalSearchBarId);
         _bottomView = findViewById(_bottomViewId);
-        _parallexView = findViewById(_parallexViewId);
+        _parallaxView = findViewById(_parallaxViewId);
         _titleView = findViewById(_titleViewId);
         _contentView = findViewById(_contentViewId);
     }
@@ -147,31 +161,17 @@ public class PaperView extends RelativeLayout {
     /*
     * Behavior
      */
-    class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (velocityY > SWIPE_THRESHOLD_VELOCITY) {
-                _scroller.fling(0, 0, 1000 + Math.round(velocityX), 1000 + Math.round(velocityY), 0, 100, 0, 100);
-                _scrollAnimator.start();
-                return true;
-            }
-            return super.onFling(e1, e2, velocityX, velocityY);
-        }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        boolean shouldIntercept =  _dragHelper.shouldInterceptTouchEvent(ev);
+        return shouldIntercept;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean result = _gestureDetector.onTouchEvent(event);
-        if (!result) {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                result = true;
-            }
-        }
+        _dragHelper.processTouchEvent(event);
         return result;
     }
 
@@ -186,12 +186,12 @@ public class PaperView extends RelativeLayout {
         int widthBottomView = _bottomView.getMeasuredWidth();
         int heightFullSearchBar = _fullSearchBar.getMeasuredHeight();
         int widthFullSearchBar = _fullSearchBar.getMeasuredWidth();
-        int heightParallexView = _parallexView.getMeasuredHeight();
-        int widthParallexView = _parallexView.getMeasuredWidth();
+        int heightParallexView = _parallaxView.getMeasuredHeight();
+        int widthParallexView = _parallaxView.getMeasuredWidth();
         
         _bottomView.layout(0,b-heightBottomView,r,b);
         _fullSearchBar.layout(0,100,r,100+heightFullSearchBar);
-        _parallexView.layout(0,b,r,b+heightParallexView);
+        _parallaxView.layout(0,b,r,b+heightParallexView);
     }
 
     /*
@@ -221,12 +221,12 @@ public class PaperView extends RelativeLayout {
         this._bottomViewId = _bottomViewId;
     }
 
-    public int get_parallexViewId() {
-        return _parallexViewId;
+    public int get_parallaxViewId() {
+        return _parallaxViewId;
     }
 
-    public void set_parallexViewId(int _parallexViewId) {
-        this._parallexViewId = _parallexViewId;
+    public void set_parallaxViewId(int _parallaxViewId) {
+        this._parallaxViewId = _parallaxViewId;
     }
 
     public int get_titleViewId() {
