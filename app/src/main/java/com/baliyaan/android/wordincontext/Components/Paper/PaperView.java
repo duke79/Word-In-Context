@@ -1,5 +1,6 @@
 package com.baliyaan.android.wordincontext.Components.Paper;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.widget.ViewDragHelper;
@@ -10,6 +11,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 
 import com.baliyaan.android.wordincontext.R;
 
@@ -23,6 +25,7 @@ import java.util.Map;
 
 public class PaperView extends RelativeLayout {
     class PVOnTouchListener implements OnTouchListener {
+
         class ViewAttributes {
             int top;
             int bottom;
@@ -34,16 +37,58 @@ public class PaperView extends RelativeLayout {
         int _startY;
         int _lastX;
         int _lastY;
+        private int _maxOffsetForBottomView;
+        private float _dragSpeedScaleForPrallax;
         private final VelocityTracker _velocityTracker;
+        private final Scroller _scroller;
+        private final ValueAnimator _scrollAnimator;
         Map<View, ViewAttributes> _startingViewPositions = new HashMap<>();
 
         PVOnTouchListener() {
             _velocityTracker = VelocityTracker.obtain();
+            _scroller = new Scroller(getContext());
+
+            _scrollAnimator = ValueAnimator.ofFloat(0, 1);
+            _scrollAnimator.setDuration(50000);
+            _scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    if (!_scroller.isFinished()) {
+                        _scroller.computeScrollOffset();
+                        float scrollerY = _scroller.getCurrY();
+                        _bottomView.layout(_bottomView.getLeft(),
+                                Math.round(scrollerY),
+                                _bottomView.getRight(),
+                                Math.round(scrollerY + _bottomView.getMeasuredHeight()));
+
+                        /*int remainingDistBV = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _bottomView.getTop();
+                        int remainingDistPV = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getTop();
+                        int requiredPVpos = Math.round(remainingDistBV*_dragSpeedScaleForPrallax);*/
+                        int parallaxTop = Math.round(_dragSpeedScaleForPrallax * (scrollerY - _parallaxView.getMeasuredHeight()));
+                        _parallaxView.layout(_parallaxView.getLeft(),
+                                parallaxTop,
+                                _parallaxView.getRight(),
+                                parallaxTop + _parallaxView.getMeasuredHeight());
+
+                    } else {
+                        _scrollAnimator.cancel();
+                    }
+                }
+            });
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             _velocityTracker.addMovement(event);
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                _velocityTracker.computeCurrentVelocity(1000);
+                /*
+                * Touch released
+                * Fling the view to good position
+                 */
+                if (_velocityTracker.getYVelocity() > 0)
+                    scrollToBottom();
+            }
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 _startX = Math.round(event.getX());
@@ -62,17 +107,13 @@ public class PaperView extends RelativeLayout {
                 parallaxViewAttributes.left = _parallaxView.getLeft();
                 parallaxViewAttributes.right = _parallaxView.getRight();
                 _startingViewPositions.put(_parallaxView, parallaxViewAttributes);
+
+                _maxOffsetForBottomView = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getMeasuredHeight();
+                _dragSpeedScaleForPrallax = Math.abs((float) (getMeasuredHeight() - _bottomView.getMeasuredHeight()) / _maxOffsetForBottomView);
             } else {
                 updatePVLayout(event);
             }
 
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                _velocityTracker.computeCurrentVelocity(1000);
-                float velocityX = _velocityTracker.getXVelocity();
-                float velocityY = _velocityTracker.getYVelocity();
-                if (velocityX > velocityY)
-                    ;
-            }
             _lastX = Math.round(event.getX());
             _lastY = Math.round(event.getY());
             return true;
@@ -83,9 +124,6 @@ public class PaperView extends RelativeLayout {
             int currentY = Math.round(event.getY());
             ViewAttributes bottomViewAttributes = _startingViewPositions.get(_bottomView);
 
-            int maxOffsetForBottomView = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getMeasuredHeight();
-            float dragSpeedScaleForPrallax = Math.abs((float) (getMeasuredHeight()-_bottomView.getMeasuredHeight()) / maxOffsetForBottomView);
-
             if (currentY - _lastY < 0 && _bottomView.getTop() <= _parallaxView.getMeasuredHeight())
                 return;
 
@@ -94,13 +132,20 @@ public class PaperView extends RelativeLayout {
 
             _bottomView.offsetTopAndBottom(currentY - _lastY);
 
-            int offsetForParallax = Math.round(dragSpeedScaleForPrallax * (currentY - _lastY));
+            int offsetForParallax = Math.round(_dragSpeedScaleForPrallax * (currentY - _lastY));
             _parallaxView.offsetTopAndBottom(offsetForParallax);
 
             /*_bottomView.layout(bottomViewAttributes.left+(currentX-_startX),
                     bottomViewAttributes.top+(currentY-_startY),
                     bottomViewAttributes.right+(currentX-_startX),
                     bottomViewAttributes.bottom+(currentY-_startY));*/
+        }
+
+        private void scrollToBottom() {
+            int scrollStart = _bottomView.getTop();
+            int scrollEnd = getMeasuredHeight() - _bottomView.getMeasuredHeight() - scrollStart;
+            _scroller.startScroll(0, scrollStart, 0, scrollEnd);
+            _scrollAnimator.start();
         }
     }
 
