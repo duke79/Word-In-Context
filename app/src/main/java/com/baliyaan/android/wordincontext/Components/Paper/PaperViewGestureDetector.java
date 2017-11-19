@@ -10,12 +10,19 @@ import android.widget.Scroller;
  */
 
 class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
+    final int DENSITY_INDEPENDENT_THRESHOLD = 200;
+    final int SWIPE_THRESHOLD_VELOCITY;
+    float SENSITIVITY = 1f;
+
     private PaperView _paperView;
     private Scroller _scroller;
     private ValueAnimator _scrollAnimator;
 
     PaperViewGestureDetector(PaperView paperView){
         _paperView = paperView;
+
+        float density = _paperView.getResources().getDisplayMetrics().density;
+        SWIPE_THRESHOLD_VELOCITY = (int) (DENSITY_INDEPENDENT_THRESHOLD * density);
 
         _scroller = new Scroller(_paperView.getContext());
         _scrollAnimator = ValueAnimator.ofFloat(0, 1);
@@ -44,7 +51,7 @@ class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (velocityY > _paperView.SWIPE_THRESHOLD_VELOCITY) {
+        if (velocityY > SWIPE_THRESHOLD_VELOCITY) {
             _scroller.fling(0, 0, 1000 + Math.round(velocityX), 1000 + Math.round(velocityY), 0, 100, 0, 100);
             _scrollAnimator.start();
             return true;

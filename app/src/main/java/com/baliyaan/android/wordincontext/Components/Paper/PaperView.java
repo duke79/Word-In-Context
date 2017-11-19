@@ -2,7 +2,6 @@ package com.baliyaan.android.wordincontext.Components.Paper;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -21,12 +20,9 @@ public class PaperView extends RelativeLayout {
     * View Attributes
      */
     // Enums etc (other non-changing values)
-    int DENSITY_INDEPENDENT_THRESHOLD;
-    int SWIPE_THRESHOLD_VELOCITY;
-    float SENSITIVITY = 1f;
+    //float SENSITIVITY = 1f;
     // Helper objects
-    private GestureDetector _gestureDetector;
-    private ViewDragHelper _dragHelper;
+    GestureDetector _gestureDetector;
     // Child views
     private int _fullSearchBarId;
     private int _minimalSearchBarId;
@@ -63,13 +59,6 @@ public class PaperView extends RelativeLayout {
         * Read attributes
          */
         initializeAttributes(context, attrs);
-
-        /*
-        * One time initialization
-         */
-        DENSITY_INDEPENDENT_THRESHOLD = 200;
-        float density = getResources().getDisplayMetrics().density;
-        SWIPE_THRESHOLD_VELOCITY = (int) (DENSITY_INDEPENDENT_THRESHOLD * density);
     }
 
     private void initializeAttributes(Context context, AttributeSet attrs) {
@@ -98,7 +87,6 @@ public class PaperView extends RelativeLayout {
         super.onFinishInflate();
         mapViews();
         _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector(this));
-        _dragHelper = ViewDragHelper.create(this,SENSITIVITY, new DragHelper(this));
     }
 
     private void mapViews() {
@@ -113,16 +101,11 @@ public class PaperView extends RelativeLayout {
     /*
     * Behavior
      */
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean shouldIntercept =  _dragHelper.shouldInterceptTouchEvent(ev);
-        return shouldIntercept;
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean result = _gestureDetector.onTouchEvent(event);
-        _dragHelper.processTouchEvent(event);
+        boolean result = false;
+        result = _gestureDetector.onTouchEvent(event);
         return result;
     }
 
