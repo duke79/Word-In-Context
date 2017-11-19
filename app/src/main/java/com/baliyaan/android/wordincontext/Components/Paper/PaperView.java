@@ -2,6 +2,7 @@ package com.baliyaan.android.wordincontext.Components.Paper;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.baliyaan.android.wordincontext.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Pulkit Singh on 11/15/2017.
@@ -23,6 +26,7 @@ public class PaperView extends RelativeLayout {
     //float SENSITIVITY = 1f;
     // Helper objects
     GestureDetector _gestureDetector;
+    ViewDragHelper _dragHelper;
     // Child views
     private int _fullSearchBarId;
     private int _minimalSearchBarId;
@@ -59,6 +63,7 @@ public class PaperView extends RelativeLayout {
         * Read attributes
          */
         initializeAttributes(context, attrs);
+        _dragHelper = ViewDragHelper.create(this, new DragHelper(this));
     }
 
     private void initializeAttributes(Context context, AttributeSet attrs) {
@@ -103,16 +108,26 @@ public class PaperView extends RelativeLayout {
      */
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (shoudProcessTouchEvent(event))
+            _gestureDetector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event) || shoudProcessTouchEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean result = false;
-        result = _gestureDetector.onTouchEvent(event);
-        return result;
+        return super.onTouchEvent(event);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        layoutFirstPosition(l,t,r,b);
+        layoutFirstPosition(l, t, r, b);
     }
 
     private void layoutFirstPosition(int l, int t, int r, int b) {
@@ -122,10 +137,10 @@ public class PaperView extends RelativeLayout {
         int widthFullSearchBar = _fullSearchBar.getMeasuredWidth();
         int heightParallexView = _parallaxView.getMeasuredHeight();
         int widthParallexView = _parallaxView.getMeasuredWidth();
-        
-        _bottomView.layout(0,b-heightBottomView,r,b);
-        _fullSearchBar.layout(0,100,r,100+heightFullSearchBar);
-        _parallaxView.layout(0,b,r,b+heightParallexView);
+
+        _bottomView.layout(0, b - heightBottomView, r, b);
+        _fullSearchBar.layout(0, 100, r, 100 + heightFullSearchBar);
+        _parallaxView.layout(0, b, r, b + heightParallexView);
     }
 
     void setViewSize(float offsetX, float offsetY) {
@@ -134,6 +149,29 @@ public class PaperView extends RelativeLayout {
         int parentHeight = ((View) getParent()).getHeight();
         params.height = Math.round(parentHeight * offsetY / 100);
         setLayoutParams(params);
+    }
+
+    private ArrayList<View> _viewsUnderTouchOnDown;
+    boolean _bShoudProcessTouchEvent = false;
+    public boolean shoudProcessTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            float x = ev.getX();
+            float y = ev.getY();
+
+            _viewsUnderTouchOnDown = new ArrayList<>();
+            int nbrChildren = getChildCount();
+            for (int i = 0; i < nbrChildren; i++) {
+                View child = getChildAt(i);
+                if (_dragHelper.isViewUnder(child, Math.round(x), Math.round(y)))
+                    _viewsUnderTouchOnDown.add(child);
+
+            }
+            if (_viewsUnderTouchOnDown.size() > 0)
+                _bShoudProcessTouchEvent = true;
+            else
+                _bShoudProcessTouchEvent = false;
+        }
+        return _bShoudProcessTouchEvent;
     }
 
     /*

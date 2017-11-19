@@ -18,7 +18,7 @@ class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
     private Scroller _scroller;
     private ValueAnimator _scrollAnimator;
 
-    PaperViewGestureDetector(PaperView paperView){
+    PaperViewGestureDetector(PaperView paperView) {
         _paperView = paperView;
 
         float density = _paperView.getResources().getDisplayMetrics().density;
@@ -46,13 +46,14 @@ class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
 
     @Override
     public boolean onDown(MotionEvent e) {
-        return true;
+        return false;
     }
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if (velocityY > SWIPE_THRESHOLD_VELOCITY) {
-            _scroller.fling(0, 0, 1000 + Math.round(velocityX), 1000 + Math.round(velocityY), 0, 100, 0, 100);
+            //_scroller.fling(0, 0, 1000 + Math.round(velocityX), 1000 + Math.round(velocityY), 0, 100, 0, 100);
+            _scroller.startScroll(0, 0, 100, 100);
             _scrollAnimator.start();
             return true;
         }
