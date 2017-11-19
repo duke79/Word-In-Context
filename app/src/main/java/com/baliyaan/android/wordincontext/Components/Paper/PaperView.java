@@ -6,6 +6,7 @@ import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -20,9 +21,30 @@ import java.util.ArrayList;
 
 public class PaperView extends RelativeLayout {
     class PVOnTouchListener implements OnTouchListener{
+        float _startX;
+        float _startY;
+        private final VelocityTracker _velocityTracker;
+
+        PVOnTouchListener(){
+            _velocityTracker = VelocityTracker.obtain();
+        }
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            return false;
+            _velocityTracker.addMovement(event);
+
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                _startX = event.getX();
+                _startY = event.getY();
+            }
+            if(event.getAction() == MotionEvent.ACTION_UP){
+                _velocityTracker.computeCurrentVelocity(1000);
+                float velocityX = _velocityTracker.getXVelocity();
+                float velocityY = _velocityTracker.getYVelocity();
+                if(velocityX > velocityY)
+                    ;
+            }
+            return true;
         }
     }
     /*
