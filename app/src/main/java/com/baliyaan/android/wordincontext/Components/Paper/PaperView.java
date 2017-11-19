@@ -32,6 +32,8 @@ public class PaperView extends RelativeLayout {
 
         int _startX;
         int _startY;
+        int _lastX;
+        int _lastY;
         private final VelocityTracker _velocityTracker;
         Map<View,ViewAttributes> _startingViewPositions = new HashMap<>();
 
@@ -65,6 +67,8 @@ public class PaperView extends RelativeLayout {
                 if(velocityX > velocityY)
                     ;
             }
+            _lastX = Math.round(event.getX());
+            _lastY = Math.round(event.getY());
             return true;
         }
 
@@ -72,10 +76,12 @@ public class PaperView extends RelativeLayout {
             int currentX = Math.round(event.getX());
             int currentY = Math.round(event.getY());
             ViewAttributes bottomViewAttributes = _startingViewPositions.get(_bottomView);
-            _bottomView.layout(bottomViewAttributes.left+(currentX-_startX),
+            _bottomView.offsetLeftAndRight(currentX-_lastX);
+            _bottomView.offsetTopAndBottom(currentY-_lastY);
+            /*_bottomView.layout(bottomViewAttributes.left+(currentX-_startX),
                     bottomViewAttributes.top+(currentY-_startY),
                     bottomViewAttributes.right+(currentX-_startX),
-                    bottomViewAttributes.bottom+(currentY-_startY));
+                    bottomViewAttributes.bottom+(currentY-_startY));*/
         }
     }
     /*
