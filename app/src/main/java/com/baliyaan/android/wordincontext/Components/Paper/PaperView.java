@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import com.baliyaan.android.wordincontext.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Pulkit Singh on 11/15/2017.
@@ -21,9 +23,17 @@ import java.util.ArrayList;
 
 public class PaperView extends RelativeLayout {
     class PVOnTouchListener implements OnTouchListener{
-        float _startX;
-        float _startY;
+        class ViewAttributes{
+            int top;
+            int bottom;
+            int left;
+            int right;
+        }
+
+        int _startX;
+        int _startY;
         private final VelocityTracker _velocityTracker;
+        Map<View,ViewAttributes> _startingViewPositions = new HashMap<>();
 
         PVOnTouchListener(){
             _velocityTracker = VelocityTracker.obtain();
@@ -34,9 +44,20 @@ public class PaperView extends RelativeLayout {
             _velocityTracker.addMovement(event);
 
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                _startX = event.getX();
-                _startY = event.getY();
+                _startX = Math.round(event.getX());
+                _startY = Math.round(event.getY());
+                ViewAttributes bottomViewAttributes = new ViewAttributes();
+                bottomViewAttributes.top = _bottomView.getTop();
+                bottomViewAttributes.bottom = _bottomView.getBottom();
+                bottomViewAttributes.left = _bottomView.getLeft();
+                bottomViewAttributes.right = _bottomView.getRight();
+                _startingViewPositions.put(_bottomView,bottomViewAttributes);
             }
+            else
+            {
+                updatePVLayout(event);
+            }
+
             if(event.getAction() == MotionEvent.ACTION_UP){
                 _velocityTracker.computeCurrentVelocity(1000);
                 float velocityX = _velocityTracker.getXVelocity();
@@ -45,6 +66,16 @@ public class PaperView extends RelativeLayout {
                     ;
             }
             return true;
+        }
+
+        private void updatePVLayout(MotionEvent event) {
+            int currentX = Math.round(event.getX());
+            int currentY = Math.round(event.getY());
+            ViewAttributes bottomViewAttributes = _startingViewPositions.get(_bottomView);
+            _bottomView.layout(bottomViewAttributes.left+(currentX-_startX),
+                    bottomViewAttributes.top+(currentY-_startY),
+                    bottomViewAttributes.right+(currentX-_startX),
+                    bottomViewAttributes.bottom+(currentY-_startY));
         }
     }
     /*
