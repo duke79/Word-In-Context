@@ -22,8 +22,8 @@ import java.util.Map;
  */
 
 public class PaperView extends RelativeLayout {
-    class PVOnTouchListener implements OnTouchListener{
-        class ViewAttributes{
+    class PVOnTouchListener implements OnTouchListener {
+        class ViewAttributes {
             int top;
             int bottom;
             int left;
@@ -35,9 +35,9 @@ public class PaperView extends RelativeLayout {
         int _lastX;
         int _lastY;
         private final VelocityTracker _velocityTracker;
-        Map<View,ViewAttributes> _startingViewPositions = new HashMap<>();
+        Map<View, ViewAttributes> _startingViewPositions = new HashMap<>();
 
-        PVOnTouchListener(){
+        PVOnTouchListener() {
             _velocityTracker = VelocityTracker.obtain();
         }
 
@@ -45,7 +45,7 @@ public class PaperView extends RelativeLayout {
         public boolean onTouch(View v, MotionEvent event) {
             _velocityTracker.addMovement(event);
 
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 _startX = Math.round(event.getX());
                 _startY = Math.round(event.getY());
 
@@ -54,25 +54,23 @@ public class PaperView extends RelativeLayout {
                 bottomViewAttributes.bottom = _bottomView.getBottom();
                 bottomViewAttributes.left = _bottomView.getLeft();
                 bottomViewAttributes.right = _bottomView.getRight();
-                _startingViewPositions.put(_bottomView,bottomViewAttributes);
+                _startingViewPositions.put(_bottomView, bottomViewAttributes);
 
                 ViewAttributes parallaxViewAttributes = new ViewAttributes();
                 parallaxViewAttributes.top = _parallaxView.getTop();
                 parallaxViewAttributes.bottom = _parallaxView.getBottom();
                 parallaxViewAttributes.left = _parallaxView.getLeft();
                 parallaxViewAttributes.right = _parallaxView.getRight();
-                _startingViewPositions.put(_parallaxView,parallaxViewAttributes);
-            }
-            else
-            {
+                _startingViewPositions.put(_parallaxView, parallaxViewAttributes);
+            } else {
                 updatePVLayout(event);
             }
 
-            if(event.getAction() == MotionEvent.ACTION_UP){
+            if (event.getAction() == MotionEvent.ACTION_UP) {
                 _velocityTracker.computeCurrentVelocity(1000);
                 float velocityX = _velocityTracker.getXVelocity();
                 float velocityY = _velocityTracker.getYVelocity();
-                if(velocityX > velocityY)
+                if (velocityX > velocityY)
                     ;
             }
             _lastX = Math.round(event.getX());
@@ -84,21 +82,26 @@ public class PaperView extends RelativeLayout {
             int currentX = Math.round(event.getX());
             int currentY = Math.round(event.getY());
             ViewAttributes bottomViewAttributes = _startingViewPositions.get(_bottomView);
-            _bottomView.offsetLeftAndRight(currentX-_lastX);
-            _bottomView.offsetTopAndBottom(currentY-_lastY);
-            _parallaxView.offsetLeftAndRight(currentX-_lastX);
-            _parallaxView.offsetTopAndBottom(2*(currentY-_lastY));
+            if (currentY > GOLDEN_HEIGHT) {
+                _bottomView.offsetLeftAndRight(currentX - _lastX);
+                _bottomView.offsetTopAndBottom(currentY - _lastY);
+                _parallaxView.offsetLeftAndRight(currentX - _lastX);
+                _parallaxView.offsetTopAndBottom(2 * (currentY - _lastY));
             /*_bottomView.layout(bottomViewAttributes.left+(currentX-_startX),
                     bottomViewAttributes.top+(currentY-_startY),
                     bottomViewAttributes.right+(currentX-_startX),
                     bottomViewAttributes.bottom+(currentY-_startY));*/
+            }
         }
     }
+
     /*
     * View Attributes
      */
     // Enums etc (other non-changing values)
     //float SENSITIVITY = 1f;
+    double GOLDEN_RATIO = 1.61803398875;
+    int GOLDEN_HEIGHT;
     // Helper objects
     GestureDetector _gestureDetector;
     ViewDragHelper _dragHelper;
@@ -188,7 +191,7 @@ public class PaperView extends RelativeLayout {
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (shoudProcessTouchEvent(event)) {
             //_gestureDetector.onTouchEvent(event);
-            _onTouchListener.onTouch(this,event);
+            _onTouchListener.onTouch(this, event);
         }
         return super.dispatchTouchEvent(event) || shoudProcessTouchEvent(event);
     }
@@ -207,6 +210,7 @@ public class PaperView extends RelativeLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         layoutFirstPosition(l, t, r, b);
+        GOLDEN_HEIGHT = getMeasuredHeight() - (int) Math.round(getMeasuredHeight() / GOLDEN_RATIO);
     }
 
     private void layoutFirstPosition(int l, int t, int r, int b) {
@@ -219,7 +223,7 @@ public class PaperView extends RelativeLayout {
 
         _bottomView.layout(0, b - heightBottomView, r, b);
         _fullSearchBar.layout(0, 100, r, 100 + heightFullSearchBar);
-        _parallaxView.layout(0, b, r, b + heightParallexView);
+        _parallaxView.layout(0, b - heightBottomView, r, b - heightBottomView + heightParallexView);
     }
 
     void setViewSize(float offsetX, float offsetY) {
@@ -232,6 +236,7 @@ public class PaperView extends RelativeLayout {
 
     private ArrayList<View> _viewsUnderTouchOnDown;
     boolean _bShoudProcessTouchEvent = false;
+
     public boolean shoudProcessTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             float x = ev.getX();
