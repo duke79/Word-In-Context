@@ -82,16 +82,25 @@ public class PaperView extends RelativeLayout {
             int currentX = Math.round(event.getX());
             int currentY = Math.round(event.getY());
             ViewAttributes bottomViewAttributes = _startingViewPositions.get(_bottomView);
-            if (currentY > GOLDEN_HEIGHT) {
-                _bottomView.offsetLeftAndRight(currentX - _lastX);
-                _bottomView.offsetTopAndBottom(currentY - _lastY);
-                _parallaxView.offsetLeftAndRight(currentX - _lastX);
-                _parallaxView.offsetTopAndBottom(2 * (currentY - _lastY));
+
+            int maxOffsetForBottomView = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getMeasuredHeight();
+            float dragSpeedScaleForPrallax = Math.abs((float) (getMeasuredHeight()-_bottomView.getMeasuredHeight()) / maxOffsetForBottomView);
+
+            if (currentY - _lastY < 0 && _bottomView.getTop() <= _parallaxView.getMeasuredHeight())
+                return;
+
+            if (currentY - _lastY > 0 && _bottomView.getBottom() >= getMeasuredHeight())
+                return;
+
+            _bottomView.offsetTopAndBottom(currentY - _lastY);
+
+            int offsetForParallax = Math.round(dragSpeedScaleForPrallax * (currentY - _lastY));
+            _parallaxView.offsetTopAndBottom(offsetForParallax);
+
             /*_bottomView.layout(bottomViewAttributes.left+(currentX-_startX),
                     bottomViewAttributes.top+(currentY-_startY),
                     bottomViewAttributes.right+(currentX-_startX),
                     bottomViewAttributes.bottom+(currentY-_startY));*/
-            }
         }
     }
 
