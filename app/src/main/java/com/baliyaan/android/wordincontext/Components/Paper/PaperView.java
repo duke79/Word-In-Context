@@ -19,6 +19,12 @@ import java.util.ArrayList;
  */
 
 public class PaperView extends RelativeLayout {
+    class PVOnTouchListener implements OnTouchListener{
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return false;
+        }
+    }
     /*
     * View Attributes
      */
@@ -27,6 +33,7 @@ public class PaperView extends RelativeLayout {
     // Helper objects
     GestureDetector _gestureDetector;
     ViewDragHelper _dragHelper;
+    PVOnTouchListener _onTouchListener;
     // Child views
     private int _fullSearchBarId;
     private int _minimalSearchBarId;
@@ -63,7 +70,6 @@ public class PaperView extends RelativeLayout {
         * Read attributes
          */
         initializeAttributes(context, attrs);
-        _dragHelper = ViewDragHelper.create(this, new DragHelper(this));
     }
 
     private void initializeAttributes(Context context, AttributeSet attrs) {
@@ -91,7 +97,9 @@ public class PaperView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mapViews();
+        _dragHelper = ViewDragHelper.create(this, new DragHelper(this));
         _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector(this));
+        _onTouchListener = new PVOnTouchListener();
     }
 
     private void mapViews() {
@@ -109,8 +117,10 @@ public class PaperView extends RelativeLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (shoudProcessTouchEvent(event))
-            _gestureDetector.onTouchEvent(event);
+        if (shoudProcessTouchEvent(event)) {
+            //_gestureDetector.onTouchEvent(event);
+            _onTouchListener.onTouch(this,event);
+        }
         return super.dispatchTouchEvent(event) || shoudProcessTouchEvent(event);
     }
 
@@ -159,13 +169,21 @@ public class PaperView extends RelativeLayout {
             float y = ev.getY();
 
             _viewsUnderTouchOnDown = new ArrayList<>();
-            int nbrChildren = getChildCount();
+
+
+            /*int nbrChildren = getChildCount();
             for (int i = 0; i < nbrChildren; i++) {
                 View child = getChildAt(i);
                 if (_dragHelper.isViewUnder(child, Math.round(x), Math.round(y)))
                     _viewsUnderTouchOnDown.add(child);
 
-            }
+            }*/
+            if (_dragHelper.isViewUnder(_bottomView, Math.round(x), Math.round(y)))
+                _viewsUnderTouchOnDown.add(_bottomView);
+            if (_dragHelper.isViewUnder(_parallaxView, Math.round(x), Math.round(y)))
+                _viewsUnderTouchOnDown.add(_parallaxView);
+
+
             if (_viewsUnderTouchOnDown.size() > 0)
                 _bShoudProcessTouchEvent = true;
             else

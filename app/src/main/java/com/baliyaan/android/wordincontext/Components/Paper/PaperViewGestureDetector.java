@@ -45,8 +45,8 @@ class PaperViewGestureDetector extends GestureDetector.SimpleOnGestureListener {
     }
 
     @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return super.onScroll(e1, e2, distanceX, distanceY);
     }
 
     @Override
