@@ -48,12 +48,20 @@ public class PaperView extends RelativeLayout {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 _startX = Math.round(event.getX());
                 _startY = Math.round(event.getY());
+
                 ViewAttributes bottomViewAttributes = new ViewAttributes();
                 bottomViewAttributes.top = _bottomView.getTop();
                 bottomViewAttributes.bottom = _bottomView.getBottom();
                 bottomViewAttributes.left = _bottomView.getLeft();
                 bottomViewAttributes.right = _bottomView.getRight();
                 _startingViewPositions.put(_bottomView,bottomViewAttributes);
+
+                ViewAttributes parallaxViewAttributes = new ViewAttributes();
+                parallaxViewAttributes.top = _parallaxView.getTop();
+                parallaxViewAttributes.bottom = _parallaxView.getBottom();
+                parallaxViewAttributes.left = _parallaxView.getLeft();
+                parallaxViewAttributes.right = _parallaxView.getRight();
+                _startingViewPositions.put(_parallaxView,parallaxViewAttributes);
             }
             else
             {
@@ -78,6 +86,8 @@ public class PaperView extends RelativeLayout {
             ViewAttributes bottomViewAttributes = _startingViewPositions.get(_bottomView);
             _bottomView.offsetLeftAndRight(currentX-_lastX);
             _bottomView.offsetTopAndBottom(currentY-_lastY);
+            _parallaxView.offsetLeftAndRight(currentX-_lastX);
+            _parallaxView.offsetTopAndBottom(2*(currentY-_lastY));
             /*_bottomView.layout(bottomViewAttributes.left+(currentX-_startX),
                     bottomViewAttributes.top+(currentY-_startY),
                     bottomViewAttributes.right+(currentX-_startX),
