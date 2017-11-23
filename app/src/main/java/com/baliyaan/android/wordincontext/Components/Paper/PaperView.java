@@ -33,6 +33,8 @@ public class PaperView extends RelativeLayout {
         private final VelocityTracker _velocityTracker;
         private final Scroller _scroller;
         private final ValueAnimator _scrollAnimator;
+        private final Scroller _scrollerSV;
+        private final ValueAnimator _scrollAnimatorSV;
 
         PVOnTouchListener() {
             _velocityTracker = VelocityTracker.obtain();
@@ -66,6 +68,28 @@ public class PaperView extends RelativeLayout {
             });
 
             /*
+            * Scroll SearchView
+            */
+            _scrollerSV = new Scroller(getContext());
+            _scrollAnimatorSV = ValueAnimator.ofFloat(0, 1);
+            _scrollAnimatorSV.setDuration(50000);
+            _scrollAnimatorSV.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    if (!_scrollerSV.isFinished()) {
+                        _scrollerSV.computeScrollOffset();
+                        float scrollerY = _scrollerSV.getCurrY();
+                        _fullSearchBar.layout(_fullSearchBar.getLeft(),
+                                Math.round(scrollerY),
+                                _fullSearchBar.getRight(),
+                                Math.round(scrollerY + _fullSearchBar.getMeasuredHeight()));
+                    } else {
+                        _scrollAnimatorSV.cancel();
+                    }
+                }
+            });
+
+            /*
             * Initialize DragSpeedScale relative to BottomView
              */
             _maxOffsetForBottomView = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getMeasuredHeight();
@@ -92,12 +116,12 @@ public class PaperView extends RelativeLayout {
             }
 
             /*
-            * Drag if any action other than ACTION_DOWN
+            * Drag if ACTION_MOVE
              */
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 _startX = Math.round(event.getX());
                 _startY = Math.round(event.getY());
-            } else {
+            } else if(MotionEvent.ACTION_MOVE == event.getAction()){
                 updatePVLayout(event);
             }
 
@@ -126,13 +150,16 @@ public class PaperView extends RelativeLayout {
 
             if (bDraggingUp && bBottomViewAboveParallaxView)
                 return;
-            if (!bDraggingUp && bBottomViewTouchedBottom) {
+            if (!bDraggingUp && bBottomViewTouchedBottom && event.getAction() == MotionEvent.ACTION_MOVE) {
+                _bBottomTouchedInLastEvent = true;
                 onTouchBottom();
                 return;
             }
 
-            if (_bBottomTouchedInLastEvent)
+            if (_bBottomTouchedInLastEvent) {
+                _bBottomTouchedInLastEvent = false;
                 onLeaveBottom();
+            }
 
             /*
             * Vertically offset the views
@@ -145,11 +172,23 @@ public class PaperView extends RelativeLayout {
         boolean _bBottomTouchedInLastEvent = false;
 
         private void onTouchBottom() {
-            _bBottomTouchedInLastEvent = true;
+            /*
+            * Scroll the SearchBar into view
+            */
+            int scrollStart = _fullSearchBar.getTop();
+            int scrollEnd = _fullSearchBar.getMeasuredHeight();
+            _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
+            _scrollAnimatorSV.start();
         }
 
         private void onLeaveBottom() {
-            _bBottomTouchedInLastEvent = false;
+            /*
+            * Scroll the SearchBar out of view
+            */
+            int scrollStart = _fullSearchBar.getTop();
+            int scrollEnd = -_fullSearchBar.getMeasuredHeight();
+            _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
+            _scrollAnimatorSV.start();
         }
 
         private void scrollToBottom() {
