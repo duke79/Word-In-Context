@@ -46,8 +46,10 @@ public class PaperView extends RelativeLayout {
 
         PVOnTouchListener() {
             _velocityTracker = VelocityTracker.obtain();
+            /*
+            * Scroll BottomView and its dependents viz. ParallaxView
+            */
             _scroller = new Scroller(getContext());
-
             _scrollAnimator = ValueAnimator.ofFloat(0, 1);
             _scrollAnimator.setDuration(50000);
             _scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -61,9 +63,6 @@ public class PaperView extends RelativeLayout {
                                 _bottomView.getRight(),
                                 Math.round(scrollerY + _bottomView.getMeasuredHeight()));
 
-                        /*int remainingDistBV = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _bottomView.getTop();
-                        int remainingDistPV = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getTop();
-                        int requiredPVpos = Math.round(remainingDistBV*_dragSpeedScaleForPrallax);*/
                         int parallaxTop = Math.round(_dragSpeedScaleForPrallax * (scrollerY - _parallaxView.getMeasuredHeight()));
                         _parallaxView.layout(_parallaxView.getLeft(),
                                 parallaxTop,
@@ -75,6 +74,12 @@ public class PaperView extends RelativeLayout {
                     }
                 }
             });
+
+            /*
+            * Initialize DragSpeedScale relative to BottomView
+             */
+            _maxOffsetForBottomView = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getMeasuredHeight();
+            _dragSpeedScaleForPrallax = Math.abs((float) (getMeasuredHeight() - _bottomView.getMeasuredHeight()) / _maxOffsetForBottomView);
         }
 
         @Override
@@ -107,9 +112,6 @@ public class PaperView extends RelativeLayout {
                 parallaxViewAttributes.left = _parallaxView.getLeft();
                 parallaxViewAttributes.right = _parallaxView.getRight();
                 _startingViewPositions.put(_parallaxView, parallaxViewAttributes);
-
-                _maxOffsetForBottomView = getMeasuredHeight() - _bottomView.getMeasuredHeight() - _parallaxView.getMeasuredHeight();
-                _dragSpeedScaleForPrallax = Math.abs((float) (getMeasuredHeight() - _bottomView.getMeasuredHeight()) / _maxOffsetForBottomView);
             } else {
                 updatePVLayout(event);
             }
@@ -225,7 +227,6 @@ public class PaperView extends RelativeLayout {
         mapViews();
         _dragHelper = ViewDragHelper.create(this, new DragHelper(this));
         _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector(this));
-        _onTouchListener = new PVOnTouchListener();
     }
 
     private void mapViews() {
@@ -243,11 +244,12 @@ public class PaperView extends RelativeLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (shoudProcessTouchEvent(event)) {
+        boolean bShouldProcessTouchEvent = shoudProcessTouchEvent(event);
+        if (bShouldProcessTouchEvent) {
             //_gestureDetector.onTouchEvent(event);
             _onTouchListener.onTouch(this, event);
         }
-        return super.dispatchTouchEvent(event) || shoudProcessTouchEvent(event);
+        return super.dispatchTouchEvent(event) || bShouldProcessTouchEvent;
     }
 
     @Override
@@ -265,6 +267,7 @@ public class PaperView extends RelativeLayout {
         super.onLayout(changed, l, t, r, b);
         layoutFirstPosition(l, t, r, b);
         GOLDEN_HEIGHT = getMeasuredHeight() - (int) Math.round(getMeasuredHeight() / GOLDEN_RATIO);
+        _onTouchListener = new PVOnTouchListener();
     }
 
     private void layoutFirstPosition(int l, int t, int r, int b) {
