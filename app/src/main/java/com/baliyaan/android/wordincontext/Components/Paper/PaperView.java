@@ -103,6 +103,8 @@ public class PaperView extends RelativeLayout {
             * Fling - if ACTION_UP
             */
             _velocityTracker.addMovement(event);
+            boolean bBottomViewAboveParallaxView = _bottomView.getTop() <= _parallaxView.getMeasuredHeight();
+            boolean bBottomViewTouchedBottom = _bottomView.getBottom() >= getMeasuredHeight();
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 _velocityTracker.computeCurrentVelocity(1000);
                 if (_velocityTracker.getYVelocity() > 0) {
@@ -121,8 +123,19 @@ public class PaperView extends RelativeLayout {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 _startX = Math.round(event.getX());
                 _startY = Math.round(event.getY());
-            } else if(MotionEvent.ACTION_MOVE == event.getAction()){
-                updatePVLayout(event);
+            } else if (MotionEvent.ACTION_MOVE == event.getAction()) {
+                int currentX = Math.round(event.getX());
+                int currentY = Math.round(event.getY());
+                int offsetX = currentX - _lastX;
+                int offsetY = currentY - _lastY;
+                boolean bDraggingUp = offsetY < 0;
+
+                if (bDraggingUp && bBottomViewAboveParallaxView)
+                    scrollToMid();
+                else if (!bDraggingUp && bBottomViewTouchedBottom)
+                    scrollToBottom();
+                else
+                    updatePVLayout(event, offsetX, offsetY);
             }
 
             /*
@@ -133,34 +146,7 @@ public class PaperView extends RelativeLayout {
             return true;
         }
 
-        private void updatePVLayout(MotionEvent event) {
-            int currentX = Math.round(event.getX());
-            int currentY = Math.round(event.getY());
-            int offsetX = currentX - _lastX;
-            int offsetY = currentY - _lastY;
-
-            /*
-            * No change if any of the following -
-            * 1. BottomView top about to go above ParallaxView bottom
-            * 2. BottomView bottom about to go below screen
-             */
-            boolean bDraggingUp = offsetY < 0;
-            boolean bBottomViewAboveParallaxView = _bottomView.getTop() <= _parallaxView.getMeasuredHeight();
-            boolean bBottomViewTouchedBottom = _bottomView.getBottom() >= getMeasuredHeight();
-
-            if (bDraggingUp && bBottomViewAboveParallaxView)
-                return;
-            if (!bDraggingUp && bBottomViewTouchedBottom && event.getAction() == MotionEvent.ACTION_MOVE) {
-                _bBottomTouchedInLastEvent = true;
-                onTouchBottom();
-                return;
-            }
-
-            if (_bBottomTouchedInLastEvent) {
-                _bBottomTouchedInLastEvent = false;
-                onLeaveBottom();
-            }
-
+        private void updatePVLayout(MotionEvent event, int offsetX, int offsetY) {
             /*
             * Vertically offset the views
              */
@@ -176,7 +162,8 @@ public class PaperView extends RelativeLayout {
             * Scroll the SearchBar into view
             */
             int scrollStart = _fullSearchBar.getTop();
-            int scrollEnd = _fullSearchBar.getMeasuredHeight();
+            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
+            int scrollEnd = _fullSearchBar.getMeasuredHeight() + lp.topMargin;
             _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
             _scrollAnimatorSV.start();
         }
@@ -186,7 +173,8 @@ public class PaperView extends RelativeLayout {
             * Scroll the SearchBar out of view
             */
             int scrollStart = _fullSearchBar.getTop();
-            int scrollEnd = -_fullSearchBar.getMeasuredHeight();
+            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
+            int scrollEnd = -_fullSearchBar.getMeasuredHeight() - lp.topMargin;
             _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
             _scrollAnimatorSV.start();
         }
