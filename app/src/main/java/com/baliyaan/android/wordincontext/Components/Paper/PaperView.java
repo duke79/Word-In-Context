@@ -35,6 +35,10 @@ public class PaperView extends RelativeLayout {
         private final ValueAnimator _scrollAnimator;
         private final Scroller _scrollerSV;
         private final ValueAnimator _scrollAnimatorSV;
+        private boolean _bUpDragAllowed;
+        private boolean _bDownDragAllowed;
+        private int _lastBottomTop;
+        private int TOLERANCE = 2;
 
         PVOnTouchListener() {
             _velocityTracker = VelocityTracker.obtain();
@@ -103,17 +107,15 @@ public class PaperView extends RelativeLayout {
             * Fling - if ACTION_UP
             */
             _velocityTracker.addMovement(event);
-            boolean bBottomViewAboveParallaxView = _bottomView.getTop() <= _parallaxView.getMeasuredHeight();
-            boolean bBottomViewTouchedBottom = _bottomView.getBottom() >= getMeasuredHeight();
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 _velocityTracker.computeCurrentVelocity(1000);
-                if (_velocityTracker.getYVelocity() > 0) {
+                if (_velocityTracker.getYVelocity() > 0 && _bDownDragAllowed) {
                     scrollToBottom();
                     onTouchBottom();
                 }
-                if (_velocityTracker.getYVelocity() < 0) {
+                if (_velocityTracker.getYVelocity() < 0 && _bUpDragAllowed) {
                     scrollToMid();
-                    onLeaveBottom();
+                    //onLeaveBottom();
                 }
             }
 
@@ -123,6 +125,12 @@ public class PaperView extends RelativeLayout {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 _startX = Math.round(event.getX());
                 _startY = Math.round(event.getY());
+
+                int initialBottomTop = _bottomView.getTop();
+                int initialBottomBottom = _bottomView.getBottom();
+                _bUpDragAllowed = initialBottomTop > _parallaxView.getMeasuredHeight();
+                _bDownDragAllowed = initialBottomBottom < getMeasuredHeight();
+                _lastBottomTop = _bottomView.getTop();
             } else if (MotionEvent.ACTION_MOVE == event.getAction()) {
                 int currentX = Math.round(event.getX());
                 int currentY = Math.round(event.getY());
@@ -130,12 +138,21 @@ public class PaperView extends RelativeLayout {
                 int offsetY = currentY - _lastY;
                 boolean bDraggingUp = offsetY < 0;
 
-                if (bDraggingUp && bBottomViewAboveParallaxView)
-                    scrollToMid();
-                else if (!bDraggingUp && bBottomViewTouchedBottom)
-                    scrollToBottom();
-                else
+                if (!_bDownDragAllowed) {
+                    int expectedBVtop = getMeasuredHeight() - _bottomView.getMeasuredHeight();
+                    if (bDraggingUp)
+                        onLeaveBottom();
+                    else if (_lastBottomTop < expectedBVtop - TOLERANCE)
+                        onTouchBottom();
+                }
+
+                if ((bDraggingUp && _bUpDragAllowed)
+                        || (!bDraggingUp && _bDownDragAllowed)) {
+                    _lastBottomTop = _bottomView.getTop();
                     updatePVLayout(event, offsetX, offsetY);
+                    _bUpDragAllowed = _bottomView.getTop() > _parallaxView.getMeasuredHeight();
+                    _bDownDragAllowed = _bottomView.getBottom() < getMeasuredHeight();
+                }
             }
 
             /*
@@ -150,9 +167,16 @@ public class PaperView extends RelativeLayout {
             /*
             * Vertically offset the views
              */
-            _bottomView.offsetTopAndBottom(offsetY);
-            int offsetForParallax = Math.round(_dragSpeedScaleForPrallax * (offsetY));
-            _parallaxView.offsetTopAndBottom(offsetForParallax);
+            int iBVresultBottom = _bottomView.getBottom() + offsetY;
+            int iHeight = getMeasuredHeight();
+            int iBVresultTop = _bottomView.getTop() + offsetY;
+            int iPVHeight = _parallaxView.getMeasuredHeight();
+            if (iBVresultBottom <= iHeight
+                    && iBVresultTop >= iPVHeight) {
+                _bottomView.offsetTopAndBottom(offsetY);
+                int offsetForParallax = Math.round(_dragSpeedScaleForPrallax * (offsetY));
+                _parallaxView.offsetTopAndBottom(offsetForParallax);
+            }
         }
 
         boolean _bBottomTouchedInLastEvent = false;
