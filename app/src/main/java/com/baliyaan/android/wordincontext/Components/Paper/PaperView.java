@@ -197,7 +197,7 @@ public class PaperView extends RelativeLayout {
             */
             int scrollStart = _fullSearchBar.getTop();
             ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
-            int scrollEnd = _fullSearchBar.getMeasuredHeight() + lp.topMargin;
+            int scrollEnd = _fullSearchBar.getMeasuredHeight() + lp.topMargin + SAFE_DISTANCE_TO_HIDE_VIEWS;
             _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
             _scrollAnimatorSV.start();
         }
@@ -208,7 +208,7 @@ public class PaperView extends RelativeLayout {
             */
             int scrollStart = _fullSearchBar.getTop();
             ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
-            int scrollEnd = -_fullSearchBar.getMeasuredHeight() - lp.topMargin;
+            int scrollEnd = -_fullSearchBar.getMeasuredHeight() - lp.topMargin - SAFE_DISTANCE_TO_HIDE_VIEWS;
             _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
             _scrollAnimatorSV.start();
         }
@@ -235,6 +235,7 @@ public class PaperView extends RelativeLayout {
     //float SENSITIVITY = 1f;
     double GOLDEN_RATIO = 1.61803398875;
     int GOLDEN_HEIGHT;
+    private int SAFE_DISTANCE_TO_HIDE_VIEWS = 300;
     // Helper objects
     GestureDetector _gestureDetector;
     ViewDragHelper _dragHelper;
@@ -356,7 +357,8 @@ public class PaperView extends RelativeLayout {
         int widthParallexView = _parallaxView.getMeasuredWidth();
 
         _bottomView.layout(0, b - heightBottomView, r, b);
-        _fullSearchBar.layout(0, 100, r, 100 + heightFullSearchBar);
+        ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
+        _fullSearchBar.layout(0, lp.topMargin, r, lp.topMargin + heightFullSearchBar);
         _parallaxView.layout(0, b - heightBottomView, r, b - heightBottomView + heightParallexView);
     }
 
