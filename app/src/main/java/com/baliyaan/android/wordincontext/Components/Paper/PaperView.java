@@ -112,10 +112,20 @@ public class PaperView extends RelativeLayout {
                 if (_velocityTracker.getYVelocity() > 0 && _bDownDragAllowed) {
                     scrollToBottom();
                     onTouchBottom();
-                }
-                if (_velocityTracker.getYVelocity() < 0 && _bUpDragAllowed) {
+                }else if (_velocityTracker.getYVelocity() < 0 && _bUpDragAllowed) {
                     scrollToMid();
                     //onLeaveBottom();
+                }else if(_bUpDragAllowed || _bDownDragAllowed){
+                    int upwardDragRequired = _parallaxView.getMeasuredHeight() - _bottomView.getTop();
+                    int downwardDragRequired = getMeasuredHeight() - _bottomView.getBottom();
+                    if(upwardDragRequired < downwardDragRequired){
+                        scrollToMid();
+                        //onLeaveBottom();
+                    }
+                    else{
+                        scrollToBottom();
+                        onTouchBottom();
+                    }
                 }
             }
 
