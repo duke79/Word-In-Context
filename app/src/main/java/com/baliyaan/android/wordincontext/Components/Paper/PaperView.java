@@ -40,6 +40,7 @@ public class PaperView extends RelativeLayout {
         private int _lastBottomTop;
         private int TOLERANCE = 2;
         private int _BVtopOnDown;
+        private int onTouchLeaveBottomCount = 0;
 
         PVOnTouchListener() {
             _velocityTracker = VelocityTracker.obtain();
@@ -154,7 +155,7 @@ public class PaperView extends RelativeLayout {
                     int expectedBVtop = getMeasuredHeight() - _bottomView.getMeasuredHeight();
                     if (bDraggingUp)
                         onLeaveBottom();
-                    else if (_lastBottomTop < expectedBVtop)// - TOLERANCE)
+                    else if (_lastBottomTop < expectedBVtop && offsetY!=0)// - TOLERANCE)
                         onTouchBottom();
                 }
 
@@ -198,22 +199,28 @@ public class PaperView extends RelativeLayout {
             /*
             * Scroll the SearchBar into view
             */
-            int scrollStart = _fullSearchBar.getTop();
-            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
-            int scrollEnd = _fullSearchBar.getMeasuredHeight() + lp.topMargin + SAFE_DISTANCE_TO_HIDE_VIEWS;
-            _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
-            _scrollAnimatorSV.start();
+            if(onTouchLeaveBottomCount>0) {
+                int scrollStart = _fullSearchBar.getTop();
+                ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
+                int scrollEnd = _fullSearchBar.getMeasuredHeight() + lp.topMargin + SAFE_DISTANCE_TO_HIDE_VIEWS;
+                _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
+                _scrollAnimatorSV.start();
+                onTouchLeaveBottomCount--;
+            }
         }
 
         private void onLeaveBottom() {
             /*
             * Scroll the SearchBar out of view
             */
-            int scrollStart = _fullSearchBar.getTop();
-            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
-            int scrollEnd = -_fullSearchBar.getMeasuredHeight() - lp.topMargin - SAFE_DISTANCE_TO_HIDE_VIEWS;
-            _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
-            _scrollAnimatorSV.start();
+            if(onTouchLeaveBottomCount<=0) {
+                int scrollStart = _fullSearchBar.getTop();
+                ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
+                int scrollEnd = -_fullSearchBar.getMeasuredHeight() - lp.topMargin - SAFE_DISTANCE_TO_HIDE_VIEWS;
+                _scrollerSV.startScroll(0, scrollStart, 0, scrollEnd);
+                _scrollAnimatorSV.start();
+                onTouchLeaveBottomCount++;
+            }
         }
 
         private void scrollToBottom() {
