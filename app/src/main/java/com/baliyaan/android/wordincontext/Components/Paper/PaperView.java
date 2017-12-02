@@ -3,6 +3,7 @@ package com.baliyaan.android.wordincontext.Components.Paper;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -10,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
 import com.baliyaan.android.wordincontext.R;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by Pulkit Singh on 11/15/2017.
  */
 
-public class PaperView extends RelativeLayout {
+public class PaperView extends CoordinatorLayout {
     class PVOnTouchListener implements OnTouchListener {
 
         int _startX;
@@ -140,6 +140,7 @@ public class PaperView extends RelativeLayout {
 
                 int initialBottomTop = _bottomView.getTop();
                 int initialBottomBottom = _bottomView.getBottom();
+                int parallaxHeight = _parallaxView.getMeasuredHeight();
                 _bUpDragAllowed = initialBottomTop > _parallaxView.getMeasuredHeight();
                 _bDownDragAllowed = initialBottomBottom < getMeasuredHeight();
                 _lastBottomTop = _bottomView.getTop();
@@ -319,7 +320,7 @@ public class PaperView extends RelativeLayout {
                 return false;
             }
         });
-        
+
         _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector(this));
     }
 
@@ -421,51 +422,5 @@ public class PaperView extends RelativeLayout {
     /*
     * Attributes' setters & getters
      */
-    public int get_fullSearchBarId() {
-        return _fullSearchBarId;
-    }
-
-    public void set_fullSearchBarId(int _fullSearchBarId) {
-        this._fullSearchBarId = _fullSearchBarId;
-    }
-
-    public int get_minimalSearchBarId() {
-        return _minimalSearchBarId;
-    }
-
-    public void set_minimalSearchBarId(int _minimalSearchBarId) {
-        this._minimalSearchBarId = _minimalSearchBarId;
-    }
-
-    public int get_bottomViewId() {
-        return _bottomViewId;
-    }
-
-    public void set_bottomViewId(int _bottomViewId) {
-        this._bottomViewId = _bottomViewId;
-    }
-
-    public int get_parallaxViewId() {
-        return _parallaxViewId;
-    }
-
-    public void set_parallaxViewId(int _parallaxViewId) {
-        this._parallaxViewId = _parallaxViewId;
-    }
-
-    public int get_titleViewId() {
-        return _titleViewId;
-    }
-
-    public void set_titleViewId(int _titleViewId) {
-        this._titleViewId = _titleViewId;
-    }
-
-    public int get_contentViewId() {
-        return _contentViewId;
-    }
-
-    public void set_contentViewId(int _contentViewId) {
-        this._contentViewId = _contentViewId;
-    }
+    //..
 }
