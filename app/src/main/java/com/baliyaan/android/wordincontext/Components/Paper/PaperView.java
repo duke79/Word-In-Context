@@ -313,7 +313,13 @@ public class PaperView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mapViews();
-        _dragHelper = ViewDragHelper.create(this, new DragHelper(this));
+        _dragHelper = ViewDragHelper.create(this, new ViewDragHelper.Callback() {
+            @Override
+            public boolean tryCaptureView(View child, int pointerId) {
+                return false;
+            }
+        });
+        
         _gestureDetector = new GestureDetector(getContext(), new PaperViewGestureDetector(this));
     }
 
