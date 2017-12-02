@@ -39,6 +39,7 @@ public class PaperView extends RelativeLayout {
         private boolean _bDownDragAllowed;
         private int _lastBottomTop;
         private int TOLERANCE = 2;
+        private int _BVtopOnDown;
 
         PVOnTouchListener() {
             _velocityTracker = VelocityTracker.obtain();
@@ -112,17 +113,17 @@ public class PaperView extends RelativeLayout {
                 if (_velocityTracker.getYVelocity() > 0 && _bDownDragAllowed) {
                     scrollToBottom();
                     onTouchBottom();
-                }else if (_velocityTracker.getYVelocity() < 0 && _bUpDragAllowed) {
+                } else if (_velocityTracker.getYVelocity() < 0 && _bUpDragAllowed) {
                     scrollToMid();
                     //onLeaveBottom();
-                }else if(_bUpDragAllowed || _bDownDragAllowed){
+                } else if ((_bUpDragAllowed || _bDownDragAllowed)
+                        && (_BVtopOnDown == _bottomView.getTop())) {
                     int upwardDragRequired = _parallaxView.getMeasuredHeight() - _bottomView.getTop();
                     int downwardDragRequired = getMeasuredHeight() - _bottomView.getBottom();
-                    if(upwardDragRequired < downwardDragRequired){
+                    if (upwardDragRequired < downwardDragRequired && _bUpDragAllowed) {
                         scrollToMid();
-                        //onLeaveBottom();
-                    }
-                    else{
+                        onLeaveBottom();
+                    } else if (_bDownDragAllowed) {
                         scrollToBottom();
                         onTouchBottom();
                     }
@@ -141,6 +142,7 @@ public class PaperView extends RelativeLayout {
                 _bUpDragAllowed = initialBottomTop > _parallaxView.getMeasuredHeight();
                 _bDownDragAllowed = initialBottomBottom < getMeasuredHeight();
                 _lastBottomTop = _bottomView.getTop();
+                _BVtopOnDown = _bottomView.getTop();
             } else if (MotionEvent.ACTION_MOVE == event.getAction()) {
                 int currentX = Math.round(event.getX());
                 int currentY = Math.round(event.getY());
@@ -152,7 +154,7 @@ public class PaperView extends RelativeLayout {
                     int expectedBVtop = getMeasuredHeight() - _bottomView.getMeasuredHeight();
                     if (bDraggingUp)
                         onLeaveBottom();
-                    else if (_lastBottomTop < expectedBVtop - TOLERANCE)
+                    else if (_lastBottomTop < expectedBVtop)// - TOLERANCE)
                         onTouchBottom();
                 }
 
@@ -170,6 +172,7 @@ public class PaperView extends RelativeLayout {
              */
             _lastX = Math.round(event.getX());
             _lastY = Math.round(event.getY());
+
             return true;
         }
 
