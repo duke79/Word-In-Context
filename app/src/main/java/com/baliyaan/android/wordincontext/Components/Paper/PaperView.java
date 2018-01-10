@@ -156,7 +156,7 @@ public class PaperView extends CoordinatorLayout {
                     int expectedBVtop = getMeasuredHeight() - _bottomView.getMeasuredHeight();
                     if (bDraggingUp)
                         onLeaveBottom();
-                    else if (_lastBottomTop < expectedBVtop && offsetY!=0)// - TOLERANCE)
+                    else if (_lastBottomTop < expectedBVtop && offsetY != 0)// - TOLERANCE)
                         onTouchBottom();
                 }
 
@@ -200,7 +200,7 @@ public class PaperView extends CoordinatorLayout {
             /*
             * Scroll the SearchBar into view
             */
-            if(onTouchLeaveBottomCount>0) {
+            if (onTouchLeaveBottomCount > 0) {
                 int scrollStart = _fullSearchBar.getTop();
                 ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
                 int scrollEnd = _fullSearchBar.getMeasuredHeight() + lp.topMargin + SAFE_DISTANCE_TO_HIDE_VIEWS;
@@ -214,7 +214,7 @@ public class PaperView extends CoordinatorLayout {
             /*
             * Scroll the SearchBar out of view
             */
-            if(onTouchLeaveBottomCount<=0) {
+            if (onTouchLeaveBottomCount <= 0) {
                 int scrollStart = _fullSearchBar.getTop();
                 ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) _fullSearchBar.getLayoutParams();
                 int scrollEnd = -_fullSearchBar.getMeasuredHeight() - lp.topMargin - SAFE_DISTANCE_TO_HIDE_VIEWS;
@@ -314,6 +314,7 @@ public class PaperView extends CoordinatorLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mapViews();
+        setBehavior();
         _dragHelper = ViewDragHelper.create(this, new ViewDragHelper.Callback() {
             @Override
             public boolean tryCaptureView(View child, int pointerId) {
@@ -331,6 +332,68 @@ public class PaperView extends CoordinatorLayout {
         _parallaxView = findViewById(_parallaxViewId);
         _titleView = findViewById(_titleViewId);
         _contentView = findViewById(_contentViewId);
+    }
+
+    private void setBehavior() {
+        LayoutParams lp = (LayoutParams) _bottomView.getLayoutParams();
+        Behavior behavior = new Behavior() {
+            public int _lastY;
+            public int _lastX;
+            public int _BVtopOnDown;
+            public int _lastBottomTop;
+            public boolean _bDownDragAllowed;
+            public boolean _bUpDragAllowed;
+            public int _startY;
+            public int _startX;
+
+            @Override
+            public boolean onTouchEvent(CoordinatorLayout parent, View child, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    _startX = Math.round(event.getX());
+                    _startY = Math.round(event.getY());
+
+                    int initialBottomTop = child.getTop();
+                    int initialBottomBottom = child.getBottom();
+                    /*int parallaxHeight = _parallaxView.getMeasuredHeight();*/
+                    _bUpDragAllowed = initialBottomTop > _parallaxView.getMeasuredHeight();
+                    _bDownDragAllowed = initialBottomBottom < getMeasuredHeight();
+                    _lastBottomTop = child.getTop();
+                    _BVtopOnDown = child.getTop();
+                } else if (MotionEvent.ACTION_MOVE == event.getAction()) {
+                    int currentX = Math.round(event.getX());
+                    int currentY = Math.round(event.getY());
+                    int offsetX = currentX - _lastX;
+                    int offsetY = currentY - _lastY;
+                    boolean bDraggingUp = offsetY < 0;
+
+                    if (!_bDownDragAllowed) {
+                        int expectedBVtop = getMeasuredHeight() - _bottomView.getMeasuredHeight();
+                        if (bDraggingUp)
+                            ;//onLeaveBottom();
+                        else if (_lastBottomTop < expectedBVtop && offsetY != 0)// - TOLERANCE)
+                            ;//onTouchBottom();
+                    }
+
+                    if ((bDraggingUp && _bUpDragAllowed)
+                            || (!bDraggingUp && _bDownDragAllowed)) {
+                        _lastBottomTop = _bottomView.getTop();
+                        //updatePVLayout(event, offsetX, offsetY);
+                        child.offsetTopAndBottom(offsetY);
+                        _bUpDragAllowed = _bottomView.getTop() > _parallaxView.getMeasuredHeight();
+                        _bDownDragAllowed = _bottomView.getBottom() < getMeasuredHeight();
+                    }
+                }
+
+            /*
+            * Store last position of touch, to help drag
+             */
+                _lastX = Math.round(event.getX());
+                _lastY = Math.round(event.getY());
+
+                return true;
+            }
+        };
+        lp.setBehavior(behavior);
     }
 
     /*
@@ -405,8 +468,9 @@ public class PaperView extends CoordinatorLayout {
                     _viewsUnderTouchOnDown.add(child);
 
             }*/
-            if (_dragHelper.isViewUnder(_bottomView, Math.round(x), Math.round(y)))
-                _viewsUnderTouchOnDown.add(_bottomView);
+
+            /*if (_dragHelper.isViewUnder(_bottomView, Math.round(x), Math.round(y)))
+                _viewsUnderTouchOnDown.add(_bottomView);*/
             if (_dragHelper.isViewUnder(_parallaxView, Math.round(x), Math.round(y)))
                 _viewsUnderTouchOnDown.add(_parallaxView);
 
