@@ -12,6 +12,8 @@ public class WordDictActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*Set content view*/
         setContentView(R.layout.activity_word_dict);
     }
 }
