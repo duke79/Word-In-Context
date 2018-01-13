@@ -105,3 +105,20 @@ public class MainActivity extends AppCompatActivity {
         _navigator.onRestoreState(savedInstanceState);
     }
 }
+
+
+/*
+Todo: Word List
+Todo: Meaning and Examples
+Todo: Could also gamify for better engagement and ease of learning
+Todo: Example: https://play.google.com/store/apps/details?id=com.praveenj.gre
+Todo: Translations
+Todo: Antonyms-Synonyms
+Todo: CamScanner
+Todo: History
+Todo: Save offline
+Todo: MORE LANGUAGES - same app or more apps
+Todo: Voice Search (from any screen, maybe with a keyword first like OK Google, short results preferably on overlay screen)
+Todo: Text-to-Speech
+Todo: More than 10 results
+*/

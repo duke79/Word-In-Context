@@ -14,16 +14,16 @@ import com.baliyaan.android.wordincontext.R;
  * Created by Pulkit Singh on 7/1/2017.
  */
 
-public class ViewPort extends MVPViewPortAdapter<Contract.Navigator,Contract.Presenter> implements Contract.View,Contract.Port {
+public class ViewPort extends MVPViewPortAdapter<Contract.Navigator, Contract.Presenter> implements Contract.View, Contract.Port {
     private SearchView _searchView = null;
 
-    public ViewPort(Contract.Navigator navigator){
+    public ViewPort(Contract.Navigator navigator) {
         super(navigator);
         super.bindPresenter(new Presenter(this));
 
         //Configure searchView
-        _searchView = (SearchView) ((Activity)navigator().getContext()).findViewById(R.id.search_view);
-        if(null!=_searchView) {
+        _searchView = (SearchView) ((Activity) navigator().getContext()).findViewById(R.id.search_view);
+        if (null != _searchView) {
             _searchView.setOnQueryTextListener(presenter());
             _searchView.setOnSuggestionListener(presenter());
         }
@@ -38,22 +38,26 @@ public class ViewPort extends MVPViewPortAdapter<Contract.Navigator,Contract.Pre
 
     @Override
     public void setQuery(String query) {
-        _searchView.setQuery(query,true);
+        if (null != _searchView)
+            _searchView.setQuery(query, true);
     }
 
     @Override
     public void setSuggestionsAdapter(CursorAdapter adapter) {
-        _searchView.setSuggestionsAdapter(adapter);
+        if (null != _searchView)
+            _searchView.setSuggestionsAdapter(adapter);
     }
 
     @Override
     public void clearFocus() {
-        _searchView.clearFocus();
+        if (null != _searchView)
+            _searchView.clearFocus();
     }
 
     @Override
     public void setQuery(String query, boolean b) {
-        _searchView.setQuery(query,b);
+        if (null != _searchView)
+            _searchView.setQuery(query, b);
     }
 
     @Override

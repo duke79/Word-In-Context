@@ -25,23 +25,26 @@ public class ViewPort
     }
 
     private void init() {
-        _view = (CustomView) ((Activity)navigator().getContext()).findViewById(R.id.definition_view);
-        _view.setVisibility(View.GONE);
+        _view = (CustomView) ((Activity) navigator().getContext()).findViewById(R.id.definition_view);
+        if (null != _view)
+            _view.setVisibility(View.GONE);
     }
 
     @Override
     public void setDefinition(String definition) {
         _definition = definition;
-        if(_definition == "")
+        if (_definition == "")
             _definition = navigator().getContext().getString(R.string.no_defintion);
-        _view.setDefinition(_definition);
-        _view.setVisibility(View.VISIBLE);
+        if(null != _view) {
+            _view.setDefinition(_definition);
+            _view.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onSaveState(Bundle state) {
         super.onSaveState(state);
-        state.putString("definition",_definition);
+        state.putString("definition", _definition);
     }
 
     @Override
@@ -53,7 +56,9 @@ public class ViewPort
 
     @Override
     public void onQueryTextSubmit(String query) {
-        _view.setVisibility(View.GONE);
-        presenter().onQueryTextSubmit(query);
+        if(_view != null) {
+            _view.setVisibility(View.GONE);
+            presenter().onQueryTextSubmit(query);
+        }
     }
 }

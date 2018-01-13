@@ -57,12 +57,23 @@ public class Navigator
         _definitionPort.onRestoreState(state);
     }
 
+    /**
+     * Simulates search operation (includes modifying search box).
+     * To be called from parent activity, specifically, to handle search intent from other activities.
+     * @param query word string to search
+     */
     void onSearchIntent(String query) {
         _searchPort.setQuery(query);
     }
 
     /*
     * Navigator implementations
+    */
+
+    /**
+     * To be called from SearchBox.MVP.Contract.Port, once query is submitted from SearchBox
+     * @param query word string to search
+     * @see #onSearchIntent(String)
     */
     @Override //Contract.Navigator
     public void onSearchBoxSubmit(String query) {
@@ -76,6 +87,10 @@ public class Navigator
         return _query;
     }
 
+    /**
+     * Re-load the contents for last query.
+     * Mainly in cases when content couldn't be loaded due to some reason (NoInternet etc.).
+     */
     @Override //Contract.Navigator
     public void onTryAgain() {
         onSearchBoxSubmit(_query);
