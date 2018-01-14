@@ -34,11 +34,12 @@ public class Presenter
                 OfflineDictionary dict = OfflineDictionary.GetInstance(view().getContext());
                 if (null != dict) {
                     ArrayList<String> matchingWords = dict.GetWordsStartingWith(query, 15);
-                    //for (int i = 0; i < matchingWords.size(); i++) {
+                    if (matchingWords.size() > 0) {//for (int i = 0; i < matchingWords.size(); i++) {
                         String matchingWord = matchingWords.get(0);
-                        ArrayList<String> definitions = dict.GetDefinitionsOf(matchingWord,15);
-                        definition = definitions.get(0);
-                    //}
+                        ArrayList<String> definitions = dict.GetDefinitionsOf(matchingWord, 15);
+                        if (definitions.size() > 0)
+                            definition = definitions.get(0);
+                    }
                 }
 
                 observer.onNext(definition); // Send definition

@@ -27,16 +27,6 @@
             app:expandedTitleMarginEnd="4dp"
             >
 
-            <!--<ImageView
-                android:id="@+id/main.backdrop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:fitsSystemWindows="true"
-                android:src="@drawable/ic_share"
-                app:layout_collapseMode="parallax"
-                />-->
-
             <com.baliyaan.android.wordincontext.Components.Examples.UI.CustomView
                 android:id="@+id/list_view"
                 android:layout_width="match_parent"
@@ -48,12 +38,12 @@
                 app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/main.toolbar"
+                android:id="@+id/word_dict_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_collapseMode="parallax"
-                app:title="Frugal"
+                app:title=""
                 />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

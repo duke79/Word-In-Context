@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
 import com.baliyaan.android.wordincontext.Components.Definition.Data.OfflineDictionary;
@@ -116,6 +117,15 @@ public class WordDictActivity
             _query = query;
             _examplesPort.onQueryTextSubmit(query);
             _definitionPort.onQueryTextSubmit(query);
+
+            /*Update toolbar*/
+            String firstChar = query.substring(0,1);
+            firstChar = firstChar.toUpperCase();
+            query = firstChar + query.substring(1,query.length()).toLowerCase();
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.word_dict_toolbar);
+            if(null != toolbar)
+                toolbar.setTitle(query);
         }
 
     /*
