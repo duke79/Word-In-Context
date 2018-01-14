@@ -1,0 +1,12 @@
+com.baliyaan.android.wordincontext
+com.baliyaan.android.wordincontext.Components.Definition.Data
+com.baliyaan.android.wordincontext.Components.Definition.MVP
+com.baliyaan.android.wordincontext.Components.Definition.Model
+com.baliyaan.android.wordincontext.Components.Definition.UI
+com.baliyaan.android.wordincontext.Components.Examples.Data
+com.baliyaan.android.wordincontext.Components.Examples.MVP
+com.baliyaan.android.wordincontext.Components.Examples.Model
+com.baliyaan.android.wordincontext.Components.Examples.UI
+com.baliyaan.android.wordincontext.Components.Paper
+com.baliyaan.android.wordincontext.Components.SearchBox.Data.Autocomplete
+com.baliyaan.android.wordincontext.Components.SearchBox.MVP
