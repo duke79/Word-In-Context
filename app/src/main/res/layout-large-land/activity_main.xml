@@ -22,22 +22,4 @@
         app:layout_heightPercent="6%"
         app:layout_widthPercent="88%" />
 
-    <com.baliyaan.android.wordincontext.Components.Definition.UI.CustomView
-        android:id="@+id/definition_view"
-        android:layout_width="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/search_view"
-        app:layout_heightPercent="20%" />
-
-    <com.baliyaan.android.wordincontext.Components.Examples.UI.CustomView
-        android:id="@+id/list_view"
-        android:layout_width="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/definition_view"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        app:layout_heightPercent="74%" />
-
 </android.support.percent.PercentRelativeLayout>

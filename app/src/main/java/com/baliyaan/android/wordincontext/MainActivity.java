@@ -11,6 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.baliyaan.android.library.ads.Interstitial;
+import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
+import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.Contract;
+import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.ViewPort;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         /*
         * Prepare UI
         */
-        setContentView(R.layout.paper_example);
+        setContentView(R.layout.activity_main);
         _navigator = new Navigator(this);
         ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
         // Back-ground image
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         * Search by intent (if any)
         */
         Intent intent = getIntent();
-        onIntent(intent);
+        onNewIntent(intent);
     }
 
     @Override
@@ -75,10 +78,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        onIntent(intent);
-    }
 
-    private void onIntent(Intent intent) {
         ClipData clipData = intent.getClipData();
         if (clipData == null)
             return;
@@ -103,6 +103,57 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         _navigator.onRestoreState(savedInstanceState);
+    }
+
+    public class Navigator
+        extends MVPNavigatorAdapter
+        implements com.baliyaan.android.wordincontext.Components.SearchBox.MVP.Contract.Navigator {
+
+        Contract.Port _searchPort = null;
+        private String _query;
+
+        protected Navigator(Context context) {
+            super(context);
+            _searchPort = new ViewPort(this);
+        }
+
+        /*
+        * Methods to be called from parent activity
+        */
+        void onSaveState(Bundle state) {
+            state.putString("query", _query);
+            _searchPort.onSaveState(state);
+        }
+
+        void onRestoreState(Bundle state) {
+            _query = (String) state.get("query");
+            _searchPort.onRestoreState(state);
+        }
+
+        /**
+         * Simulates search operation.
+         * To be called from parent activity, specifically, to handle search intent from other activities.
+         * @param query word string to search
+         */
+        void onSearchIntent(String query) {
+            onSearchBoxSubmit(query);
+        }
+
+        /*
+        * Methods to be called from ports
+        */
+        /**
+         * To be called from SearchBox.MVP.Contract.Port, once query is submitted from SearchBox
+         *
+         * @param query word string to search
+         */
+        @Override //Contract.Navigator
+        public void onSearchBoxSubmit(String query) {
+
+            Intent intent = new Intent(getContext(), WordDictActivity.class);
+            intent.putExtra("query", query);
+            getContext().startActivity(intent);
+        }
     }
 }
 

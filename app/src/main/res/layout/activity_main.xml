@@ -23,20 +23,4 @@
         android:background="#aaaaaa"
         app:layout_heightPercent="6%" />
 
-    <com.baliyaan.android.wordincontext.Components.Definition.UI.CustomView
-        android:id="@+id/definition_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/search_view" />
-
-
-    <com.baliyaan.android.wordincontext.Components.Examples.UI.CustomView
-        android:id="@+id/list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/definition_view"
-        android:layout_margin="5dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
-
 </android.support.percent.PercentRelativeLayout>
