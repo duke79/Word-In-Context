@@ -1,13 +1,9 @@
 package com.baliyaan.android.wordincontext.Components.Definition.MVP;
 
-import android.app.Activity;
-import android.widget.Toast;
-
 import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
-import com.baliyaan.android.wordincontext.Components.Definition.Data.OnlineDictionary;
-import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.Components.Definition.Data.OfflineDictionary;
 
-import java.io.IOException;
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -22,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class Presenter
         extends MVPPresenterAdapter<Contract.View>
-implements Contract.Presenter{
+        implements Contract.Presenter {
     protected Presenter(Contract.View view) {
         super(view);
     }
@@ -33,19 +29,19 @@ implements Contract.Presenter{
         Observable<String> observable = new Observable<String>() {
             @Override
             protected void subscribeActual(Observer observer) {
-                try {
-                    String definition = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition
-                    observer.onNext(definition); // Send definition
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    observer.onNext(""); // "" (empty) definition
+                String definition = "";/* = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition*/
 
-                    ((Activity)view().getContext()).runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(view().getContext(), R.string.NoInternet, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                OfflineDictionary dict = OfflineDictionary.GetInstance(view().getContext());
+                if (null != dict) {
+                    ArrayList<String> matchingWords = dict.GetWordsStartingWith(query, 15);
+                    //for (int i = 0; i < matchingWords.size(); i++) {
+                        String matchingWord = matchingWords.get(0);
+                        ArrayList<String> definitions = dict.GetDefinitionsOf(matchingWord,15);
+                        definition = definitions.get(0);
+                    //}
                 }
+
+                observer.onNext(definition); // Send definition
             }
         };
 
