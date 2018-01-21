@@ -1,7 +1,7 @@
 package com.baliyaan.android.wordincontext.Components.Definition.MVP;
 
 import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
-import com.baliyaan.android.wordincontext.Components.Definition.Data.OfflineDictionary;
+import com.baliyaan.android.wordincontext.Data.DictionaryDB;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class Presenter
             protected void subscribeActual(Observer observer) {
                 String definition = "";/* = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition*/
 
-                OfflineDictionary dict = OfflineDictionary.GetInstance(view().getContext());
+                DictionaryDB dict = DictionaryDB.GetInstance(view().getContext());
                 if (null != dict) {
                     ArrayList<String> matchingWords = dict.GetWordsStartingWith(query, 15);
                     if (matchingWords.size() > 0) {//for (int i = 0; i < matchingWords.size(); i++) {

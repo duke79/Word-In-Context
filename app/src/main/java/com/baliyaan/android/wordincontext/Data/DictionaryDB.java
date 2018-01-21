@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.Components.Definition.Data;
+package com.baliyaan.android.wordincontext.Data;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,27 +9,28 @@ import com.baliyaan.android.library.db.SQLiteAssetHelper.SQLiteAssetHelper;
 
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashSet;
 import java.util.Locale;
 
 /**
- * Created by Pulkit Singh on 1/13/2018.
+ * Created by Pulkit Singh on 1/21/2018.
  */
 
-public class OfflineDictionary extends SQLiteAssetHelper {
-    private static OfflineDictionary _dict = null;
+public class DictionaryDB extends SQLiteAssetHelper {
+    private static DictionaryDB _dict = null;
     private static final String DATABASE_NAME = "Dictionary.db";
     private static final int DATABASE_VERSION = 1;
     private SQLiteDatabase _db = null;
 
-    private OfflineDictionary(Context context) {
+    private DictionaryDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         setForcedUpgrade();
     }
 
-    public static OfflineDictionary GetInstance(Context context)
+    public static DictionaryDB GetInstance(Context context)
     {
         if(null == _dict)
-            _dict = new OfflineDictionary(context);
+            _dict = new DictionaryDB(context);
         return _dict;
     }
 
@@ -45,20 +46,23 @@ public class OfflineDictionary extends SQLiteAssetHelper {
             cursor = _db.rawQuery(query,null);
         }
         catch (Exception e){
-            Log.e("WordListDB",e.toString());
+            Log.e("DictionaryDB",e.toString());
         }
         //Traverse cursor
-        ArrayList<String> list = new ArrayList<>();
+        HashSet<String> hash = new HashSet<>();
         if(null != cursor) {
             if (cursor.moveToFirst()) {
                 do {
                     String word = cursor.getString(0);
                     //Log.i("SQLiteAssetHelperTest",word);
-                    list.add(word);
+                    hash.add(word);
                 } while (cursor.moveToNext());
             }
             cursor.close();
         }
+        ArrayList list = new ArrayList();
+        list.addAll(hash);
+
         return list;
     }
 
@@ -74,7 +78,7 @@ public class OfflineDictionary extends SQLiteAssetHelper {
             cursor = _db.rawQuery(query,null);
         }
         catch (Exception e){
-            Log.e("WordListDB",e.toString());
+            Log.e("DictionaryDB",e.toString());
         }
         //Traverse cursor
         ArrayList<String> list = new ArrayList<>();

@@ -2,6 +2,8 @@ package com.baliyaan.android.wordincontext.Components.SearchBox.Data.Autocomplet
 
 import android.content.Context;
 
+import com.baliyaan.android.wordincontext.Data.DictionaryDB;
+
 import java.util.ArrayList;
 
 /**
@@ -11,10 +13,10 @@ import java.util.ArrayList;
 class Dictionary {
 
     private static Dictionary _dictionary = null;
-    private WordListDB _db = null;
+    private DictionaryDB _dict = null;
 
     private Dictionary(final Context context){
-        _db = new WordListDB(context);
+        _dict = DictionaryDB.GetInstance(context);
     }
 
     static Dictionary getInstance(Context context){
@@ -24,6 +26,6 @@ class Dictionary {
     }
 
     ArrayList<String> getSuggestionsFor(String token, int nbrSuggestions) {
-        return _db.GetWordsStartingWith(token,nbrSuggestions);
+        return _dict.GetWordsStartingWith(token,nbrSuggestions);
     }
 }
