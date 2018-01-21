@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "422886694568",
+    "firebase_url": "https://vilokanlabs-e8847.firebaseio.com",
+    "project_id": "vilokanlabs-e8847",
+    "storage_bucket": "vilokanlabs-e8847.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422886694568:android:5de713bd1ce83bca",
+        "android_client_info": {
+          "package_name": "com.baliyaan.android.wordincontext"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422886694568-f5gfut9rao1jm2vds8otjcbjo6195kcu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.baliyaan.android.wordincontext",
+            "certificate_hash": "15e2cffceca3e4a820a08ac74cbb34d2ef9d3b10"
+          }
+        },
+        {
+          "client_id": "422886694568-89vi7300di1eqbnu6lrccf6j990qggpf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDzJ7X1I9EGSFp2FZ0-roZiyeHqT_5SHQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422886694568-89vi7300di1eqbnu6lrccf6j990qggpf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

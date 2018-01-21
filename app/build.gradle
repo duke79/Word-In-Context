@@ -18,7 +18,7 @@ android {
         }
         release {
             minifyEnabled true
-            useProguard false
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,6 +28,9 @@ android {
 }
 
 dependencies {
+    compile 'com.google.firebase:firebase-crash:11.0.4'
+    compile 'com.google.firebase:firebase-messaging:11.0.4'
+    compile 'com.google.firebase:firebase-core:11.0.4'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v4:25.3.1'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -38,7 +41,7 @@ dependencies {
     compile 'com.android.support:percent:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'org.jsoup:jsoup:1.8.1'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-ads:11.0.4'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
     testCompile 'junit:junit:4.12'
@@ -49,6 +52,16 @@ dependencies {
     compile 'com.github.Baliyaan.Android-Library:mvp:-SNAPSHOT'
     //PageIndicatorView
     compile 'com.romandanylyk:pageindicatorview:0.2.0@aar'
-    //Development helpers
+
+    //Icons - FontAwesome
+    /*compile 'com.eqot:font-awesome-android:0.1.0'*/
+
+    /*Development helpers*/
+    // Stetho
     compile 'com.facebook.stetho:stetho:1.5.0'
+    // LeakCanary : https://github.com/square/leakcanary
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
+
+apply plugin: 'com.google.gms.google-services'
