@@ -8,25 +8,29 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.baliyaan.android.library.ads.Interstitial;
-import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
-import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.Contract;
-import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.ViewPort;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class MainActivity extends AppCompatActivity {
 
-    Navigator _navigator = null;
     Interstitial _interstitial = null;
     Context _context = null;
+    private FirebaseAnalytics _firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _context = this;
 
-        // Enable home button
+        /* Firebase */
+        // Obtain the FirebaseAnalytics instance.
+        _firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        /*Enable home button*/
         ActionBar actionBar = getActionBar();
         if (null != actionBar) {
             actionBar.setHomeButtonEnabled(true);
@@ -37,11 +41,22 @@ public class MainActivity extends AppCompatActivity {
         * Prepare UI
         */
         setContentView(R.layout.activity_main);
-        _navigator = new Navigator(this);
         ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
         // Back-ground image
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background_mage);
         bgImage.setImageBitmap(Bitmap.createBitmap(b));
+        // SearchBox callback
+        SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Show the word definition activity*/
+                Intent intentSearch = new Intent(_context, SearchActivity.class);
+                intentSearch.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                _context.startActivity(intentSearch);
+                overridePendingTransition(0,0);
+            }
+        });
 
         /*
         * Search by intent (if any)
@@ -90,70 +105,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         if (!(intentQuery.length() > 0))
             return;
-        _navigator.onSearchIntent(intentQuery);
-    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        _navigator.onSaveState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        _navigator.onRestoreState(savedInstanceState);
-    }
-
-    public class Navigator
-        extends MVPNavigatorAdapter
-        implements com.baliyaan.android.wordincontext.Components.SearchBox.MVP.Contract.Navigator {
-
-        Contract.Port _searchPort = null;
-        private String _query;
-
-        protected Navigator(Context context) {
-            super(context);
-            _searchPort = new ViewPort(this);
-        }
-
-        /*
-        * Methods to be called from parent activity
-        */
-        void onSaveState(Bundle state) {
-            state.putString("query", _query);
-            _searchPort.onSaveState(state);
-        }
-
-        void onRestoreState(Bundle state) {
-            _query = (String) state.get("query");
-            _searchPort.onRestoreState(state);
-        }
-
-        /**
-         * Simulates search operation.
-         * To be called from parent activity, specifically, to handle search intent from other activities.
-         * @param query word string to search
-         */
-        void onSearchIntent(String query) {
-            onSearchBoxSubmit(query);
-        }
-
-        /*
-        * Methods to be called from ports
-        */
-        /**
-         * To be called from SearchBox.MVP.Contract.Port, once query is submitted from SearchBox
-         *
-         * @param query word string to search
-         */
-        @Override //Contract.Navigator
-        public void onSearchBoxSubmit(String query) {
-
-            Intent intent = new Intent(getContext(), WordDictActivity.class);
-            intent.putExtra("query", query);
-            getContext().startActivity(intent);
-        }
+        /*Show the word definition activity*/
+        Intent intentWordDict = new Intent(this, WordDictActivity.class);
+        intentWordDict.putExtra("query", intentQuery);
+        this.startActivity(intentWordDict);
     }
 }
 
