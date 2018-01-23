@@ -26,6 +26,9 @@ public class ViewPort extends MVPViewPortAdapter<Contract.Navigator, Contract.Pr
         if (null != _searchView) {
             _searchView.setOnQueryTextListener(presenter());
             _searchView.setOnSuggestionListener(presenter());
+            //_searchView.requestFocus(0,null);
+            //_searchView.requestFocusFromTouch();
+            _searchView.setIconified(false);
         }
 
         //SearchView icon color
