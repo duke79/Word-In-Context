@@ -8,4 +8,5 @@
     <string name="definition_placeholder"></string>
     <string name="no_defintion"><![CDATA[<No definition found!>]]></string>
     <string name="lorem">Lorem Impsum lo lo lo Lorem Impsum lo lo lo Lorem Impsum lo lo lo</string>
+    <string name="nbr_search_suggestions">10</string>
 </resources>

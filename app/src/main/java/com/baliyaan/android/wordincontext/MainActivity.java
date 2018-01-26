@@ -41,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
         * Prepare UI
         */
         setContentView(R.layout.activity_main);
-        ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
         // Back-ground image
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background_mage);
-        bgImage.setImageBitmap(Bitmap.createBitmap(b));
+        ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
+        if(null != bgImage) {
+            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background_mage);
+            bgImage.setImageBitmap(Bitmap.createBitmap(b));
+        }
         // SearchBox callback
         SearchView searchView = (SearchView) findViewById(R.id.search_view);
         searchView.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        overridePendingTransition(0,0); //To prevent animation on returning from SearchActivity
 
         /*
         * Display ads

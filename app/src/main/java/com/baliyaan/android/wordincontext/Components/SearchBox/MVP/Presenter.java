@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
 import com.baliyaan.android.wordincontext.Components.SearchBox.Data.Autocomplete.SuggestionsAdapter;
+import com.baliyaan.android.wordincontext.R;
 
 
 /**
@@ -45,7 +46,7 @@ class Presenter extends MVPPresenterAdapter<Contract.View> implements Contract.P
             view().setSuggestionsAdapter(null);
         } else {
             view().setSuggestionsAdapter(_adapter);
-            _adapter.suggestFor(newText,5);
+            _adapter.suggestFor(newText, Integer.parseInt(view().getContext().getString(R.string.nbr_search_suggestions)));
         }
         return true;
     }
