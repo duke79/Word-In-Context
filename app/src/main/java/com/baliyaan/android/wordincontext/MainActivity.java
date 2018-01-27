@@ -18,11 +18,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.baliyaan.android.library.ads.Interstitial;
@@ -38,6 +38,8 @@ public class MainActivity
     Context _context = null;
     private FirebaseAnalytics _firebaseAnalytics;
     private int ACTIVITY_REQ_CODE_VOICE_SEARCH = 1;
+    private int SCREEN_HEIGHT = -1;
+    private int SCREEN_WIDTH = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class MainActivity
             Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background_mage);
             bgImage.setImageBitmap(Bitmap.createBitmap(b));
         }
-        // SearchBox callback
+        // SearchBox callback & size
         SearchView searchView = (SearchView) findViewById(R.id.search_view);
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +80,7 @@ public class MainActivity
             }
         });
         // Search Voice callback
-        ImageButton voiceSearchBtn = (ImageButton) findViewById(R.id.voice_search_btn);
+        /*ImageButton voiceSearchBtn = (ImageButton) findViewById(R.id.voice_search_btn);
         voiceSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,13 +89,13 @@ public class MainActivity
                     intent.setAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                     ((Activity) _context).startActivityForResult(intent, ACTIVITY_REQ_CODE_VOICE_SEARCH);
                 } catch (ActivityNotFoundException e) {
-                   Log.e(MainActivity.class.getName(),e.toString());
+                    Log.e(MainActivity.class.getName(), e.toString());
                 }
             }
-        });
+        });*/
         //Navigation Drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar); //TODO: uncomment only when overflow needed
+        setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -128,6 +130,29 @@ public class MainActivity
                 }
             }
         });
+
+        /* Calculate Screen Size*/
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        SCREEN_HEIGHT = dm.heightPixels;
+        SCREEN_WIDTH = dm.widthPixels;
+        /* Search Box layout */
+        /*View voiceSearchBtn = findViewById(R.id.voice_search_btn);
+        int vsWidth = voiceSearchBtn.getWidth();
+        View searchView = findViewById(R.id.search_view);
+        if (null != searchView) {
+            *//*ViewGroup.LayoutParams lp = searchView.getLayoutParams();
+            lp.width = SCREEN_WIDTH/2;
+            searchView.setLayoutParams(lp);*//*
+            int svLeft = searchView.getLeft();
+            int svRight = searchView.getRight();
+            int svTop = searchView.getTop();
+            int svBottom = searchView.getBottom();
+            searchView.layout(svLeft,
+                    svTop,
+                    SCREEN_WIDTH-vsWidth,
+                    svBottom);
+        }*/
     }
 
     @Override
@@ -197,7 +222,14 @@ public class MainActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_voice_search) {
+            try {
+                Intent intent = new Intent();
+                intent.setAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                ((Activity) _context).startActivityForResult(intent, ACTIVITY_REQ_CODE_VOICE_SEARCH);
+            } catch (ActivityNotFoundException e) {
+                Log.e(MainActivity.class.getName(), e.toString());
+            }
             return true;
         }
 

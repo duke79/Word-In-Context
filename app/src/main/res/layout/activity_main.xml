@@ -17,19 +17,12 @@
         android:padding="10dp"
         app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        <android.support.v7.widget.SearchView
-            android:id="@+id/search_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="#F3F3F3" />
-
-        <ImageButton
-            android:id="@+id/voice_search_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:src="@drawable/ic_voice" />
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:background="#F3F3F3" />
 
     </android.support.v7.widget.Toolbar>
 
