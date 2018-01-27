@@ -56,6 +56,9 @@ public class WordDictActivity
                     String title = (String) toolbar.getTitle();
                     if(title != "")
                     {
+                        _ttsEngine.setSpeechRate(0.5f);
+                        Bundle params = new Bundle();
+                        params.putString(TextToSpeech.Engine.KEY_PARAM_PAN,"-1");
                         _ttsEngine.speak(title,TextToSpeech.QUEUE_FLUSH,null);
                     }
                 }
