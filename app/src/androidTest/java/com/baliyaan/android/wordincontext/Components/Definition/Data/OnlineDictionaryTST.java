@@ -2,7 +2,7 @@ package com.baliyaan.android.wordincontext.Components.Definition.Data;
 
 import android.support.test.runner.AndroidJUnit4;
 
-import com.baliyaan.android.wordincontext.Components.Definition.Model.Definition;
+import com.baliyaan.android.wordincontext.Model.Definition;
 
 import junit.framework.Assert;
 

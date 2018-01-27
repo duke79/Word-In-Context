@@ -16,7 +16,7 @@ class Dictionary {
     private DictionaryDB _dict = null;
 
     private Dictionary(final Context context){
-        _dict = DictionaryDB.GetInstance(context);
+        _dict = DictionaryDB.getInstance(context);
     }
 
     static Dictionary getInstance(Context context){
@@ -26,6 +26,6 @@ class Dictionary {
     }
 
     ArrayList<String> getSuggestionsFor(String token, int nbrSuggestions) {
-        return _dict.GetWordsStartingWith(token,nbrSuggestions);
+        return _dict.getWordsStartingWith(token,nbrSuggestions);
     }
 }

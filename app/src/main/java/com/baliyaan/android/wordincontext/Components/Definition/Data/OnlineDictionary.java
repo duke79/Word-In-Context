@@ -2,7 +2,7 @@ package com.baliyaan.android.wordincontext.Components.Definition.Data;
 
 import android.util.Pair;
 
-import com.baliyaan.android.wordincontext.Components.Definition.Model.Definition;
+import com.baliyaan.android.wordincontext.Model.Definition;
 
 import org.json.JSONArray;
 import org.json.JSONException;

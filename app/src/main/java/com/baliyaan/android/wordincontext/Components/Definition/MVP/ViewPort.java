@@ -6,7 +6,10 @@ import android.view.View;
 
 import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
 import com.baliyaan.android.wordincontext.Components.Definition.UI.CustomView;
+import com.baliyaan.android.wordincontext.Model.Definition;
 import com.baliyaan.android.wordincontext.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Pulkit Singh on 11/5/2017.
@@ -16,7 +19,7 @@ public class ViewPort
         extends MVPViewPortAdapter<Contract.Navigator, Contract.Presenter>
         implements Contract.View, Contract.Port {
     private CustomView _view;
-    private String _definition;
+    private ArrayList<Definition> _definitions;
 
     public ViewPort(Contract.Navigator navigator) {
         super(navigator);
@@ -31,12 +34,18 @@ public class ViewPort
     }
 
     @Override
-    public void setDefinition(String definition) {
-        _definition = definition;
-        if (_definition == "")
-            _definition = navigator().getContext().getString(R.string.no_defintion);
-        if(null != _view) {
-            _view.setDefinition(_definition);
+    public void setDefinitions(ArrayList<Definition> definitions) {
+        _definitions = definitions;
+
+        if (null != _view) {
+            if (_definitions.size() < 1) {
+                _view.addDefinition(navigator().getContext().getString(R.string.no_defintion));
+            }
+            else{
+                for(Definition definition : _definitions)
+                    _view.addDefinition(definition._definition);
+            }
+
             _view.setVisibility(View.VISIBLE);
         }
     }
@@ -44,19 +53,19 @@ public class ViewPort
     @Override
     public void onSaveState(Bundle state) {
         super.onSaveState(state);
-        state.putString("definition", _definition);
+        state.putParcelableArrayList("definitions", _definitions);
     }
 
     @Override
     public void onRestoreState(Bundle state) {
         super.onRestoreState(state);
-        String definition = state.getString("definition");
-        setDefinition(definition);
+        ArrayList<Definition> definitions = state.getParcelableArrayList("definitions");
+        setDefinitions(definitions);
     }
 
     @Override
     public void onQueryTextSubmit(String query) {
-        if(_view != null) {
+        if (_view != null) {
             _view.setVisibility(View.GONE);
             presenter().onQueryTextSubmit(query);
         }

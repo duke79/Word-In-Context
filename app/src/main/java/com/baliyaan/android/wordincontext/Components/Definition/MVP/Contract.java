@@ -4,6 +4,9 @@ import com.baliyaan.android.mvp.Interfaces.BaseMVPNavigator;
 import com.baliyaan.android.mvp.Interfaces.BaseMVPPort;
 import com.baliyaan.android.mvp.Interfaces.BaseMVPPresenter;
 import com.baliyaan.android.mvp.Interfaces.BaseMVPView;
+import com.baliyaan.android.wordincontext.Model.Definition;
+
+import java.util.ArrayList;
 
 /**
  * Created by Pulkit Singh on 11/5/2017.
@@ -15,7 +18,7 @@ public interface Contract {
     }
 
     interface View extends BaseMVPView<Presenter>{
-        void setDefinition(String definition);
+        void setDefinitions(ArrayList<Definition> definitions);
     }
 
     interface Port extends BaseMVPPort{

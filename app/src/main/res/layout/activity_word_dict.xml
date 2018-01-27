@@ -58,7 +58,7 @@
             android:id="@+id/definition_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_view" />
+            android:orientation="vertical"/>
 
     </android.support.v4.widget.NestedScrollView>
 
