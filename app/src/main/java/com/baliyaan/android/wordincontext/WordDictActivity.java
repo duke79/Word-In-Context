@@ -54,12 +54,25 @@ public class WordDictActivity
                 public void onClick(View v) {
                     Toolbar toolbar = (Toolbar) findViewById(R.id.word_dict_toolbar);
                     String title = (String) toolbar.getTitle();
-                    if(title != "")
-                    {
+                    if (title != "") {
+
+                        //TODO: Voice chooser in settings?
+                        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Set<Voice> voices = _ttsEngine.getVoices();
+                            int toggle = 1;
+                            for (Voice voice : voices) {
+                                Locale locale = voice.getLocale();
+                                if (Objects.equals(Locale.US.getCountry(), locale.getCountry()) && toggle < 3) {
+                                    _ttsEngine.setVoice(voice);
+                                    toggle++;
+                                }
+                            }
+                        }*/
+
                         _ttsEngine.setSpeechRate(0.5f);
                         Bundle params = new Bundle();
-                        params.putString(TextToSpeech.Engine.KEY_PARAM_PAN,"-1");
-                        _ttsEngine.speak(title,TextToSpeech.QUEUE_FLUSH,null);
+                        params.putString(TextToSpeech.Engine.KEY_PARAM_PAN, "-1");
+                        _ttsEngine.speak(title, TextToSpeech.QUEUE_FLUSH, null);
                     }
                 }
             });
