@@ -38,8 +38,14 @@ public class Dictionary {
         return _singleton;
     }
 
-    public ArrayList<String> getSuggestionsFor(String token, int nbrSuggestions) {
-        return _dictDB.getWordsStartingWith(token, nbrSuggestions);
+    public Observable<ArrayList<String>> getSuggestionsFor(final String token, final int nbrSuggestions) {
+        return new Observable<ArrayList<String>>() {
+            @Override
+            protected void subscribeActual(Observer<? super ArrayList<String>> observer) {
+                ArrayList<String> suggestions = _dictDB.getWordsStartingWith(token, nbrSuggestions);
+                observer.onNext(suggestions);
+            }
+        };
     }
 
     public Observable<List<Example>> getExamples(final String token) {

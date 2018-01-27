@@ -10,7 +10,7 @@
 
     <string name="lorem">Lorem Impsum lo lo lo Lorem Impsum lo lo lo Lorem Impsum lo lo lo</string>
 
-    <string name="nbr_search_suggestions">10</string>
+    <string name="nbr_search_suggestions">50</string>
 
     <string name="title_activity_navigation_drawer">NavigationDrawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
