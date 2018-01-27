@@ -3,24 +3,32 @@ package com.baliyaan.android.wordincontext;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Toast;
 
 import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
 import com.baliyaan.android.wordincontext.Components.Definition.MVP.Contract;
 import com.baliyaan.android.wordincontext.Components.Examples.MVP.ViewPort;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.Locale;
+
 /**
  * Created by Pulkit Singh on 1/10/2018.
  */
 
 public class WordDictActivity
-        extends AppCompatActivity {
+        extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private Navigator _navigator;
     private FirebaseAnalytics _firebaseAnalytics;
+    private int MY_DATA_CHECK_CODE = 0;
+    private TextToSpeech _ttsEngine = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +40,27 @@ public class WordDictActivity
 
         /*Set content view*/
         setContentView(R.layout.activity_word_dict);
+
+        /*Initialize TTS Engine*/
+        Intent checkTTSIntent = new Intent();
+        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+
+        /* Fab Button Callback */
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.tts_btn);
+        if (null != fab) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toolbar toolbar = (Toolbar) findViewById(R.id.word_dict_toolbar);
+                    String title = (String) toolbar.getTitle();
+                    if(title != "")
+                    {
+                        _ttsEngine.speak(title,TextToSpeech.QUEUE_FLUSH,null);
+                    }
+                }
+            });
+        }
 
         /*Initialize MVP Navigator*/
         _navigator = new Navigator(this);
@@ -66,6 +95,31 @@ public class WordDictActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         _navigator.onRestoreState(savedInstanceState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MY_DATA_CHECK_CODE) {
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                _ttsEngine = new TextToSpeech(this, this);
+            } else {
+                Intent intent = new Intent();
+                intent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(intent);
+            }
+        }
+    }
+
+    /* TextToSpeech.OnInitListener implementations*/
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            if (_ttsEngine.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE)
+                _ttsEngine.setLanguage(Locale.US);
+        } else if (status == TextToSpeech.ERROR) {
+            Toast.makeText(this, R.string.tts_fail, Toast.LENGTH_LONG).show();
+        }
     }
 
     public class Navigator

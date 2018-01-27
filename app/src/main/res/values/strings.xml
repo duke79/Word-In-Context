@@ -23,4 +23,5 @@
     <!--SQL queries-->
     <string name="Dicitionary_db__MatchingWords">select word from entries where UPPER(word) like UPPER(\"%1$1s%%\") limit %2$2s;</string>
     <string name="Dicitionary_db__WordDefinitions">select * from entries where UPPER(word)=UPPER(\"%1$1s\") limit %2$2s;</string>
+    <string name="tts_fail">Sorry! Text To Speech failed...</string>
 </resources>
