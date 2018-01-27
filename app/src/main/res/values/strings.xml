@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sentence Examples</string>
+    <string name="app_name">Vilokan Dictionary</string>
     <string name="source">Source:-</string>
     <string name="counter">#Counter</string>
     <string name="adId">ca-app-pub-4278963888720323/8594194494</string>
@@ -7,12 +7,16 @@
     <string name="NoInternet">No internet connection!</string>
     <string name="definition_placeholder"></string>
     <string name="no_defintion"><![CDATA[<No definition found!>]]></string>
-    <string name="lorem">Lorem Impsum lo lo lo Lorem Impsum lo lo lo Lorem Impsum lo lo lo</string>
-    <string name="nbr_search_suggestions">10</string>
-    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
 
+    <string name="lorem">Lorem Impsum lo lo lo Lorem Impsum lo lo lo Lorem Impsum lo lo lo</string>
+
+    <string name="nbr_search_suggestions">10</string>
+
+    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_share_pre">I\'m using the</string>
+    <string name="action_share_post">app and thought you might like it too. See it here: \n</string>
 </resources>
