@@ -27,7 +27,7 @@ public class WordDictActivity
 
     private Navigator _navigator;
     private FirebaseAnalytics _firebaseAnalytics;
-    private int MY_DATA_CHECK_CODE = 0;
+    private int ACTIVITY_REQ_CODE_TTS_CHECK = 0;
     private TextToSpeech _ttsEngine = null;
 
     @Override
@@ -44,7 +44,7 @@ public class WordDictActivity
         /*Initialize TTS Engine*/
         Intent checkTTSIntent = new Intent();
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+        startActivityForResult(checkTTSIntent, ACTIVITY_REQ_CODE_TTS_CHECK);
 
         /* Fab Button Callback */
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.tts_btn);
@@ -116,7 +116,7 @@ public class WordDictActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MY_DATA_CHECK_CODE) {
+        if (requestCode == ACTIVITY_REQ_CODE_TTS_CHECK) {
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 _ttsEngine = new TextToSpeech(this, this);
             } else {

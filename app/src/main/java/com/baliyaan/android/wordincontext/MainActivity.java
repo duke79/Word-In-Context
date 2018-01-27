@@ -1,6 +1,7 @@
 package com.baliyaan.android.wordincontext;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,10 +22,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.baliyaan.android.library.ads.Interstitial;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import java.util.ArrayList;
 
 public class MainActivity
         extends AppCompatActivity
@@ -32,6 +37,7 @@ public class MainActivity
     Interstitial _interstitial = null;
     Context _context = null;
     private FirebaseAnalytics _firebaseAnalytics;
+    private int ACTIVITY_REQ_CODE_VOICE_SEARCH = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +61,7 @@ public class MainActivity
         setContentView(R.layout.activity_main);
         // Back-ground image
         ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
-        if(null != bgImage) {
+        if (null != bgImage) {
             Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background_mage);
             bgImage.setImageBitmap(Bitmap.createBitmap(b));
         }
@@ -68,7 +74,21 @@ public class MainActivity
                 Intent intentSearch = new Intent(_context, SearchActivity.class);
                 intentSearch.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 _context.startActivity(intentSearch);
-                overridePendingTransition(0,0);
+                overridePendingTransition(0, 0);
+            }
+        });
+        // Search Voice callback
+        ImageButton voiceSearchBtn = (ImageButton) findViewById(R.id.voice_search_btn);
+        voiceSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent();
+                    intent.setAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    ((Activity) _context).startActivityForResult(intent, ACTIVITY_REQ_CODE_VOICE_SEARCH);
+                } catch (ActivityNotFoundException e) {
+                   Log.e(MainActivity.class.getName(),e.toString());
+                }
             }
         });
         //Navigation Drawer
@@ -92,7 +112,7 @@ public class MainActivity
     @Override
     protected void onStart() {
         super.onStart();
-        overridePendingTransition(0,0); //To prevent animation on returning from SearchActivity
+        overridePendingTransition(0, 0); //To prevent animation on returning from SearchActivity
 
         /*
         * Display ads
@@ -138,9 +158,22 @@ public class MainActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTIVITY_REQ_CODE_VOICE_SEARCH && resultCode == RESULT_OK) {
+            ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String query = results.get(0);
+            /*Toast.makeText(this,query,Toast.LENGTH_SHORT);*/
+            Intent intentWordDict = new Intent(this, WordDictActivity.class);
+            intentWordDict.putExtra("query", query);
+            this.startActivity(intentWordDict);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if(null != drawer) {
+        if (null != drawer) {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
@@ -193,25 +226,21 @@ public class MainActivity
                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 intent.putExtra(Intent.EXTRA_TEXT,
                         getString(R.string.action_share_pre)
-                        + " " + getString(R.string.app_name) + " "
-                        + getString(R.string.action_share_post)
-                        + "https://play.google.com/store/apps/details?id=" + appPackage);
+                                + " " + getString(R.string.app_name) + " "
+                                + getString(R.string.action_share_post)
+                                + "https://play.google.com/store/apps/details?id=" + appPackage);
                 startActivity(intent);
-            }
-            catch (ActivityNotFoundException e){
-                Log.e(this.getClass().getName(),e.toString());
+            } catch (ActivityNotFoundException e) {
+                Log.e(this.getClass().getName(), e.toString());
             }
         } else if (id == R.id.nav_rate) {
             final String appPackage = getPackageName();
-            try{
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id="+appPackage)));
-            }
-            catch (ActivityNotFoundException e1)
-            {
-                try{
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+appPackage)));
-                }
-                catch (ActivityNotFoundException e2) {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage)));
+            } catch (ActivityNotFoundException e1) {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage)));
+                } catch (ActivityNotFoundException e2) {
                 }
             }
         }
