@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 
+import com.baliyaan.android.wordincontext.Data.Dictionary;
+
 import java.util.ArrayList;
 
 import io.reactivex.Observable;

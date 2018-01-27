@@ -1,4 +1,4 @@
-package com.baliyaan.android.wordincontext.Components.Examples.Data;
+package com.baliyaan.android.wordincontext.Data;
 
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
 

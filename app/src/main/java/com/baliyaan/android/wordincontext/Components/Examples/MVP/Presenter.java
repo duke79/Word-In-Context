@@ -1,26 +1,19 @@
 package com.baliyaan.android.wordincontext.Components.Examples.MVP;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.widget.Toast;
 
 import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
-import com.baliyaan.android.wordincontext.R;
+import com.baliyaan.android.wordincontext.Data.Dictionary;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.baliyaan.android.wordincontext.Components.Examples.Data.Scraper.GetExamples;
 
 
 /**
@@ -29,49 +22,32 @@ import static com.baliyaan.android.wordincontext.Components.Examples.Data.Scrape
 
 class Presenter extends MVPPresenterAdapter<Contract.View> implements Contract.Presenter {
 
-    private List<Example> _examples = new ArrayList<Example>();;
+    private List<Example> _examples = new ArrayList<Example>();
+    private Dictionary _dictionary = null;
 
     protected Presenter(Contract.View view) {
         super(view);
+        _dictionary = Dictionary.getInstance(view().getContext());
     }
 
     @Override
     public void onQueryTextSubmit(final String query) {
-        Observable<List<Example>> observable = new Observable<List<Example>>() {
-            @Override
-            protected void subscribeActual(Observer<? super List<Example>> observer) {
-                try {
-                    final List<Example> newList = GetExamples(query);
-                    if (newList.size() > 0) {
-                            _examples.removeAll(_examples);
-                            _examples.addAll(newList);
-                    }
-                    observer.onNext(newList);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    final List<Example> newList = new ArrayList<>();
-                    observer.onNext(newList);
-
-                    ((Activity)view().getContext()).runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(view().getContext(), R.string.NoInternet, Toast.LENGTH_SHORT).show();
+        if (null != _dictionary) {
+            _dictionary.getExamples(query)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<List<Example>>() {
+                        @Override
+                        public void accept(@NonNull List<Example> newList) throws Exception {
+                            if (newList.size() > 0) {
+                                _examples.removeAll(_examples);
+                                _examples.addAll(newList);
+                                view().displayResult();
+                            } else
+                                view().displayError();
                         }
                     });
-                }
-            }
-        };
-
-        observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Example>>() {
-                    @Override
-                    public void accept(@NonNull List<Example> newList) throws Exception {
-                        if(newList.size()>0)
-                            view().displayResult();
-                        else
-                            view().displayError();
-                    }
-                });
+        }
     }
 
     @Override
