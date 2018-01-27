@@ -130,4 +130,24 @@ public class DictionaryDB extends SQLiteAssetHelper {
 
         return observable;
     }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+    }
+
+    //ToDo: Create index and test with suggestions
+    //ToDo: Update AndroidLibarary sQLite to support onCreate
+    //ToDo: Handle onUpgrade like a pro by revisions(case 1:sql ; no break case 2:more sql ) & onCreate (to keep everything for the new user in this function
+    /*@Override
+    public void onCreate(SQLiteDatabase db) {
+        super.onCreate(db);
+        CREATE INDEX tag_word from entries(word);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        super.onUpgrade(db, oldVersion, newVersion);
+        CREATE INDEX tag_word from entries(word);
+    }*/
 }
