@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.baliyaan.android.library.db.SQLiteAssetHelper.SQLiteAssetHelper;
+import com.baliyaan.android.library.ds.Trie;
+import com.baliyaan.android.library.io.SerializeService;
 import com.baliyaan.android.wordincontext.Model.Definition;
 import com.baliyaan.android.wordincontext.R;
 
@@ -16,6 +18,8 @@ import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Pulkit Singh on 1/21/2018.
@@ -25,6 +29,7 @@ public class DictionaryDB extends SQLiteAssetHelper {
     private static DictionaryDB _dict = null;
     private static final String DATABASE_NAME = "Dictionary.db";
     private static final int DATABASE_VERSION = 1;
+    private Trie _suggestionsTrie = null;
     private SQLiteDatabase _db = null;
     private Context _context = null;
 
@@ -32,11 +37,15 @@ public class DictionaryDB extends SQLiteAssetHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         _context = context;
         setForcedUpgrade();
+
+        /*Initialize suggestions Trie*/
+        _suggestionsTrie = (Trie) SerializeService.deserialize(_context, _context.getString(R.string.FileSuggestionsTrie));
+        if (null == _suggestionsTrie)
+            serializeSuggestionsTrie();
     }
 
-    public static DictionaryDB getInstance(Context context)
-    {
-        if(null == _dict)
+    public static DictionaryDB getInstance(Context context) {
+        if (null == _dict)
             _dict = new DictionaryDB(context);
         return _dict;
     }
@@ -44,20 +53,19 @@ public class DictionaryDB extends SQLiteAssetHelper {
     public ArrayList<String> getWordsStartingWith(String input, int n) {
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb, Locale.US);
-        String query = formatter.format(_context.getString(R.string.Dicitionary_db__MatchingWords),input,n).toString();
+        String query = formatter.format(_context.getString(R.string.Dicitionary_db__MatchingWords), input, n).toString();
 
         Cursor cursor = null;
         try {
-            if(null == _db)
+            if (null == _db)
                 _db = getWritableDatabase();
-            cursor = _db.rawQuery(query,null);
-        }
-        catch (Exception e){
-            Log.e("DictionaryDB",e.toString());
+            cursor = _db.rawQuery(query, null);
+        } catch (Exception e) {
+            Log.e("DictionaryDB", e.toString());
         }
         //Traverse cursor
         HashSet<String> hash = new HashSet<>();
-        if(null != cursor) {
+        if (null != cursor) {
             if (cursor.moveToFirst()) {
                 do {
                     String word = cursor.getString(0);
@@ -74,29 +82,44 @@ public class DictionaryDB extends SQLiteAssetHelper {
         return list;
     }
 
-    public ArrayList<Definition> getDefinitionsOf(String input, int n){
+    public Observable<ArrayList<String>> getObservableWordsStartingWith(final String input, final int n) {
+        return new Observable<ArrayList<String>>() {
+            @Override
+            protected void subscribeActual(Observer<? super ArrayList<String>> observer) {
+                ArrayList<String> suggestions = null;
+
+                if (null != _suggestionsTrie) {
+                    suggestions = _suggestionsTrie.getWordsStartingWith(input, n);
+                } else {
+                    suggestions = getWordsStartingWith(input, n);
+                }
+
+                observer.onNext(suggestions);
+            }
+        };
+    }
+
+    public ArrayList<Definition> getDefinitionsOf(String input, int n) {
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb, Locale.US);
-        String query = formatter.format(_context.getString(R.string.Dicitionary_db__WordDefinitions),input,n).toString();
+        String query = formatter.format(_context.getString(R.string.Dicitionary_db__WordDefinitions), input, n).toString();
 
         Cursor cursor = null;
         try {
-            if(null == _db)
+            if (null == _db)
                 _db = getWritableDatabase();
-            cursor = _db.rawQuery(query,null);
-        }
-        catch (Exception e){
-            Log.e("DictionaryDB",e.toString());
+            cursor = _db.rawQuery(query, null);
+        } catch (Exception e) {
+            Log.e("DictionaryDB", e.toString());
         }
         //Traverse cursor
         ArrayList<Definition> list = new ArrayList<>();
-        if(null != cursor) {
+        if (null != cursor) {
             if (cursor.moveToFirst()) {
                 do {
                     try {
                         String[] strDefinitions = cursor.getString(2).split(";");
-                        for(String strDefinition : strDefinitions)
-                        {
+                        for (String strDefinition : strDefinitions) {
                             Definition definition = new Definition();
                             //definition._id = cursor.getString(0);
                             definition._headword = cursor.getString(0);
@@ -115,21 +138,60 @@ public class DictionaryDB extends SQLiteAssetHelper {
         return list;
     }
 
-    public Observable<ArrayList<Definition>> getObservableDefinitionsOf(final String input, int n){
+    public Observable<ArrayList<Definition>> getObservableDefinitionsOf(final String input, int n) {
 
         Observable<ArrayList<Definition>> observable =
                 new Observable<ArrayList<Definition>>() {
-            @Override
-            protected void subscribeActual(Observer observer) {
-                //String definition = "";/* = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition*/
-                ArrayList<Definition> definitions = null;
-                definitions = getDefinitionsOf(input, 15);
-                observer.onNext(definitions); // Send definition
-            }
-        };
+                    @Override
+                    protected void subscribeActual(Observer observer) {
+                        //String definition = "";/* = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition*/
+                        ArrayList<Definition> definitions = null;
+                        definitions = getDefinitionsOf(input, 15);
+                        observer.onNext(definitions); // Send definition
+                    }
+                };
 
         return observable;
     }
+
+    public Observable<String> getAllWords() {
+        return new Observable<String>() {
+            @Override
+            protected void subscribeActual(Observer<? super String> observer) {
+                /*Build query string*/
+                StringBuilder sb = new StringBuilder();
+                Formatter formatter = new Formatter(sb, Locale.US);
+                String query = formatter.format("select word from entries").toString();
+
+                /*Execute query & retrieve cursor*/
+                Cursor cursor = null;
+                try {
+                    if (null == _db)
+                        _db = getWritableDatabase();
+                    cursor = _db.rawQuery(query, null);
+                } catch (Exception e) {
+                    Log.e("DictionaryDB", e.toString());
+                }
+
+                /*Traverse cursor & retrieve results*/
+                if (null != cursor) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            try {
+                                String strWord = cursor.getString(0);
+                                observer.onNext(strWord);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+                    observer.onComplete();
+                }
+            }
+        };
+    }
+
 
     @Override
     public void onOpen(SQLiteDatabase db) {
@@ -139,15 +201,46 @@ public class DictionaryDB extends SQLiteAssetHelper {
     //ToDo: Create index and test with suggestions
     //ToDo: Update AndroidLibarary sQLite to support onCreate
     //ToDo: Handle onUpgrade like a pro by revisions(case 1:sql ; no break case 2:more sql ) & onCreate (to keep everything for the new user in this function
-    /*@Override
+    @Override
     public void onCreate(SQLiteDatabase db) {
         super.onCreate(db);
-        CREATE INDEX tag_word from entries(word);
+        serializeSuggestionsTrie();
+        /*CREATE INDEX tag_word from entries(word);*/
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         super.onUpgrade(db, oldVersion, newVersion);
-        CREATE INDEX tag_word from entries(word);
-    }*/
+        serializeSuggestionsTrie();
+        /*CREATE INDEX tag_word from entries(word);*/
+    }
+
+    private void serializeSuggestionsTrie() {
+        /*Create Trie of words from Dictionary.db*/
+        final Trie trie = new Trie();
+        getAllWords()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        String strWord = s.toLowerCase();
+                        trie.add(strWord);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        _suggestionsTrie = trie;
+                        SerializeService.serialize(trie, _context, _context.getString(R.string.FileSuggestionsTrie));
+                    }
+                });
+    }
 }

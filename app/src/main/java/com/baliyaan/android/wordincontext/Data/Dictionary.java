@@ -39,13 +39,7 @@ public class Dictionary {
     }
 
     public Observable<ArrayList<String>> getSuggestionsFor(final String token, final int nbrSuggestions) {
-        return new Observable<ArrayList<String>>() {
-            @Override
-            protected void subscribeActual(Observer<? super ArrayList<String>> observer) {
-                ArrayList<String> suggestions = _dictDB.getWordsStartingWith(token, nbrSuggestions);
-                observer.onNext(suggestions);
-            }
-        };
+        return _dictDB.getObservableWordsStartingWith(token, nbrSuggestions);
     }
 
     public Observable<List<Example>> getExamples(final String token) {

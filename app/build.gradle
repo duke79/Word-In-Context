@@ -52,6 +52,7 @@ dependencies {
     compile 'com.github.Baliyaan.Android-Library:ads:-SNAPSHOT'
     compile 'com.github.Baliyaan.Android-Library:ds:-SNAPSHOT'
     compile 'com.github.Baliyaan.Android-Library:mvp:-SNAPSHOT'
+    compile 'com.github.Baliyaan.Android-Library:io:-SNAPSHOT'
     //PageIndicatorView
     compile 'com.romandanylyk:pageindicatorview:0.2.0@aar'
 

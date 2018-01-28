@@ -3,6 +3,8 @@
     package="com.baliyaan.android.wordincontext">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_PROFILE"/>
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
