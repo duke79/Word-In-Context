@@ -1,18 +1,23 @@
 package com.baliyaan.android.wordincontext.Data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
 import com.baliyaan.android.wordincontext.Model.Definition;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Pulkit Singh on 6/17/2017.
@@ -43,8 +48,8 @@ public class Dictionary {
         return _dictDB.getObservableWordsStartingWith(token, nbrSuggestions);
     }
 
-    public Observable<ArrayList<Definition>> getDefinitionsFor(String input, int n){
-        return _dictDB.getObservableDefinitionsOf(input,n);
+    public Observable<ArrayList<Definition>> getDefinitionsFor(String input, int n) {
+        return _dictDB.getObservableDefinitionsOf(input, n);
     }
 
     public Observable<List<Example>> getExamplesFor(final String token) {
@@ -53,47 +58,52 @@ public class Dictionary {
             protected void subscribeActual(final Observer<? super List<Example>> observer) {
                 //TODO: Temporary code, see below
                 /* Temporary block starts*/
-                try {
+               /* try {
                     observer.onNext(Scraper.GetExamples(token));
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
                 /* Temporary block ends*/
 
                 //TODO: Switch to this code once Firebase access is provided
-                /*if(null != _examplesDB) {
+                if (null != _examplesDB) {
                     _examplesDB.child(token).addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            ArrayList<Example> examples = new ArrayList<>();
-                            if(dataSnapshot.exists()) {
+                        public void onDataChange(final DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                ArrayList<Example> examples = new ArrayList<>();
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                                     Example example = child.getValue(Example.class);
                                     if (null != example) {
                                         examples.add(example);
                                     }
                                 }
+                                observer.onNext(examples);
+                            } else {
+                                Scraper.GetExamples(token)
+                                        .subscribeOn(Schedulers.newThread())
+                                        .observeOn(Schedulers.newThread())
+                                        .subscribe(new Consumer<List<Example>>() {
+                                            @Override
+                                            public void accept(List<Example> examples) throws Exception {
+                                                observer.onNext(examples);
+                                                for (Example example : examples) {
+                                                    dataSnapshot.getRef().push().setValue(example);
+                                                }
+                                            }
+                                        });
                             }
-                            else{
-                                try {
-                                    examples.addAll(Scraper.GetExamples(token));
-                                    for(Example example:examples) {
-                                        dataSnapshot.getRef().push().setValue(example);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            observer.onNext(examples);
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            Log.e(this.getClass().getName(),databaseError.toString());
+                            Log.e(this.getClass().getName(), databaseError.toString());
                         }
                     });
-                }*/
+                }
             }
-        };
+        }
+
+                ;
     }
 }

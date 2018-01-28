@@ -11,6 +11,9 @@ public class Example implements Parcelable{
     public String _content;
     public String _link;
 
+    public Example(){
+    }
+
     public Example(String content) {
         _content = content;
     }

@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,7 +27,12 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.baliyaan.android.library.ads.Interstitial;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -37,9 +43,11 @@ public class MainActivity
     Interstitial _interstitial = null;
     Context _context = null;
     private FirebaseAnalytics _firebaseAnalytics;
+    private FirebaseAuth _firebaseAuth;
     private int ACTIVITY_REQ_CODE_VOICE_SEARCH = 1;
     private int SCREEN_HEIGHT = -1;
     private int SCREEN_WIDTH = -1;
+    private FirebaseUser _user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,16 @@ public class MainActivity
         /* Firebase */
         // Obtain the FirebaseAnalytics instance.
         _firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Obtain FirebaseAuth instance
+        _firebaseAuth = FirebaseAuth.getInstance();
+        _firebaseAuth.signInAnonymously()
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        _user = _firebaseAuth.getCurrentUser();
+                        String name = _user.getDisplayName();
+                    }
+                });
 
         /*Enable home button*/
         ActionBar actionBar = getActionBar();
