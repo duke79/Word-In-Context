@@ -39,7 +39,16 @@ public class DictionaryDB extends SQLiteAssetHelper {
         setForcedUpgrade();
 
         /*Initialize suggestions Trie*/
-        _suggestionsTrie = (Trie) SerializeService.deserialize(_context, _context.getString(R.string.FileSuggestionsTrie));
+        deserializeSuggestionsTrie()
+                .subscribeOn(Schedulers.newThread());
+                /*.observeOn(Schedulers.newThread())
+                .subscribe(new Consumer<Trie>() {
+                    @Override
+                    public void accept(Trie trie) throws Exception {
+
+                    }
+                });*/
+
         if (null == _suggestionsTrie)
             serializeSuggestionsTrie();
     }
@@ -86,15 +95,12 @@ public class DictionaryDB extends SQLiteAssetHelper {
         return new Observable<ArrayList<String>>() {
             @Override
             protected void subscribeActual(Observer<? super ArrayList<String>> observer) {
-                ArrayList<String> suggestions = null;
-
-                if (null != _suggestionsTrie) {
-                    suggestions = _suggestionsTrie.getWordsStartingWith(input, n);
-                } else {
-                    suggestions = getWordsStartingWith(input, n);
+                if(null != _suggestionsTrie) {
+                    ArrayList<String> suggestions = _suggestionsTrie.getWordsStartingWith(input, n);
+                    if(null == suggestions)
+                        suggestions = new ArrayList<>();
+                    observer.onNext(suggestions);
                 }
-
-                observer.onNext(suggestions);
             }
         };
     }
@@ -216,8 +222,8 @@ public class DictionaryDB extends SQLiteAssetHelper {
     }
 
     private void serializeSuggestionsTrie() {
+        _suggestionsTrie = new Trie();
         /*Create Trie of words from Dictionary.db*/
-        final Trie trie = new Trie();
         getAllWords()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.newThread())
@@ -229,7 +235,7 @@ public class DictionaryDB extends SQLiteAssetHelper {
                     @Override
                     public void onNext(String s) {
                         String strWord = s.toLowerCase();
-                        trie.add(strWord);
+                        _suggestionsTrie.add(strWord);
                     }
 
                     @Override
@@ -238,9 +244,19 @@ public class DictionaryDB extends SQLiteAssetHelper {
 
                     @Override
                     public void onComplete() {
-                        _suggestionsTrie = trie;
-                        SerializeService.serialize(trie, _context, _context.getString(R.string.FileSuggestionsTrie));
+                        SerializeService.serialize(_suggestionsTrie, _context, _context.getString(R.string.FileSuggestionsTrie));
                     }
                 });
+    }
+
+    public Observable<Trie> deserializeSuggestionsTrie(){
+        return new Observable<Trie>() {
+            @Override
+            protected void subscribeActual(Observer<? super Trie> observer) {
+                _suggestionsTrie = (Trie) SerializeService.deserialize(_context, _context.getString(R.string.FileSuggestionsTrie));
+                if(null == _suggestionsTrie)
+                    serializeSuggestionsTrie();
+            }
+        };
     }
 }

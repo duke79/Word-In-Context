@@ -1,7 +1,7 @@
 package com.baliyaan.android.wordincontext.Components.Definition.MVP;
 
 import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
-import com.baliyaan.android.wordincontext.Data.DictionaryDB;
+import com.baliyaan.android.wordincontext.Data.Dictionary;
 import com.baliyaan.android.wordincontext.Model.Definition;
 
 import java.util.ArrayList;
@@ -25,8 +25,7 @@ public class Presenter
     @Override
     public void onQueryTextSubmit(final String query) {
 
-        DictionaryDB dict = DictionaryDB.getInstance(view().getContext());
-        dict.getObservableDefinitionsOf(query, 15)
+        Dictionary.getInstance(view().getContext()).getDefinitionsFor(query, 15)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ArrayList<Definition>>() {

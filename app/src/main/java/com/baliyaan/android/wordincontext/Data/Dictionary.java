@@ -3,6 +3,7 @@ package com.baliyaan.android.wordincontext.Data;
 import android.content.Context;
 
 import com.baliyaan.android.wordincontext.Components.Examples.Model.Example;
+import com.baliyaan.android.wordincontext.Model.Definition;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -42,7 +43,11 @@ public class Dictionary {
         return _dictDB.getObservableWordsStartingWith(token, nbrSuggestions);
     }
 
-    public Observable<List<Example>> getExamples(final String token) {
+    public Observable<ArrayList<Definition>> getDefinitionsFor(String input, int n){
+        return _dictDB.getObservableDefinitionsOf(input,n);
+    }
+
+    public Observable<List<Example>> getExamplesFor(final String token) {
         return new Observable<List<Example>>() {
             @Override
             protected void subscribeActual(final Observer<? super List<Example>> observer) {

@@ -33,7 +33,7 @@ class Presenter extends MVPPresenterAdapter<Contract.View> implements Contract.P
     @Override
     public void onQueryTextSubmit(final String query) {
         if (null != _dictionary) {
-            _dictionary.getExamples(query)
+            _dictionary.getExamplesFor(query)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<List<Example>>() {
