@@ -1,6 +1,5 @@
 package com.baliyaan.android.wordincontext.Components.Definition.MVP;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
@@ -18,35 +17,33 @@ import java.util.ArrayList;
 public class ViewPort
         extends MVPViewPortAdapter<Contract.Navigator, Contract.Presenter>
         implements Contract.View, Contract.Port {
-    private CustomView _view;
     private ArrayList<Definition> _definitions;
 
-    public ViewPort(Contract.Navigator navigator) {
-        super(navigator);
+    public ViewPort(Contract.Navigator navigator, View view) {
+        super(navigator,view);
         super.bindPresenter(new Presenter(this));
         init();
     }
 
     private void init() {
-        _view = (CustomView) ((Activity) navigator().getContext()).findViewById(R.id.definition_view);
-        if (null != _view)
-            _view.setVisibility(View.GONE);
+        if (null != view())
+            view().setVisibility(View.GONE);
     }
 
     @Override
     public void setDefinitions(ArrayList<Definition> definitions) {
         _definitions = definitions;
 
-        if (null != _view) {
+        if (null != view()) {
             if (_definitions.size() < 1) {
-                _view.addDefinition(navigator().getContext().getString(R.string.no_defintion));
+                ((CustomView) view()).addDefinition(navigator().getContext().getString(R.string.no_defintion));
             }
             else{
                 for(Definition definition : _definitions)
-                    _view.addDefinition(definition._definition);
+                    ((CustomView) view()).addDefinition(definition._definition);
             }
 
-            _view.setVisibility(View.VISIBLE);
+            view().setVisibility(View.VISIBLE);
         }
     }
 
@@ -65,8 +62,8 @@ public class ViewPort
 
     @Override
     public void onQueryTextSubmit(String query) {
-        if (_view != null) {
-            _view.setVisibility(View.GONE);
+        if (view() != null) {
+            view().setVisibility(View.GONE);
             presenter().onQueryTextSubmit(query);
         }
     }

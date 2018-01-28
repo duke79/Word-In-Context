@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.baliyaan.android.mvp.Adapters.MVPNavigatorAdapter;
 import com.baliyaan.android.wordincontext.Components.SearchBox.MVP.Contract;
@@ -15,7 +16,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
  * Created by Pulkit Singh on 1/23/2018.
  */
 
-public class SearchActivity extends AppCompatActivity{
+public class SearchActivity extends AppCompatActivity {
     public class Navigator
             extends MVPNavigatorAdapter
             implements com.baliyaan.android.wordincontext.Components.SearchBox.MVP.Contract.Navigator {
@@ -25,7 +26,8 @@ public class SearchActivity extends AppCompatActivity{
 
         protected Navigator(Context context) {
             super(context);
-            _searchPort = new ViewPort(this);
+            View view = findViewById(R.id.search_view);
+            _searchPort = new ViewPort(this, view);
         }
 
         /*
@@ -44,6 +46,7 @@ public class SearchActivity extends AppCompatActivity{
         /*
         * Methods to be called from ports
         */
+
         /**
          * To be called from SearchBox.MVP.Contract.Port, once query is submitted from SearchBox
          *

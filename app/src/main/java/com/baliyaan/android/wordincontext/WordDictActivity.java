@@ -159,8 +159,11 @@ public class WordDictActivity
          */
         Navigator(Activity activity) {
             super(activity);
-            _examplesPort = new ViewPort(this);
-            _definitionPort = new com.baliyaan.android.wordincontext.Components.Definition.MVP.ViewPort(this);
+            View examplesView = findViewById(R.id.list_view);
+            _examplesPort = new ViewPort(this, examplesView);
+
+            View defView = findViewById(R.id.definition_view);
+            _definitionPort = new com.baliyaan.android.wordincontext.Components.Definition.MVP.ViewPort(this, defView);
         }
 
         /*

@@ -19,20 +19,18 @@ import com.baliyaan.android.wordincontext.R;
 
 public class ViewPort extends MVPViewPortAdapter<Contract.Navigator, Contract.Presenter> implements Contract.View, Contract.Port {
     private final ListView _suggestionsView;
-    private SearchView _searchView = null;
 
-    public ViewPort(Contract.Navigator navigator) {
-        super(navigator);
+    public ViewPort(Contract.Navigator navigator, View view) {
+        super(navigator, view);
         super.bindPresenter(new Presenter(this));
 
         /*Configure Search View*/
-        _searchView = (SearchView) ((Activity) navigator().getContext()).findViewById(R.id.search_view);
-        if (null != _searchView) {
-            _searchView.setOnQueryTextListener(presenter());
-            _searchView.setOnSuggestionListener(presenter());
+        if (null != view()) {
+            ((SearchView)view()).setOnQueryTextListener(presenter());
+            ((SearchView)view()).setOnSuggestionListener(presenter());
             //_searchView.requestFocus(0,null);
             //_searchView.requestFocusFromTouch();
-            _searchView.setIconified(false);
+            ((SearchView)view()).setIconified(false);
         }
 
         //SearchView icon color
@@ -43,7 +41,7 @@ public class ViewPort extends MVPViewPortAdapter<Contract.Navigator, Contract.Pr
 
         /*Configure Suggestions View*/
         _suggestionsView = (ListView) ((Activity) navigator().getContext()).findViewById(R.id.suggestions_view);
-        if(null != _suggestionsView){
+        if (null != _suggestionsView) {
             _suggestionsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -57,30 +55,29 @@ public class ViewPort extends MVPViewPortAdapter<Contract.Navigator, Contract.Pr
 
     @Override
     public void setQuery(String query) {
-        if (null != _searchView)
-            _searchView.setQuery(query, true);
+        if (null != view())
+            ((SearchView)view()).setQuery(query, true);
     }
 
     @Override
     public void setSuggestionsAdapter(CursorAdapter adapter) {
-        if(null != _suggestionsView) {
+        if (null != _suggestionsView) {
             _suggestionsView.setAdapter(adapter);
-        }
-        else if (null != _searchView){
-            _searchView.setSuggestionsAdapter(adapter);
+        } else if (null != view()) {
+            ((SearchView)view()).setSuggestionsAdapter(adapter);
         }
     }
 
     @Override
     public void clearFocus() {
-        if (null != _searchView)
-            _searchView.clearFocus();
+        if (null != view())
+            ((SearchView)view()).clearFocus();
     }
 
     @Override
     public void setQuery(String query, boolean b) {
-        if (null != _searchView)
-            _searchView.setQuery(query, b);
+        if (null != view())
+            ((SearchView)view()).setQuery(query, b);
     }
 
     @Override
