@@ -48,7 +48,7 @@ public class Dictionary {
         return _dictDB.getObservableWordsStartingWith(token, nbrSuggestions);
     }
 
-    public Observable<ArrayList<Definition>> getDefinitionsFor(String input, int n) {
+    public Observable<Definition> getDefinitionsFor(String input, int n) {
         return _dictDB.getObservableDefinitionsOf(input, n);
     }
 
@@ -56,16 +56,6 @@ public class Dictionary {
         return new Observable<List<Example>>() {
             @Override
             protected void subscribeActual(final Observer<? super List<Example>> observer) {
-                //TODO: Temporary code, see below
-                /* Temporary block starts*/
-               /* try {
-                    observer.onNext(Scraper.GetExamples(token));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                /* Temporary block ends*/
-
-                //TODO: Switch to this code once Firebase access is provided
                 if (null != _examplesDB) {
                     _examplesDB.child(token).addValueEventListener(new ValueEventListener() {
                         @Override
@@ -102,8 +92,6 @@ public class Dictionary {
                     });
                 }
             }
-        }
-
-                ;
+        };
     }
 }

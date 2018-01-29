@@ -105,55 +105,47 @@ public class DictionaryDB extends SQLiteAssetHelper {
         };
     }
 
-    public ArrayList<Definition> getDefinitionsOf(String input, int n) {
-        StringBuilder sb = new StringBuilder();
-        Formatter formatter = new Formatter(sb, Locale.US);
-        String query = formatter.format(_context.getString(R.string.Dicitionary_db__WordDefinitions), input, n).toString();
+    public Observable<Definition> getObservableDefinitionsOf(final String input, final int n) {
 
-        Cursor cursor = null;
-        try {
-            if (null == _db)
-                _db = getWritableDatabase();
-            cursor = _db.rawQuery(query, null);
-        } catch (Exception e) {
-            Log.e("DictionaryDB", e.toString());
-        }
-        //Traverse cursor
-        ArrayList<Definition> list = new ArrayList<>();
-        if (null != cursor) {
-            if (cursor.moveToFirst()) {
-                do {
-                    try {
-                        String[] strDefinitions = cursor.getString(2).split(";");
-                        for (String strDefinition : strDefinitions) {
-                            Definition definition = new Definition();
-                            //definition._id = cursor.getString(0);
-                            definition._headword = cursor.getString(0);
-                            definition._partOfSpeech = cursor.getString(1);
-                            definition._definition = strDefinition;
-                            //Log.i("SQLiteAssetHelperTest",word);
-                            list.add(definition);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }
-        return list;
-    }
-
-    public Observable<ArrayList<Definition>> getObservableDefinitionsOf(final String input, int n) {
-
-        Observable<ArrayList<Definition>> observable =
-                new Observable<ArrayList<Definition>>() {
+        Observable<Definition> observable =
+                new Observable<Definition>() {
                     @Override
                     protected void subscribeActual(Observer observer) {
                         //String definition = "";/* = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition*/
-                        ArrayList<Definition> definitions = null;
-                        definitions = getDefinitionsOf(input, 15);
-                        observer.onNext(definitions); // Send definition
+                        StringBuilder sb = new StringBuilder();
+                        Formatter formatter = new Formatter(sb, Locale.US);
+                        String query = formatter.format(_context.getString(R.string.Dicitionary_db__WordDefinitions), input, n).toString();
+
+                        Cursor cursor = null;
+                        try {
+                            if (null == _db)
+                                _db = getWritableDatabase();
+                            cursor = _db.rawQuery(query, null);
+                        } catch (Exception e) {
+                            Log.e("DictionaryDB", e.toString());
+                        }
+                        //Traverse cursor
+                        if (null != cursor) {
+                            if (cursor.moveToFirst()) {
+                                do {
+                                    try {
+                                        String[] strDefinitions = cursor.getString(2).split(";");
+                                        for (String strDefinition : strDefinitions) {
+                                            Definition definition = new Definition();
+                                            //definition._id = cursor.getString(0);
+                                            definition._headword = cursor.getString(0);
+                                            definition._partOfSpeech = cursor.getString(1);
+                                            definition._definition = strDefinition;
+                                            //Log.i("SQLiteAssetHelperTest",word);
+                                            observer.onNext(definition); // Send definition
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                } while (cursor.moveToNext());
+                            }
+                            cursor.close();
+                        }
                     }
                 };
 

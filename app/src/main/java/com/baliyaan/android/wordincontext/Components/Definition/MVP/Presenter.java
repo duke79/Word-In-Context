@@ -4,8 +4,6 @@ import com.baliyaan.android.mvp.Adapters.MVPPresenterAdapter;
 import com.baliyaan.android.wordincontext.Data.Dictionary;
 import com.baliyaan.android.wordincontext.Model.Definition;
 
-import java.util.ArrayList;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -28,10 +26,10 @@ public class Presenter
         Dictionary.getInstance(view().getContext()).getDefinitionsFor(query, 15)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ArrayList<Definition>>() {
+                .subscribe(new Consumer<Definition>() {
                     @Override
-                    public void accept(@NonNull ArrayList<Definition> definitions) throws Exception {
-                        view().setDefinitions(definitions);
+                    public void accept(@NonNull Definition definition) throws Exception {
+                        view().addDefinition(definition);
                     }
                 });
 

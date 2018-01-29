@@ -17,10 +17,10 @@ import java.util.ArrayList;
 public class ViewPort
         extends MVPViewPortAdapter<Contract.Navigator, Contract.Presenter>
         implements Contract.View, Contract.Port {
-    private ArrayList<Definition> _definitions;
+    private ArrayList<Definition> _definitions = new ArrayList<>();
 
     public ViewPort(Contract.Navigator navigator, View view) {
-        super(navigator,view);
+        super(navigator, view);
         super.bindPresenter(new Presenter(this));
         init();
     }
@@ -31,18 +31,15 @@ public class ViewPort
     }
 
     @Override
-    public void setDefinitions(ArrayList<Definition> definitions) {
-        _definitions = definitions;
+    public void addDefinition(Definition definition) {
+        _definitions.add(definition);
 
         if (null != view()) {
             if (_definitions.size() < 1) {
                 ((CustomView) view()).addDefinition(navigator().getContext().getString(R.string.no_defintion));
+            } else {
+                ((CustomView) view()).addDefinition(definition._definition);
             }
-            else{
-                for(Definition definition : _definitions)
-                    ((CustomView) view()).addDefinition(definition._definition);
-            }
-
             view().setVisibility(View.VISIBLE);
         }
     }
@@ -57,7 +54,10 @@ public class ViewPort
     public void onRestoreState(Bundle state) {
         super.onRestoreState(state);
         ArrayList<Definition> definitions = state.getParcelableArrayList("definitions");
-        setDefinitions(definitions);
+        if(null != definitions) {
+            for (Definition definition : definitions)
+                addDefinition(definition);
+        }
     }
 
     @Override
