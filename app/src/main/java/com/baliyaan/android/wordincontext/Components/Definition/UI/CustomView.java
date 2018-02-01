@@ -1,11 +1,11 @@
 package com.baliyaan.android.wordincontext.Components.Definition.UI;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.baliyaan.android.wordincontext.R;
 
@@ -14,7 +14,7 @@ import com.baliyaan.android.wordincontext.R;
  */
 
 public class CustomView extends LinearLayout {
-    private LayoutInflater _inflater;
+    private RecyclerView _recyclerView;
 
     public CustomView(Context context) {
         super(context);
@@ -32,12 +32,15 @@ public class CustomView extends LinearLayout {
     }
 
     private void init(Context context) {
-        _inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater.from(context).inflate(R.layout.definitions,this);
+        _recyclerView = (RecyclerView) findViewById(R.id.definitions_list);
+        //_recyclerView.setHasFixedSize(false);
     }
 
-    public void addDefinition(String definition){
-        ViewGroup view = (ViewGroup) _inflater.inflate(R.layout.definition_main,this);
-        TextView def_tv = (TextView) ((ViewGroup)view.getChildAt(getChildCount()-1)).getChildAt(2);
-        def_tv.setText(definition);
+    public void setAdapter(RecyclerView.Adapter adapter){
+        _recyclerView.setAdapter(adapter);
+        LinearLayoutManager lm = new LinearLayoutManager(getContext());
+        //lm.setOrientation(VERTICAL);
+        _recyclerView.setLayoutManager(lm);
     }
 }

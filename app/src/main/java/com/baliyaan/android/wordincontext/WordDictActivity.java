@@ -162,7 +162,7 @@ public class WordDictActivity
             View examplesView = findViewById(R.id.list_view);
             _examplesPort = new ViewPort(this, examplesView);
 
-            View defView = findViewById(R.id.definition_view);
+            View defView = findViewById(R.id.definitions_list);
             _definitionPort = new com.baliyaan.android.wordincontext.Components.Definition.MVP.ViewPort(this, defView);
         }
 

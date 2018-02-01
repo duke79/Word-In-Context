@@ -1,12 +1,13 @@
 package com.baliyaan.android.wordincontext.Components.Definition.MVP;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.baliyaan.android.mvp.Adapters.MVPViewPortAdapter;
-import com.baliyaan.android.wordincontext.Components.Definition.UI.CustomView;
+import com.baliyaan.android.wordincontext.Components.Definition.UI.CustomAdapter;
 import com.baliyaan.android.wordincontext.Model.Definition;
-import com.baliyaan.android.wordincontext.R;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class ViewPort
         extends MVPViewPortAdapter<Contract.Navigator, Contract.Presenter>
         implements Contract.View, Contract.Port {
     private ArrayList<Definition> _definitions = new ArrayList<>();
+    private CustomAdapter _adapter;
 
     public ViewPort(Contract.Navigator navigator, View view) {
         super(navigator, view);
@@ -26,22 +28,23 @@ public class ViewPort
     }
 
     private void init() {
-        if (null != view())
-            view().setVisibility(View.GONE);
+        /*Dummy Definition*/
+        Definition definition = new Definition();
+        definition._definition = "Hello hello, I'm kinda busy!";
+        _definitions.add(definition);
+        /*Dummy Definition*/
+
+        _adapter = new CustomAdapter(_definitions);
+        ((RecyclerView)view()).setAdapter(_adapter);
+        LinearLayoutManager lm = new LinearLayoutManager(getContext());
+        //lm.setOrientation(VERTICAL);
+        ((RecyclerView)view()).setLayoutManager(lm);
     }
 
     @Override
     public void addDefinition(Definition definition) {
         _definitions.add(definition);
-
-        if (null != view()) {
-            if (_definitions.size() < 1) {
-                ((CustomView) view()).addDefinition(navigator().getContext().getString(R.string.no_defintion));
-            } else {
-                ((CustomView) view()).addDefinition(definition._definition);
-            }
-            view().setVisibility(View.VISIBLE);
-        }
+        _adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -63,7 +66,6 @@ public class ViewPort
     @Override
     public void onQueryTextSubmit(String query) {
         if (view() != null) {
-            view().setVisibility(View.GONE);
             presenter().onQueryTextSubmit(query);
         }
     }

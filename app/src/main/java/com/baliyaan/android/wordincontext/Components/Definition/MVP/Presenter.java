@@ -23,7 +23,7 @@ public class Presenter
     @Override
     public void onQueryTextSubmit(final String query) {
 
-        Dictionary.getInstance(view().getContext()).getDefinitionsFor(query, 15)
+        Dictionary.getInstance(view().getContext()).getDefinitionsFor(query, 3)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Definition>() {
