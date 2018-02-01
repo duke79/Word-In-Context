@@ -1,6 +1,7 @@
 package com.baliyaan.android.wordincontext.Components.Definition.MVP;
 
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -35,16 +36,19 @@ public class ViewPort
         /*Dummy Definition*/
 
         _adapter = new CustomAdapter(_definitions);
+        _adapter.setHasStableIds(true);
         ((RecyclerView)view()).setAdapter(_adapter);
         LinearLayoutManager lm = new LinearLayoutManager(getContext());
         //lm.setOrientation(VERTICAL);
         ((RecyclerView)view()).setLayoutManager(lm);
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        ((RecyclerView)view()).setItemAnimator(animator);
     }
 
     @Override
     public void addDefinition(Definition definition) {
         _definitions.add(definition);
-        _adapter.notifyDataSetChanged();
+        _adapter.notifyItemInserted(_definitions.size()-1);
     }
 
     @Override

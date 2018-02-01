@@ -19,6 +19,7 @@ import java.util.Locale;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -96,10 +97,14 @@ public class DictionaryDB extends SQLiteAssetHelper {
             @Override
             protected void subscribeActual(Observer<? super ArrayList<String>> observer) {
                 if(null != _suggestionsTrie) {
-                    ArrayList<String> suggestions = _suggestionsTrie.getWordsStartingWith(input, n);
-                    if(null == suggestions)
-                        suggestions = new ArrayList<>();
-                    observer.onNext(suggestions);
+                    try {
+                        ArrayList<String> suggestions = _suggestionsTrie.getWordsStartingWith(input, n);
+                        if (null == suggestions)
+                            suggestions = new ArrayList<>();
+                        observer.onNext(suggestions);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         };
