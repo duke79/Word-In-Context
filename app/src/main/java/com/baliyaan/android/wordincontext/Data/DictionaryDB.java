@@ -9,9 +9,9 @@ import com.baliyaan.android.library.db.SQLiteAssetHelper.SQLiteAssetHelper;
 import com.baliyaan.android.library.ds.Trie;
 import com.baliyaan.android.library.io.SerializeService;
 import com.baliyaan.android.wordincontext.Model.Definition;
+import com.baliyaan.android.wordincontext.MyApplication;
 import com.baliyaan.android.wordincontext.R;
 
-import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashSet;
 import java.util.Locale;
@@ -19,7 +19,7 @@ import java.util.Locale;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.UndeliverableException;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -27,90 +27,119 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class DictionaryDB extends SQLiteAssetHelper {
-    private static DictionaryDB _dict = null;
     private static final String DATABASE_NAME = "Dictionary.db";
     private static final int DATABASE_VERSION = 1;
     private Trie _suggestionsTrie = null;
     private SQLiteDatabase _db = null;
-    private Context _context = null;
 
-    private DictionaryDB(Context context) {
+    DictionaryDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        _context = context;
-        setForcedUpgrade();
+        setForcedUpgrade(); //ToDo: Comment it out to enable #onUpgrade() callback on version increment
 
         /*Initialize suggestions Trie*/
         deserializeSuggestionsTrie()
-                .subscribeOn(Schedulers.newThread());
-                /*.observeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
                 .subscribe(new Consumer<Trie>() {
                     @Override
                     public void accept(Trie trie) throws Exception {
-
                     }
-                });*/
+                });
 
-        if (null == _suggestionsTrie)
-            serializeSuggestionsTrie();
+        /*if (null == _suggestionsTrie)
+            serializeSuggestionsTrie();*/
+
+        /*Initi words hash*/
     }
 
-    public static DictionaryDB getInstance(Context context) {
-        if (null == _dict)
-            _dict = new DictionaryDB(context);
-        return _dict;
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
     }
 
-    public ArrayList<String> getWordsStartingWith(String input, int n) {
-        StringBuilder sb = new StringBuilder();
-        Formatter formatter = new Formatter(sb, Locale.US);
-        String query = formatter.format(_context.getString(R.string.Dicitionary_db__MatchingWords), input, n).toString();
-
-        Cursor cursor = null;
-        try {
-            if (null == _db)
-                _db = getWritableDatabase();
-            cursor = _db.rawQuery(query, null);
-        } catch (Exception e) {
-            Log.e("DictionaryDB", e.toString());
-        }
-        //Traverse cursor
-        HashSet<String> hash = new HashSet<>();
-        if (null != cursor) {
-            if (cursor.moveToFirst()) {
-                do {
-                    String word = cursor.getString(0);
-                    word = word.toLowerCase();
-                    //Log.i("SQLiteAssetHelperTest",word);
-                    hash.add(word);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }
-        ArrayList list = new ArrayList();
-        list.addAll(hash);
-
-        return list;
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        super.onCreate(db);
+        //serializeSuggestionsTrie();
+        /*CREATE INDEX tag_word from entries(word);*/
     }
 
-    public Observable<ArrayList<String>> getObservableWordsStartingWith(final String input, final int n) {
-        return new Observable<ArrayList<String>>() {
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //serializeSuggestionsTrie();
+
+        _db = db;
+        /*switch (newVersion) {
+            case 1:
+                ;
+            case 2:
+                ;
+            case 3:
+                ;
+            case 4:
+                ;
+            case 5:
+                ;
+            case 6:
+                Cursor cursor = sqlQuery("CREATE INDEX tag_word on entries(word)");
+        }*/
+        _db = null; // To be unset after upgrade, because it gets closed and stays no more usable (https://stackoverflow.com/a/31508029/973425)
+        //super.onUpgrade(db, oldVersion, newVersion);
+    }
+
+    /*Public API*/
+
+    /**
+     * Get the suggestions for a prefix
+     *
+     * @param input
+     * @param n
+     * @return Observable to be subscribed on
+     */
+    Observable<HashSet<String>> getSuggestions(final String input, final int n) {
+        return new Observable<HashSet<String>>() {
             @Override
-            protected void subscribeActual(Observer<? super ArrayList<String>> observer) {
-                if(null != _suggestionsTrie) {
-                    try {
-                        ArrayList<String> suggestions = _suggestionsTrie.getWordsStartingWith(input, n);
-                        if (null == suggestions)
-                            suggestions = new ArrayList<>();
+            protected void subscribeActual(Observer<? super HashSet<String>> observer) {
+                try {
+                    StringBuilder sb = new StringBuilder();
+                    Formatter formatter = new Formatter(sb, Locale.US);
+                    String query = formatter.format(MyApplication.getAppContext().getString(R.string.Dicitionary_db__MatchingWords), input, n).toString();
+
+                    if (null != _suggestionsTrie) {
+                        HashSet<String> suggestions = new HashSet<>();
+                        suggestions.addAll(_suggestionsTrie.getWordsStartingWith(input, n));
                         observer.onNext(suggestions);
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    } else {
+                        Cursor cursor = sqlQuery(query);
+                        if (null != cursor) {
+                            HashSet<String> suggestions = new HashSet<>();
+                            int i = 0;
+                            if (cursor.moveToFirst()) {
+                                do {
+                                    String sug = cursor.getString(0);
+                                    suggestions.add(sug);
+                                } while (cursor.moveToNext() && (i++ < n));
+                            }
+                            cursor.close();
+                            observer.onNext(suggestions);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
     }
 
-    public Observable<Definition> getObservableDefinitionsOf(final String input, final int n) {
+    /**
+     * Definitions of a word.
+     * Note : Definitions may be of different senses. This method doesn't offer a distinction.
+     *
+     * @param input
+     * @param n
+     * @return Observable to be subscribed on
+     */
+    Observable<Definition> getDefinitions(final String input, final int n) {
 
         Observable<Definition> observable =
                 new Observable<Definition>() {
@@ -119,16 +148,10 @@ public class DictionaryDB extends SQLiteAssetHelper {
                         //String definition = "";/* = OnlineDictionary.getSimpleDefinitionOf(query); // Get definition*/
                         StringBuilder sb = new StringBuilder();
                         Formatter formatter = new Formatter(sb, Locale.US);
-                        String query = formatter.format(_context.getString(R.string.Dicitionary_db__WordDefinitions), input, n).toString();
+                        String query = formatter.format(MyApplication.getAppContext().getString(R.string.Dicitionary_db__WordDefinitions), input, n).toString();
 
-                        Cursor cursor = null;
-                        try {
-                            if (null == _db)
-                                _db = getWritableDatabase();
-                            cursor = _db.rawQuery(query, null);
-                        } catch (Exception e) {
-                            Log.e("DictionaryDB", e.toString());
-                        }
+                        Cursor cursor = sqlQuery(query);
+
                         //Traverse cursor
                         if (null != cursor) {
                             if (cursor.moveToFirst()) {
@@ -157,24 +180,17 @@ public class DictionaryDB extends SQLiteAssetHelper {
         return observable;
     }
 
-    public Observable<String> getAllWords() {
+    /**
+     * Get all the words in the dictionary database.
+     *
+     * @return
+     */
+    Observable<String> getAll() {
         return new Observable<String>() {
             @Override
             protected void subscribeActual(Observer<? super String> observer) {
-                /*Build query string*/
-                StringBuilder sb = new StringBuilder();
-                Formatter formatter = new Formatter(sb, Locale.US);
-                String query = formatter.format("select word from entries").toString();
 
-                /*Execute query & retrieve cursor*/
-                Cursor cursor = null;
-                try {
-                    if (null == _db)
-                        _db = getWritableDatabase();
-                    cursor = _db.rawQuery(query, null);
-                } catch (Exception e) {
-                    Log.e("DictionaryDB", e.toString());
-                }
+                Cursor cursor = sqlQuery("select word from entries");
 
                 /*Traverse cursor & retrieve results*/
                 if (null != cursor) {
@@ -195,33 +211,11 @@ public class DictionaryDB extends SQLiteAssetHelper {
         };
     }
 
-
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-    }
-
-    //ToDo: Create index and test with suggestions
-    //ToDo: Update AndroidLibarary sQLite to support onCreate
-    //ToDo: Handle onUpgrade like a pro by revisions(case 1:sql ; no break case 2:more sql ) & onCreate (to keep everything for the new user in this function
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        super.onCreate(db);
-        serializeSuggestionsTrie();
-        /*CREATE INDEX tag_word from entries(word);*/
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        super.onUpgrade(db, oldVersion, newVersion);
-        serializeSuggestionsTrie();
-        /*CREATE INDEX tag_word from entries(word);*/
-    }
-
+    /*Private methods*/
     private void serializeSuggestionsTrie() {
         _suggestionsTrie = new Trie();
         /*Create Trie of words from Dictionary.db*/
-        getAllWords()
+        getAll()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.newThread())
                 .subscribe(new Observer<String>() {
@@ -241,19 +235,31 @@ public class DictionaryDB extends SQLiteAssetHelper {
 
                     @Override
                     public void onComplete() {
-                        SerializeService.serialize(_suggestionsTrie, _context, _context.getString(R.string.FileSuggestionsTrie));
+                        SerializeService.serialize(_suggestionsTrie, MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.FileSuggestionsTrie));
                     }
                 });
     }
 
-    public Observable<Trie> deserializeSuggestionsTrie(){
+    private Observable<Trie> deserializeSuggestionsTrie() {
         return new Observable<Trie>() {
             @Override
             protected void subscribeActual(Observer<? super Trie> observer) {
-                _suggestionsTrie = (Trie) SerializeService.deserialize(_context, _context.getString(R.string.FileSuggestionsTrie));
-                if(null == _suggestionsTrie)
+                _suggestionsTrie = (Trie) SerializeService.deserialize(MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.FileSuggestionsTrie));
+                if (null == _suggestionsTrie)
                     serializeSuggestionsTrie();
             }
         };
+    }
+
+    private Cursor sqlQuery(String query) {
+        Cursor cursor = null;
+        try {
+            if (null == _db)
+                _db = getWritableDatabase();
+            cursor = _db.rawQuery(query, null);
+        } catch (Exception e) {
+            Log.e(this.getClass().getName(), e.toString());
+        }
+        return cursor;
     }
 }

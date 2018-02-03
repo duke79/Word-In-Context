@@ -8,6 +8,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import com.baliyaan.android.wordincontext.Data.Dictionary;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -21,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 public class SuggestionsAdapter extends SimpleCursorAdapter {
 
     private Dictionary _dictionary = null;
-    private ArrayList<String> _suggestions = null;
+    private ArrayList<String> _suggestions = new ArrayList<>();
 
     private SuggestionsAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
         super(context, layout, c, from, to, flags);
@@ -40,7 +41,8 @@ public class SuggestionsAdapter extends SimpleCursorAdapter {
     }
 
     private String _token = "";
-    public SuggestionsAdapter suggestFor(final String token, final int nbrSuggestions) {
+
+    public void suggestFor(final String token, final int nbrSuggestions) {
         _token = token;
 
         final MatrixCursor cursorWithSuggestions = new MatrixCursor(new String[]{"_id", "word"}); //one column named "_id" is required for CursorAdapter
@@ -48,15 +50,14 @@ public class SuggestionsAdapter extends SimpleCursorAdapter {
         _dictionary.getSuggestionsFor(token, nbrSuggestions)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ArrayList<String>>() {
+                .subscribe(new Consumer<HashSet<String>>() {
                     @Override
-                    public void accept(@NonNull ArrayList<String> suggestions) throws Exception {
+                    public void accept(@NonNull HashSet<String> suggestions) throws Exception {
                         if (!_token.equals(token))
                             return;
 
-                        if (_suggestions != null)
-                            _suggestions.removeAll(_suggestions);
-                        _suggestions = suggestions;
+                        _suggestions.clear();
+                        _suggestions.addAll(suggestions);
 
                         if (_suggestions != null && _suggestions.size() > 0) {
                             int key = 1;
@@ -69,7 +70,6 @@ public class SuggestionsAdapter extends SimpleCursorAdapter {
                     }
                 });
 
-        return this;
     }
 
     public String getSuggestionAt(int index) {

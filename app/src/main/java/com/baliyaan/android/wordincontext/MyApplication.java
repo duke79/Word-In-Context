@@ -1,6 +1,7 @@
 package com.baliyaan.android.wordincontext;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
@@ -10,9 +11,12 @@ import com.squareup.leakcanary.LeakCanary;
  */
 
 public class MyApplication extends Application {
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        MyApplication.context = getApplicationContext();
 
         /*LeakCanary*/
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -24,5 +28,9 @@ public class MyApplication extends Application {
 
         /*Stetho*/
         Stetho.initializeWithDefaults(this);
+    }
+
+    public static Context getAppContext() {
+        return MyApplication.context;
     }
 }

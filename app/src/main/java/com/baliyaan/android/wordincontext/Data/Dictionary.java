@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -30,7 +31,7 @@ public class Dictionary {
     private DatabaseReference _examplesDB = null;
 
     private Dictionary(final Context context) {
-        _dictDB = DictionaryDB.getInstance(context);
+        _dictDB = new DictionaryDB(context);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         if (null != database) {
             _examplesDB = database.getReference("word_in_context");
@@ -44,12 +45,12 @@ public class Dictionary {
         return _singleton;
     }
 
-    public Observable<ArrayList<String>> getSuggestionsFor(final String token, final int nbrSuggestions) {
-        return _dictDB.getObservableWordsStartingWith(token, nbrSuggestions);
+    public Observable<HashSet<String>> getSuggestionsFor(final String token, final int nbrSuggestions) {
+        return _dictDB.getSuggestions(token, nbrSuggestions);
     }
 
     public Observable<Definition> getDefinitionsFor(String input, int n) {
-        return _dictDB.getObservableDefinitionsOf(input, n);
+        return _dictDB.getDefinitions(input, n);
     }
 
     public Observable<List<Example>> getExamplesFor(final String token) {

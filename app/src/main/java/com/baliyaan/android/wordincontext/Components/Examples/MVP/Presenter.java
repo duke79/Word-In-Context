@@ -40,7 +40,7 @@ class Presenter extends MVPPresenterAdapter<Contract.View> implements Contract.P
                         @Override
                         public void accept(@NonNull List<Example> newList) throws Exception {
                             if (newList.size() > 0) {
-                                _examples.removeAll(_examples);
+                                _examples.clear();
                                 _examples.addAll(newList);
                                 view().displayResult();
                             } else
@@ -65,7 +65,7 @@ class Presenter extends MVPPresenterAdapter<Contract.View> implements Contract.P
     public void onRestoreState(Bundle state) {
         super.onRestoreState(state);
         List<Example> savedList = state.getParcelableArrayList("examples");
-        _examples.removeAll(savedList);
+        _examples.clear();
         _examples.addAll(savedList);
         view().displayResult();
     }

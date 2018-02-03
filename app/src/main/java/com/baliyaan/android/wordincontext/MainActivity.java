@@ -1,14 +1,13 @@
 package com.baliyaan.android.wordincontext;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -41,7 +40,6 @@ public class MainActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Interstitial _interstitial = null;
-    Context _context = null;
     private FirebaseAnalytics _firebaseAnalytics;
     private FirebaseAuth _firebaseAuth;
     private int ACTIVITY_REQ_CODE_VOICE_SEARCH = 1;
@@ -52,7 +50,6 @@ public class MainActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        _context = this;
 
         /* Firebase */
         // Obtain the FirebaseAnalytics instance.
@@ -69,7 +66,8 @@ public class MainActivity
                 });
 
         /*Enable home button*/
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = null;
+        actionBar = getActionBar();
         if (null != actionBar) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -91,9 +89,10 @@ public class MainActivity
             @Override
             public void onClick(View v) {
                 /*Show the word definition activity*/
-                Intent intentSearch = new Intent(_context, SearchActivity.class);
+                Intent intentSearch = new Intent(MyApplication.getAppContext(), SearchActivity.class);
                 intentSearch.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                _context.startActivity(intentSearch);
+                intentSearch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                MyApplication.getAppContext().startActivity(intentSearch);
                 overridePendingTransition(0, 0);
             }
         });
@@ -132,7 +131,9 @@ public class MainActivity
     @Override
     protected void onStart() {
         super.onStart();
-        overridePendingTransition(0, 0); //To prevent animation on returning from SearchActivity
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+            overridePendingTransition(0, 0); //To prevent animation on returning from SearchActivity
+        }
 
         /*
         * Display ads
@@ -141,7 +142,7 @@ public class MainActivity
             @Override
             public void run() {
                 if (null == _interstitial) {
-                    _interstitial = new Interstitial(_context, getString(R.string.adId));
+                    _interstitial = new Interstitial(MyApplication.getAppContext(), getString(R.string.adId));
                     _interstitial.AllowOnlyAfter((long) 3.6e+5);// 6 minutes
                     _interstitial.AllowInDebug(false);
                     _interstitial.showEvery(1000000, true); // every 16.66 minutes
@@ -189,12 +190,10 @@ public class MainActivity
         if (item == null)
             return;
         String intentQuery = item.getText().toString();
-        if (intentQuery == null)
-            return;
         if (!(intentQuery.length() > 0))
             return;
 
-        /*Show the word definition activity*/
+            /*Show the word definition activity*/
         Intent intentWordDict = new Intent(this, WordDictActivity.class);
         intentWordDict.putExtra("query", intentQuery);
         this.startActivity(intentWordDict);
@@ -244,7 +243,7 @@ public class MainActivity
             try {
                 Intent intent = new Intent();
                 intent.setAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                ((Activity) _context).startActivityForResult(intent, ACTIVITY_REQ_CODE_VOICE_SEARCH);
+                startActivityForResult(intent, ACTIVITY_REQ_CODE_VOICE_SEARCH);
             } catch (ActivityNotFoundException e) {
                 Log.e(MainActivity.class.getName(), e.toString());
             }
