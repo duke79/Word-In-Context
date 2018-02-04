@@ -49,11 +49,16 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
     testCompile 'junit:junit:4.12'
     //Baliyaan.Android-Library
-    compile 'com.github.Baliyaan.Android-Library:db:-SNAPSHOT'
-    compile 'com.github.Baliyaan.Android-Library:ads:-SNAPSHOT'
-    compile 'com.github.Baliyaan.Android-Library:ds:-SNAPSHOT'
-    compile 'com.github.Baliyaan.Android-Library:mvp:-SNAPSHOT'
-    compile 'com.github.Baliyaan.Android-Library:io:-SNAPSHOT'
+    /*compile 'com.github.Baliyaan:Android-Library:0.0.4'*/
+    /**
+    * Java Source : https://stackoverflow.com/questions/36181814/how-to-export-aar-library-with-its-documentation
+    * */
+    compile project(':ads-release')
+    compile project(':afsm-release')
+    compile project(':db-release')
+    compile project(':ds-release')
+    compile project(':io-release')
+    compile project(':mvp-release')
     //PageIndicatorView
     compile 'com.romandanylyk:pageindicatorview:0.2.0@aar'
 
