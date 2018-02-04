@@ -1,13 +1,11 @@
 package com.baliyaan.android.wordincontext;
 
-import android.app.ActionBar;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -23,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
 
 import com.baliyaan.android.library.ads.Interstitial;
@@ -46,132 +45,97 @@ public class MainActivity
     private int SCREEN_HEIGHT = -1;
     private int SCREEN_WIDTH = -1;
     private FirebaseUser _user;
+    private boolean _FLAG_FIRST_ONSTART = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /* Firebase */
-        // Obtain the FirebaseAnalytics instance.
-        _firebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        // Obtain FirebaseAuth instance
-        _firebaseAuth = FirebaseAuth.getInstance();
-        _firebaseAuth.signInAnonymously()
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        _user = _firebaseAuth.getCurrentUser();
-                        String name = _user.getDisplayName();
-                    }
-                });
-
-        /*Enable home button*/
-        ActionBar actionBar = null;
-        actionBar = getActionBar();
-        if (null != actionBar) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        /*
-        * Prepare UI
-        */
         setContentView(R.layout.activity_main);
-        // Back-ground image
-        ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
-        if (null != bgImage) {
-            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background_mage);
-            bgImage.setImageBitmap(Bitmap.createBitmap(b));
-        }
-        // SearchBox callback & size
-        SearchView searchView = (SearchView) findViewById(R.id.search_view);
-        searchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Show the word definition activity*/
-                Intent intentSearch = new Intent(MyApplication.getAppContext(), SearchActivity.class);
-                intentSearch.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                intentSearch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                MyApplication.getAppContext().startActivity(intentSearch);
-                overridePendingTransition(0, 0);
-            }
-        });
-        // Search Voice callback
-        /*ImageButton voiceSearchBtn = (ImageButton) findViewById(R.id.voice_search_btn);
-        voiceSearchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent intent = new Intent();
-                    intent.setAction(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                    ((Activity) _context).startActivityForResult(intent, ACTIVITY_REQ_CODE_VOICE_SEARCH);
-                } catch (ActivityNotFoundException e) {
-                    Log.e(MainActivity.class.getName(), e.toString());
-                }
-            }
-        });*/
-        //Navigation Drawer
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        /*
-        * Search by intent (if any)
-        */
-        Intent intent = getIntent();
-        onNewIntent(intent);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-            overridePendingTransition(0, 0); //To prevent animation on returning from SearchActivity
-        }
+        overridePendingTransition(0, 0); //To prevent animation on returning from SearchActivity
+
+        if(_FLAG_FIRST_ONSTART) {
+            _FLAG_FIRST_ONSTART = false;
+        /*Firebase*/
+            // Obtain the FirebaseAnalytics instance.
+            _firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+            // Obtain FirebaseAuth instance
+            _firebaseAuth = FirebaseAuth.getInstance();
+            _firebaseAuth.signInAnonymously()
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            _user = _firebaseAuth.getCurrentUser();
+                            String name = _user.getDisplayName();
+                        }
+                    });
 
         /*
         * Display ads
         */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (null == _interstitial) {
-                    _interstitial = new Interstitial(MyApplication.getAppContext(), getString(R.string.adId));
-                    _interstitial.AllowOnlyAfter((long) 3.6e+5);// 6 minutes
-                    _interstitial.AllowInDebug(false);
-                    _interstitial.showEvery(1000000, true); // every 16.66 minutes
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (null == _interstitial) {
+                        _interstitial = new Interstitial(MyApplication.getAppContext(), getString(R.string.adId));
+                        _interstitial.AllowOnlyAfter((long) 3.6e+5);// 6 minutes
+                        _interstitial.AllowInDebug(false);
+                        _interstitial.showEvery(1000000, true); // every 16.66 minutes
+                    }
                 }
-            }
-        });
+            });
 
-        /* Calculate Screen Size*/
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        SCREEN_HEIGHT = dm.heightPixels;
-        SCREEN_WIDTH = dm.widthPixels;
-        /* Search Box layout */
-        /*View voiceSearchBtn = findViewById(R.id.voice_search_btn);
-        int vsWidth = voiceSearchBtn.getWidth();
-        View searchView = findViewById(R.id.search_view);
-        if (null != searchView) {
-            *//*ViewGroup.LayoutParams lp = searchView.getLayoutParams();
-            lp.width = SCREEN_WIDTH/2;
-            searchView.setLayoutParams(lp);*//*
-            int svLeft = searchView.getLeft();
-            int svRight = searchView.getRight();
-            int svTop = searchView.getTop();
-            int svBottom = searchView.getBottom();
-            searchView.layout(svLeft,
-                    svTop,
-                    SCREEN_WIDTH-vsWidth,
-                    svBottom);
-        }*/
+        /*Calculate Screen Size*/
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            SCREEN_HEIGHT = dm.heightPixels;
+            SCREEN_WIDTH = dm.widthPixels;
+
+        /*Back-ground image*/
+            ImageView bgImage = (ImageView) findViewById(R.id.background_blur);
+            if (null != bgImage) {
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.background_mage);
+                bgImage.setImageBitmap(Bitmap.createBitmap(b));
+            }
+
+        /*SearchBox callback & size*/
+            SearchView searchView = (SearchView) findViewById(R.id.search_view);
+            searchView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                /*Show the word definition activity*/
+                    Intent intentSearch = new Intent(MyApplication.getAppContext(), SearchActivity.class);
+                    intentSearch.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intentSearch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    MyApplication.getAppContext().startActivity(intentSearch);
+                    overridePendingTransition(0, 0);
+                }
+            });
+
+        /*Navigation Drawer*/
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+
+        /*Navigation View*/
+            ViewStub nav_stub = (ViewStub) findViewById(R.id.nav_view_stub);
+        /*nav_stub.inflate();*/
+            nav_stub.setVisibility(View.VISIBLE);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+
+        /*Search by intent (if any)*/
+            Intent intent = getIntent();
+            onNewIntent(intent);
+        }
     }
 
     @Override
